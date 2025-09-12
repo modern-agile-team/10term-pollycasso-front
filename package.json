@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "npx chromatic --project-token=chpt_7617ba207698934"
+    "chromatic": "npx chromatic"
   },
   "dependencies": {
     "@modern-kit/utils": "^2.6.0",
