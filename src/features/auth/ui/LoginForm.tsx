@@ -1,13 +1,13 @@
 import { useForm } from 'react-hook-form';
-import { requestLogin } from '@/features/auth/api/auth';
+import { postLogin } from '@/features/auth/';
 import Button from '@/shared/ui/Button';
-import type { LoginCredentials } from '@/features/auth/model/auth';
+import type { LoginCredentials } from '@/features/auth/';
 
 export const LoginForm = () => {
   const { register, handleSubmit } = useForm<LoginCredentials>();
 
   const onSubmit = (data: LoginCredentials) => {
-    requestLogin(data)
+    postLogin(data)
       .then((res: any) => {
         console.log('로그인 성공:', res);
         // 토큰 저장, 사용자 상태 업그레이드 부분임
