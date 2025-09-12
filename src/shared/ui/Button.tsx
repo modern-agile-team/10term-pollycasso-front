@@ -33,7 +33,7 @@ const Button = ({
   bgColor = 'blue',
   ...rest
 }: ButtonProps) => {
-  const baseClasses = 'font-bold rounded-md transition-colors';
+  const baseClasses = 'font-bold rounded-full transition-colors';
   const variantClasses = {
     primary: 'hover:opacity-90',
     secondary: 'hover:opacity-80',
@@ -50,7 +50,7 @@ const Button = ({
     gray: 'text-gray-500',
   }[textColor];
   const bgColorClasses = {
-    blue: 'bg-blue-500',
+    blue: 'bg-blue-700',
     red: 'bg-red-500',
     green: 'bg-green-500',
   }[bgColor];
