@@ -1,23 +1,66 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { globalIgnores } from 'eslint/config'
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+import js from '@eslint/js';
+import globals from 'globals';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
+import prettier from 'eslint-config-prettier';
+
+export default tseslint.config({
+  ignores: ['dist', 'node_modules', 'public'],
+}, {
+  files: ['**/*.{ts,tsx}'],
+  plugins: {
+    react,
+    'react-hooks': reactHooks,
+  },
+  languageOptions: {
+    parser: tseslint.parser,
+    parserOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      ecmaFeatures: {
+        jsx: true,
+      },
+    },
+    globals: {
+      ...globals.browser,
+      ...globals.node,
     },
   },
-])
+  rules: {
+    ...js.configs.recommended.rules,
+    ...tseslint.configs.recommended[0].rules,
+    ...react.configs.recommended.rules,
+
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-no-target-blank': 'off',
+
+    'prefer-arrow-callback': ['error', { allowNamedFunctions: false }],
+    'arrow-parens': 'off',
+    'arrow-body-style': 'off',
+    'func-style': ['error', 'expression'],
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+}, {
+  files: ['**/*.tsx'],
+  plugins: {
+    'react-refresh': reactRefresh,
+  },
+  rules: {
+    ...reactRefresh.configs.vite.rules,
+  },
+}, {
+  ...prettier,
+}, storybook.configs["flat/recommended"]);
