@@ -4,6 +4,7 @@ import Spinner from '@/shared/ui/Spinner';
 import RootLayout from '@/shared/ui/RootLayout';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
 const WelcomePage = lazy(() => import('@/pages/WelcomePage'));
 
 const router = createBrowserRouter([
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         element: <LoginPage />,
+      },
+      {
+        path: '/signup',
+        element: <SignUpPage />,
       },
       {
         path: '/welcome',
