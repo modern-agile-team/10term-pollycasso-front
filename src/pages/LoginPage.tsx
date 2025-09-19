@@ -7,7 +7,7 @@ const LoginPage = () => {
     <AuthLayout>
       <img
         src={title}
-        className="w-full max-w-[405px] mx-auto mt-10 mb-4"
+        className="w-full max-w-[405px] mx-auto mt-20"
         alt="폴리카소 로고"
       />
       <LoginForm />

@@ -1,5 +1,4 @@
 import { FormProvider } from 'react-hook-form';
-import clsx from 'clsx';
 import { AuthInput } from '@/features/auth/ui';
 import { useLogin } from '@/features/auth/model';
 import { SocialGuide } from './SocialGuide';
@@ -13,7 +12,6 @@ export const LoginForm = () => {
   const {
     methods,
     handleSubmit,
-    isValid,
     username,
     password,
     isAnyFieldFocused,
@@ -24,7 +22,7 @@ export const LoginForm = () => {
   return (
     <div className="w-[470px] flex flex-col items-center">
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-2">
           <AuthInput<LoginFormValues>
             name="username"
             label="아이디"
@@ -44,13 +42,7 @@ export const LoginForm = () => {
 
           <button
             type="submit"
-            disabled={!isValid}
-            className={clsx(
-              'text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl',
-              isValid
-                ? 'bg-[#003D00] hover:bg-green-600'
-                : 'bg-[#7A9A7A] cursor-not-allowed',
-            )}
+            className="text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl bg-[#003D00] hover:bg-green-600"
           >
             로그인
           </button>
@@ -59,7 +51,7 @@ export const LoginForm = () => {
 
       <hr className="w-full border border-[#419341]" />
 
-      <div className="relative w-full mt-4 h-10">
+      <div className="relative w-full h-10">
         <SocialGuide visible={!username && !password && !isAnyFieldFocused} />
       </div>
     </div>

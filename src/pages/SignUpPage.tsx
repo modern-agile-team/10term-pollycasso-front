@@ -7,7 +7,7 @@ const SignUpPage = () => {
     <AuthLayout>
       <img
         src={title}
-        className="w-full max-w-[405px] mx-auto mt-10 mb-4"
+        className="w-full max-w-[405px] mx-auto mt-20 mb-2"
         alt="폴리카소 로고"
       />
       <SignUpForm />

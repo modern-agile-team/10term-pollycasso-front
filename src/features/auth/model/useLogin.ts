@@ -15,11 +15,7 @@ export const useLogin = () => {
     mode: 'onChange',
   });
 
-  const {
-    handleSubmit,
-    watch,
-    formState: { isValid },
-  } = methods;
+  const { handleSubmit, watch } = methods;
 
   const username = watch('username');
   const password = watch('password');
@@ -31,7 +27,6 @@ export const useLogin = () => {
   return {
     methods,
     handleSubmit,
-    isValid,
     username,
     password,
     isAnyFieldFocused,

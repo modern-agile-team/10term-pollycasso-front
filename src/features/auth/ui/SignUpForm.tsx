@@ -78,7 +78,7 @@ export const SignUpForm = () => {
           }
         />
 
-        <hr className="my-7 w-[450px] border border-[#419341]" />
+        <hr className="mt-7 mb-6 w-[450px] border border-[#419341]" />
 
         <button
           type="submit"
