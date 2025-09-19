@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router';
-import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
 import { MegaphoneIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AuthInput } from '@/features/auth/ui/AuthInput';
 import clsx from 'clsx';
 import title from '@/assets/title.svg';
 import kakao from '@/assets/kakao.svg';
@@ -15,14 +15,15 @@ interface LoginFormValues {
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const methods = useForm<LoginFormValues>({
+    mode: 'onChange',
+  });
 
   const {
-    register,
     handleSubmit,
-    formState: { errors },
     watch,
-  } = useForm<LoginFormValues>();
+    formState: { isValid },
+  } = methods;
 
   const username = watch('username');
   const password = watch('password');
@@ -37,103 +38,48 @@ const LoginPage = () => {
       <div className="flex flex-col justify-start items-center w-[690px] min-h-[650px] rounded-lg bg-white/30">
         <img src={title} className="w-full max-w-[405px] mx-auto mt-10 mb-4" />
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-[470px] flex flex-col items-center"
-        >
-          <div
-            className={clsx(
-              'relative w-[470px] mt-3 rounded-xl border bg-white transition-all duration-200',
-              focusedField === 'username'
-                ? 'ring-2 ring-[#419341] border-transparent'
-                : 'border-gray-300',
-              errors.username && 'border-red-500 ring-red-500',
-            )}
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-[470px] flex flex-col items-center"
           >
-            <input
-              type="text"
-              autoComplete="off"
-              id="username"
-              {...register('username', { required: true })}
-              onFocus={() => setFocusedField('username')}
-              onBlur={() => setFocusedField(null)}
-              className="w-[420px] pr-10 px-6 pt-[20px] pb-[16px] bg-transparent focus:outline-none"
+            <AuthInput<LoginFormValues>
+              name="username"
+              label="아이디"
+              validation={{
+                required: '아이디를 입력해주세요',
+              }}
             />
-            <label
-              htmlFor="username"
-              className={clsx(
-                'absolute left-6 transition-all duration-200 pointer-events-none font-pretendard',
-                {
-                  'text-xs text-black top-[6px]':
-                    focusedField === 'username' || username,
-                  'text-lg text-black top-[16px]': !(
-                    focusedField === 'username' || username
-                  ),
-                },
-              )}
-            >
-              아이디
-            </label>
-          </div>
-          {errors.username && (
-            <p className="w-full text-left mt-2 text-red-500 text-xs">
-              - 아이디를 입력해주세요
-            </p>
-          )}
 
-          <div
-            className={clsx(
-              'relative w-[470px] mt-3 rounded-xl border bg-white transition-all duration-200',
-              focusedField === 'password'
-                ? 'ring-2 ring-[#419341] border-transparent'
-                : 'border-gray-300',
-              errors.password && 'border-red-500 ring-red-500',
-            )}
-          >
-            <input
+            <AuthInput<LoginFormValues>
+              name="password"
+              label="비밀번호"
               type="password"
-              autoComplete="off"
-              id="password"
-              {...register('password', { required: true })}
-              onFocus={() => setFocusedField('password')}
-              onBlur={() => setFocusedField(null)}
-              className="w-[420px] pr-10 px-6 pt-[20px] pb-[16px] bg-transparent focus:outline-none"
+              validation={{
+                required: '비밀번호를 입력해주세요',
+              }}
             />
-            <label
-              htmlFor="password"
+
+            <button
+              type="submit"
+              disabled={!isValid}
               className={clsx(
-                'absolute left-6 transition-all duration-200 pointer-events-none font-pretendard',
-                {
-                  'text-xs text-black top-[6px]':
-                    focusedField === 'password' || password,
-                  'text-lg text-black top-[16px]': !(
-                    focusedField === 'password' || password
-                  ),
-                },
+                'text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl',
+                isValid
+                  ? 'bg-[#003D00] hover:bg-green-600'
+                  : 'bg-[#7A9A7A] cursor-not-allowed',
               )}
             >
-              비밀번호
-            </label>
-          </div>
-          {errors.password && (
-            <p className="w-full text-left mt-2 text-red-500 text-xs">
-              - 비밀번호를 입력해주세요
-            </p>
-          )}
-
-          <button
-            type="submit"
-            className="bg-[#003D00] text-white rounded-xl p-4 my-4 w-[470px] hover:bg-green-600 transition-colors duration-200 text-2xl "
-          >
-            로그인
-          </button>
-        </form>
+              로그인
+            </button>
+          </form>
+        </FormProvider>
 
         <hr className="w-[470px] border border-[#419341]" />
 
         <div className="relative w-[470px] mt-4">
           <AnimatePresence>
-            {!username && !password && !focusedField && (
+            {!username && !password && (
               <motion.div
                 initial={{ opacity: 0, y: -10, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}

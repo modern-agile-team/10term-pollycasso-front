@@ -1,73 +1,38 @@
-import type { ComponentProps } from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
 
-export interface ButtonProps extends ComponentProps<'button'> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'small' | 'medium' | 'large';
-  textColor?: 'white' | 'black' | 'gray';
-  bgColor?: 'blue' | 'red' | 'green' | 'transparent';
-  children: React.ReactNode;
+type ButtonVariant = 'primary' | 'kakao' | 'google';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  leftIcon?: ReactNode;
+  variant?: ButtonVariant;
 }
 
-const Button = ({
+const variantStyles: Record<ButtonVariant, string> = {
+  primary: 'bg-blue-500 text-white hover:bg-blue-600',
+  kakao: 'bg-[#FEE500] text-black hover:brightness-95',
+  google: 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-50',
+};
+
+export const Button = ({
   children,
-  onClick,
-  disabled = false,
-  type = 'button',
+  leftIcon,
   variant = 'primary',
-  size = 'medium',
-  textColor = 'white',
-  bgColor = 'blue',
   className,
-  ref,
-  ...rest
-}: ButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const baseClasses = 'font-bold rounded-xl transition-colors';
-
-  const variantClasses = {
-    primary: 'hover:opacity-90',
-    secondary: 'hover:opacity-80',
-    ghost: 'bg-transparent hover:bg-gray-100',
-  }[variant];
-
-  const sizeClasses = {
-    small: 'px-2 py-1 text-sm',
-    medium: 'px-4 py-2 text-base',
-    large: 'px-6 py-3 text-lg',
-  }[size];
-
-  const textColorClasses = {
-    white: 'text-white',
-    black: 'text-black',
-    gray: 'text-gray-500',
-  }[textColor];
-
-  const bgColorClasses = {
-    blue: 'bg-blue-700',
-    red: 'bg-red-500',
-    green: 'bg-green-500',
-    transparent: 'bg-transparent',
-  }[bgColor];
-
+  ...props
+}: ButtonProps) => {
   return (
     <button
-      ref={ref}
-      onClick={onClick}
-      disabled={disabled}
-      type={type}
       className={clsx(
-        baseClasses,
-        variantClasses,
-        sizeClasses,
-        textColorClasses,
-        bgColor !== 'transparent' && bgColorClasses,
+        'flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium transition-colors',
+        variantStyles[variant],
         className,
       )}
-      {...rest}
+      {...props}
     >
+      {leftIcon && <span className="w-5 h-5">{leftIcon}</span>}
       {children}
     </button>
   );
 };
-
-export default Button;
