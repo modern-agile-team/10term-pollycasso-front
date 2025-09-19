@@ -1,23 +1,25 @@
+// src/shared/ui/Button.tsx
+
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
 
-type ButtonVariant = 'primary' | 'kakao' | 'google';
+// cva 대신 사용할 타입과 스타일 객체
+type ButtonVariant = 'primary' | 'kakao' | 'google' | 'destructive';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  leftIcon?: ReactNode;
   variant?: ButtonVariant;
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-blue-500 text-white hover:bg-blue-600',
-  kakao: 'bg-[#FEE500] text-black hover:brightness-95',
-  google: 'bg-white text-gray-800 border border-gray-300 hover:bg-gray-50',
+  primary: 'bg-[#003D00] text-white hover:bg-green-600',
+  kakao: 'bg-[#FEE500] text-black hover:bg-[#FEE500]/90',
+  google: 'bg-white text-black hover:bg-gray-100',
+  destructive: 'bg-red-500 text-white hover:bg-red-600',
 };
 
 export const Button = ({
   children,
-  leftIcon,
   variant = 'primary',
   className,
   ...props
@@ -25,13 +27,12 @@ export const Button = ({
   return (
     <button
       className={clsx(
-        'flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium transition-colors',
+        'inline-flex h-14 items-center justify-center rounded-md px-4 py-4 text-lg font-pretendard transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
         variantStyles[variant],
         className,
       )}
       {...props}
     >
-      {leftIcon && <span className="w-5 h-5">{leftIcon}</span>}
       {children}
     </button>
   );
