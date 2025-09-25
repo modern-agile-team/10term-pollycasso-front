@@ -2,11 +2,10 @@ import { motion } from 'framer-motion';
 import clsx from 'clsx';
 
 interface SpinnerProps {
-  /** 스피너 아래에 표시할 메시지 */
   message?: string;
 }
 
-const Spinner = ({ message }: SpinnerProps) => {
+export const Spinner = ({ message }: SpinnerProps) => {
   return (
     <div
       className={clsx(

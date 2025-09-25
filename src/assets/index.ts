@@ -1,0 +1,7 @@
+export { default as Background } from './background.svg';
+export { default as Favicon } from './favicon.svg';
+export { default as Google } from './google.svg';
+export { default as Kakao } from './kakao.svg';
+export { default as LeafYellow } from './leaf_yellow.svg';
+export { default as LeafGreen } from './leaf_green.svg';
+export { default as Title } from './title.svg';

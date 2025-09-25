@@ -1,22 +1,19 @@
-import { LoginForm } from '@/features/auth';
-import clsx from 'clsx';
+import title from '@/assets/title.svg';
+import { AuthLayout } from '@/widgets/auth/ui/AuthLayout';
+import { LoginForm, SocialLoginButtons, SignUpLink } from '@/features/auth/ui';
 
 const LoginPage = () => {
   return (
-    <div
-      className={clsx(
-        'flex',
-        'justify-center',
-        'items-center',
-        'h-screen',
-        'bg-gray-100',
-      )}
-    >
-      <div className={clsx('bg-white', 'p-8', 'rounded', 'shadow-md')}>
-        <h1 className={clsx('text-2xl', 'font-bold', 'mb-4')}>로그인</h1>
-        <LoginForm />
-      </div>
-    </div>
+    <AuthLayout>
+      <img
+        src={title}
+        className="w-full max-w-[405px] mx-auto mt-20"
+        alt="폴리카소 로고"
+      />
+      <LoginForm />
+      <SocialLoginButtons />
+      <SignUpLink />
+    </AuthLayout>
   );
 };
 

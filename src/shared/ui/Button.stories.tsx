@@ -1,35 +1,58 @@
-import type { Meta } from '@storybook/react-vite';
-import Button from './Button';
-import type { ButtonProps } from './Button';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Button } from './Button';
 
-const meta: Meta<ButtonProps> = {
-  title: 'UI/Button',
+const meta: Meta<typeof Button> = {
+  title: 'shared/ui/Button',
   component: Button,
   tags: ['autodocs'],
   argTypes: {
-    children: { control: 'text' },
-    onClick: { action: 'clicked' },
-    disabled: { control: 'boolean' },
-    type: { control: 'radio', options: ['button', 'submit', 'reset'] },
-    variant: { control: 'radio', options: ['primary', 'secondary', 'ghost'] },
-    size: { control: 'radio', options: ['small', 'medium', 'large'] },
-    textColor: { control: 'radio', options: ['white', 'black', 'gray'] },
-    bgColor: {
-      control: 'radio',
-      options: ['blue', 'red', 'green', 'transparent'],
+    variant: {
+      control: {
+        type: 'select',
+        options: ['primary', 'kakao', 'google', 'destructive'],
+      },
     },
-  },
-  args: {
-    children: '버튼',
-    textColor: 'white',
-    bgColor: 'blue',
-  },
-};
-
-export const Default = {
-  args: {
-    children: '아주 평범한 버튼',
+    disabled: {
+      control: 'boolean',
+    },
   },
 };
 
 export default meta;
+type Story = StoryObj<typeof Button>;
+
+export const Primary: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Primary Button',
+  },
+};
+
+export const Kakao: Story = {
+  args: {
+    variant: 'kakao',
+    children: '카카오 로그인',
+  },
+};
+
+export const Google: Story = {
+  args: {
+    variant: 'google',
+    children: 'Google 로그인',
+  },
+};
+
+export const Destructive: Story = {
+  args: {
+    variant: 'destructive',
+    children: 'Destructive Button',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Disabled Button',
+    disabled: true,
+  },
+};

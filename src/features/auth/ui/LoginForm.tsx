@@ -1,27 +1,62 @@
-import { useForm } from 'react-hook-form';
-import { postLogin } from '@/features/auth/';
-import Button from '@/shared/ui/Button';
-import type { LoginCredentials } from '@/features/auth/';
+import { FormProvider } from 'react-hook-form';
+import { AuthInput, PasswordVisibilityToggle } from '@/features/auth/ui';
+import { useLogin } from '@/features/auth/model';
+import { SocialGuide } from './SocialGuide';
 
 export const LoginForm = () => {
-  const { register, handleSubmit } = useForm<LoginCredentials>();
-
-  const onSubmit = (data: LoginCredentials) => {
-    postLogin(data)
-      .then((res: any) => {
-        console.log('로그인 성공:', res);
-        // 토큰 저장, 사용자 상태 업그레이드 부분임
-      })
-      .catch((err: any) => {
-        console.error('로그인 실패:', err);
-      });
-  };
+  const {
+    methods,
+    handleSubmit,
+    username,
+    password,
+    isAnyFieldFocused,
+    setIsAnyFieldFocused,
+    showPassword,
+    setShowPassword,
+    onSubmit,
+  } = useLogin();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('email')} type="email" placeholder="이메일" />
-      <input {...register('password')} type="password" placeholder="비밀번호" />
-      <Button type="submit">로그인</Button>
-    </form>
+    <div className="w-[470px] flex flex-col items-center">
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-2">
+          <AuthInput
+            name="username"
+            label="아이디"
+            showValidationIcon
+            onFocus={() => setIsAnyFieldFocused(true)}
+            onBlur={() => setIsAnyFieldFocused(false)}
+          />
+
+          <AuthInput
+            name="password"
+            label="비밀번호"
+            type={showPassword ? 'text' : 'password'}
+            showValidationIcon
+            onFocus={() => setIsAnyFieldFocused(true)}
+            onBlur={() => setIsAnyFieldFocused(false)}
+            rightAddon={
+              <PasswordVisibilityToggle
+                isShown={showPassword}
+                onToggle={() => setShowPassword((prev) => !prev)}
+              />
+            }
+          />
+
+          <button
+            type="submit"
+            className="text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl bg-[#003D00] hover:bg-green-600"
+          >
+            로그인
+          </button>
+        </form>
+      </FormProvider>
+
+      <hr className="w-full border border-[#419341]" />
+
+      <div className="relative w-full h-10">
+        <SocialGuide visible={!username && !password && !isAnyFieldFocused} />
+      </div>
+    </div>
   );
 };

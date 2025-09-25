@@ -1,2 +1,3 @@
 export * from './LoginPage';
-export * from './SamplePage';
+export * from './SignUpPage';
+export * from './WelcomePage';

@@ -1,73 +1,39 @@
-import type { ComponentProps } from 'react';
+// src/shared/ui/Button.tsx
+
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
 
-export interface ButtonProps extends ComponentProps<'button'> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'small' | 'medium' | 'large';
-  textColor?: 'white' | 'black' | 'gray';
-  bgColor?: 'blue' | 'red' | 'green' | 'transparent';
-  children: React.ReactNode;
+// cva 대신 사용할 타입과 스타일 객체
+type ButtonVariant = 'primary' | 'kakao' | 'google' | 'destructive';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  variant?: ButtonVariant;
 }
 
-const Button = ({
+const variantStyles: Record<ButtonVariant, string> = {
+  primary: 'bg-[#003D00] text-white hover:bg-green-600',
+  kakao: 'bg-[#FEE500] text-black hover:bg-[#FEE500]/90',
+  google: 'bg-white text-black hover:bg-gray-100',
+  destructive: 'bg-red-500 text-white hover:bg-red-600',
+};
+
+export const Button = ({
   children,
-  onClick,
-  disabled = false,
-  type = 'button',
   variant = 'primary',
-  size = 'medium',
-  textColor = 'white',
-  bgColor = 'blue',
   className,
-  ref,
-  ...rest
-}: ButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
-  const baseClasses = 'font-bold rounded-xl transition-colors';
-
-  const variantClasses = {
-    primary: 'hover:opacity-90',
-    secondary: 'hover:opacity-80',
-    ghost: 'bg-transparent hover:bg-gray-100',
-  }[variant];
-
-  const sizeClasses = {
-    small: 'px-2 py-1 text-sm',
-    medium: 'px-4 py-2 text-base',
-    large: 'px-6 py-3 text-lg',
-  }[size];
-
-  const textColorClasses = {
-    white: 'text-white',
-    black: 'text-black',
-    gray: 'text-gray-500',
-  }[textColor];
-
-  const bgColorClasses = {
-    blue: 'bg-blue-700',
-    red: 'bg-red-500',
-    green: 'bg-green-500',
-    transparent: 'bg-transparent',
-  }[bgColor];
-
+  ...props
+}: ButtonProps) => {
   return (
     <button
-      ref={ref}
-      onClick={onClick}
-      disabled={disabled}
-      type={type}
       className={clsx(
-        baseClasses,
-        variantClasses,
-        sizeClasses,
-        textColorClasses,
-        bgColor !== 'transparent' && bgColorClasses,
+        'inline-flex h-14 items-center justify-center rounded-md px-4 py-4 text-lg font-pretendard transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+        variantStyles[variant],
         className,
       )}
-      {...rest}
+      {...props}
     >
       {children}
     </button>
   );
 };
-
-export default Button;
