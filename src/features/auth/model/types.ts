@@ -9,7 +9,6 @@ export type LoginResponse = LoginSuccessResponse | LoginFailureResponse;
 
 export interface LoginSuccessResponse {
   accessToken: string;
-  refreshToken: string;
 }
 
 export interface LoginFailureResponse {
@@ -28,7 +27,6 @@ export type SignupResponse = SignupSuccessResponse | SignupFailureResponse;
 
 export interface SignupSuccessResponse {
   accessToken: string;
-  refreshToken: string;
 }
 
 export interface SignupFailureResponse {
@@ -40,11 +38,6 @@ export interface SignupFailureResponse {
 export interface AuthState {
   user: User | null;
   accessToken: string | null;
-  refreshToken: string | null;
-  setAuth: (data: {
-    user: User;
-    accessToken: string;
-    refreshToken: string;
-  }) => void;
+  setAuth: (data: { user: User; accessToken: string }) => void;
   clearAuth: () => void;
 }
