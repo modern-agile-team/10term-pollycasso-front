@@ -4,10 +4,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/features/auth/lib';
 import type { LoginFormValues } from '@/features/auth/lib';
-import { useAuthStore } from '@/features/auth/model';
+import { useAuthStore, type LoginFailureResponse } from '@/features/auth/model';
 import { parseAccessToken } from '@/shared/lib/jwt';
 import { useMutation } from '@tanstack/react-query';
 import { authQueries } from '@/features/auth/queries/authQueries';
+import type { AxiosError } from 'axios';
 
 export const useLogin = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export const useLogin = () => {
 
   const { mutate: login, isPending } = useMutation({
     ...authQueries.login(),
+
     onSuccess: (result) => {
       if (!('accessToken' in result)) {
         setErrorMessage(result.message ?? '로그인에 실패했습니다.');
@@ -47,7 +49,7 @@ export const useLogin = () => {
       setErrorMessage(null);
       navigate('/welcome');
     },
-    onError: (err: any) => {
+    onError: (err: AxiosError<LoginFailureResponse>) => {
       setErrorMessage(err.response?.data?.message ?? '로그인에 실패했습니다.');
     },
   });

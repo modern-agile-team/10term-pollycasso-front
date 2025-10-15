@@ -8,6 +8,8 @@ import { useAuthStore } from '@/features/auth/model/useAuthStore';
 import { parseAccessToken } from '@/shared/lib/jwt';
 import { useMutation } from '@tanstack/react-query';
 import { authQueries } from '@/features/auth/queries/authQueries';
+import { AxiosError } from 'axios';
+import type { SignupFailureResponse } from '@/features/auth';
 
 export const useSignUp = () => {
   const navigate = useNavigate();
@@ -24,11 +26,8 @@ export const useSignUp = () => {
 
   const {
     handleSubmit,
-    watch,
     formState: { isValid },
   } = methods;
-
-  const passwordValue = watch('password');
 
   const { mutate: signup, isPending: isSigningUp } = useMutation({
     ...authQueries.signup(),
@@ -58,13 +57,16 @@ export const useSignUp = () => {
 
         setErrorMessage(null);
         navigate('/welcome');
-      } catch (err: any) {
+      } catch (err: unknown) {
+        if (err instanceof AxiosError) {
+          console.error('자동 로그인 실패:', err.response?.data?.message);
+        }
         alert('회원가입에 성공했어요! 로그인 페이지로 이동합니다.');
         navigate('/login');
       }
     },
 
-    onError: (err: any) => {
+    onError: (err: AxiosError<SignupFailureResponse>) => {
       if (
         err.response?.status === 409 &&
         Array.isArray(err.response?.data?.errors)
@@ -98,7 +100,6 @@ export const useSignUp = () => {
     methods,
     handleSubmit,
     isValid,
-    passwordValue,
     showPassword,
     setShowPassword,
     showConfirmPassword,
