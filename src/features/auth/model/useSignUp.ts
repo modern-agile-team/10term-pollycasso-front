@@ -5,6 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema } from '@/features/auth/lib';
 import type { SignUpFormValues } from '@/features/auth/lib';
 import { useAuthStore } from '@/features/auth/model/useAuthStore';
+import { parseAccessToken } from '@/shared/lib/jwt';
+import { useMutation } from '@tanstack/react-query';
+import { authQueries } from '@/features/auth/queries/authQueries';
 
 export const useSignUp = () => {
   const navigate = useNavigate();
@@ -27,46 +30,68 @@ export const useSignUp = () => {
 
   const passwordValue = watch('password');
 
-  const onSubmit = async (data: {
+  const { mutate: signup, isPending: isSigningUp } = useMutation({
+    ...authQueries.signup(),
+
+    onSuccess: async (_, form) => {
+      try {
+        const loginResult = await authQueries.login().mutationFn({
+          username: form.username,
+          password: form.password,
+        });
+
+        if (!('accessToken' in loginResult)) {
+          setErrorMessage('로그인에 실패했습니다.');
+          return;
+        }
+
+        const decoded = parseAccessToken(loginResult.accessToken);
+
+        setAuth({
+          user: {
+            id: decoded.sub,
+            nickname: decoded.nickname,
+          },
+          accessToken: loginResult.accessToken,
+          refreshToken: loginResult.refreshToken,
+        });
+
+        setErrorMessage(null);
+        navigate('/welcome');
+      } catch (err: any) {
+        alert('회원가입에 성공했어요! 로그인 페이지로 이동합니다.');
+        navigate('/login');
+      }
+    },
+
+    onError: (err: any) => {
+      if (
+        err.response?.status === 409 &&
+        Array.isArray(err.response?.data?.errors)
+      ) {
+        err.response.data.errors.forEach(
+          (e: { field: string; reason: string }) => {
+            methods.setError(e.field as keyof typeof methods.formState.errors, {
+              type: 'manual',
+              message: e.reason,
+            });
+          },
+        );
+        return;
+      }
+
+      setErrorMessage(
+        err.response?.data?.message ?? '회원가입에 실패했습니다.',
+      );
+    },
+  });
+
+  const onSubmit = (form: {
     username: string;
     nickname: string;
     password: string;
   }) => {
-    const res = await fetch('/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    if (res.status === 500) {
-      const error = await res.json();
-      alert(error.message);
-      return;
-    }
-
-    if (res.status === 409) {
-      const error = await res.json();
-
-      error.errors.forEach((err: { field: string; reason: string }) => {
-        methods.setError(err.field as keyof typeof methods.formState.errors, {
-          type: 'manual',
-          message: err.reason,
-        });
-      });
-
-      return;
-    }
-
-    const result = await res.json();
-
-    setAuth({
-      user: result.user,
-      accessToken: result.accessToken,
-      refreshToken: result.refreshToken,
-    });
-
-    setErrorMessage(null);
-    navigate('/welcome');
+    signup(form);
   };
 
   return {
@@ -78,6 +103,8 @@ export const useSignUp = () => {
     setShowPassword,
     showConfirmPassword,
     setShowConfirmPassword,
+    isSigningUp,
+    errorMessage,
     onSubmit,
   };
 };

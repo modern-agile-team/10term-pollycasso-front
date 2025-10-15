@@ -16,6 +16,7 @@ export const LoginForm = () => {
     setShowPassword,
     errorMessage,
     onSubmit,
+    isPending,
   } = useLogin();
 
   return (
@@ -46,9 +47,14 @@ export const LoginForm = () => {
           {errorMessage && <ErrorMessage message={errorMessage} />}
           <button
             type="submit"
-            className="text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl bg-[#003D00] hover:bg-green-600"
+            disabled={isPending}
+            className={`text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl ${
+              isPending
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-[#003D00] hover:bg-green-600'
+            }`}
           >
-            로그인
+            {isPending ? '로그인 중...' : '로그인'}
           </button>
         </form>
       </FormProvider>

@@ -14,6 +14,8 @@ export const SignUpForm = () => {
     showConfirmPassword,
     setShowConfirmPassword,
     onSubmit,
+    isSigningUp,
+    errorMessage,
   } = useSignUp();
 
   return (
@@ -23,7 +25,6 @@ export const SignUpForm = () => {
         className="w-[470px] flex flex-col items-center"
       >
         <AuthInput name="username" label="아이디" showValidationIcon />
-
         <AuthInput name="nickname" label="닉네임" showValidationIcon />
 
         <AuthInput
@@ -52,20 +53,22 @@ export const SignUpForm = () => {
           }
         />
 
+        {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
+
         <hr className="mt-7 mb-6 w-[450px] border border-[#419341]" />
 
         <button
           type="submit"
-          disabled={!isValid}
+          disabled={!isValid || isSigningUp}
           className={clsx(
             'text-white rounded-xl p-4 mb-8 w-[450px] h-[80px] transition-colors duration-200 text-2xl',
             {
-              'bg-[#003D00] hover:bg-green-600': isValid,
-              'bg-[#7A917A] cursor-not-allowed': !isValid,
+              'bg-[#003D00] hover:bg-green-600': isValid && !isSigningUp,
+              'bg-[#7A917A] cursor-not-allowed': !isValid || isSigningUp,
             },
           )}
         >
-          회원가입
+          {isSigningUp ? '회원가입 중...' : '회원가입'}
         </button>
       </form>
     </FormProvider>

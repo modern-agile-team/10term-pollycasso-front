@@ -5,6 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/features/auth/lib';
 import type { LoginFormValues } from '@/features/auth/lib';
 import { useAuthStore } from '@/features/auth/model';
+import { parseAccessToken } from '@/shared/lib/jwt';
+import { useMutation } from '@tanstack/react-query';
+import { authQueries } from '@/features/auth/queries/authQueries';
 
 export const useLogin = () => {
   const navigate = useNavigate();
@@ -23,29 +26,34 @@ export const useLogin = () => {
   const username = watch('username');
   const password = watch('password');
 
-  const onSubmit = async (data: { username: string; password: string }) => {
-    const res = await fetch('/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+  const { mutate: login, isPending } = useMutation({
+    ...authQueries.login(),
+    onSuccess: (result) => {
+      if (!('accessToken' in result)) {
+        setErrorMessage(result.message ?? '로그인에 실패했습니다.');
+        return;
+      }
 
-    if (!res.ok) {
-      const error = await res.json();
-      setErrorMessage(error.message);
-      return;
-    }
+      const decoded = parseAccessToken(result.accessToken);
+      setAuth({
+        user: {
+          id: decoded.sub,
+          nickname: decoded.nickname,
+        },
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      });
 
-    const result = await res.json();
+      setErrorMessage(null);
+      navigate('/welcome');
+    },
+    onError: (err: any) => {
+      setErrorMessage(err.response?.data?.message ?? '로그인에 실패했습니다.');
+    },
+  });
 
-    setAuth({
-      user: result.user,
-      accessToken: result.accessToken,
-      refreshToken: result.refreshToken,
-    });
-
-    setErrorMessage(null);
-    navigate('/welcome');
+  const onSubmit = (form: { username: string; password: string }) => {
+    login(form);
   };
 
   return {
@@ -58,6 +66,7 @@ export const useLogin = () => {
     showPassword,
     setShowPassword,
     errorMessage,
+    isPending,
     onSubmit,
   };
 };
