@@ -1,5 +1,9 @@
 import { http, HttpResponse } from 'msw';
 
+function encode(obj: object) {
+  return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+}
+
 const USERS = [
   {
     id: 'id-1',
@@ -25,7 +29,7 @@ export const authHandlers = [
     if (username === 'hackeruser1') {
       return HttpResponse.json(
         {
-          code: '500',
+          code: 500,
           message: '서버에 알 수 없는 오류가 발생했습니다.',
           errors: [],
         },
@@ -40,7 +44,7 @@ export const authHandlers = [
     if (!user) {
       return HttpResponse.json(
         {
-          code: 'AUTHENTICATION_FAILED',
+          code: 401,
           message: '아이디 또는 비밀번호가 일치하지 않습니다',
           errors: [],
         },
@@ -48,15 +52,15 @@ export const authHandlers = [
       );
     }
 
+    const header = encode({ alg: 'HS256', typ: 'JWT' });
+    const payload = encode({ sub: user.id, nickname: user.nickname });
+    const signature = 'mock-signature';
+    const fakeJwt = `${header}.${payload}.${signature}`;
+
     return HttpResponse.json(
       {
-        accessToken: 'mock-access-token-12345',
-        refreshToken: 'mock-refresh-token-67890',
-        user: {
-          id: 'user-1',
-          username: user.username,
-          nickname: user.nickname,
-        },
+        accessToken: fakeJwt,
+        refreshToken: 'mock-refresh-token',
       },
       { status: 200 },
     );
@@ -105,6 +109,14 @@ export const authHandlers = [
         { status: 409 },
       );
     }
+
+    const newUser = {
+      id: `user-${USERS.length + 1}`,
+      username,
+      nickname,
+      password,
+    };
+    USERS.push(newUser);
 
     return HttpResponse.json(
       {
