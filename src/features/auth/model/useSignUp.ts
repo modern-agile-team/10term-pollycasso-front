@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { authQueries } from '@/features/auth/queries/authQueries';
 import { AxiosError } from 'axios';
 import type { SignupFailureResponse } from '@/features/auth';
+import { AUTH_MESSAGES } from '@/features/auth/constants';
 
 export const useSignUp = () => {
   const navigate = useNavigate();
@@ -20,8 +21,7 @@ export const useSignUp = () => {
 
   const methods = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
+    mode: 'onChange',
   });
 
   const {
@@ -66,24 +66,29 @@ export const useSignUp = () => {
     },
 
     onError: (err: AxiosError<SignupFailureResponse>) => {
-      if (
-        err.response?.status === 409 &&
-        Array.isArray(err.response?.data?.errors)
-      ) {
-        err.response.data.errors.forEach(
+      if (err.response?.status === 409) {
+        err.response.data.errors?.forEach(
           (e: { field: string; reason: string }) => {
-            methods.setError(e.field as keyof typeof methods.formState.errors, {
-              type: 'manual',
-              message: e.reason,
-            });
+            let clientMessage: string | undefined;
+
+            if (e.field === 'username') {
+              clientMessage = AUTH_MESSAGES.USERNAME_DUPLICATE;
+            } else if (e.field === 'nickname') {
+              clientMessage = AUTH_MESSAGES.NICKNAME_DUPLICATE;
+            }
+
+            if (clientMessage) {
+              methods.setError(e.field as any, {
+                type: 'manual',
+                message: clientMessage,
+              });
+            }
           },
         );
         return;
       }
 
-      setErrorMessage(
-        err.response?.data?.message ?? '회원가입에 실패했습니다.',
-      );
+      setErrorMessage(AUTH_MESSAGES.SIGNUP_GENERAL_FAILURE);
     },
   });
 
