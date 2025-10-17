@@ -43,7 +43,6 @@ export const useLogin = () => {
           nickname: decoded.nickname,
         },
         accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
       });
 
       setErrorMessage(null);

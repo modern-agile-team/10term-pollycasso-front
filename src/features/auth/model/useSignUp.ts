@@ -52,7 +52,6 @@ export const useSignUp = () => {
             nickname: decoded.nickname,
           },
           accessToken: loginResult.accessToken,
-          refreshToken: loginResult.refreshToken,
         });
 
         setErrorMessage(null);
@@ -88,12 +87,9 @@ export const useSignUp = () => {
     },
   });
 
-  const onSubmit = (form: {
-    username: string;
-    nickname: string;
-    password: string;
-  }) => {
-    signup(form);
+  const onSubmit = (formValues: SignUpFormValues) => {
+    const { confirmPassword, ...payload } = formValues;
+    signup(payload);
   };
 
   return {
