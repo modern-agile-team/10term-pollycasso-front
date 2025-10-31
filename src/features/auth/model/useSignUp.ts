@@ -43,7 +43,9 @@ export const useSignUp = () => {
 
     onSuccess: async (_, form) => {
       try {
-        const loginResult = await authQueries.login().mutationFn({
+        const { mutationFn: loginRequest } = authQueries.login();
+
+        const loginResult = await loginRequest!({
           username: form.username,
           password: form.password,
         });
