@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { mockChannels, mockFriends } from '../constants/mainData';
 import type { ChatMessage, Friend } from './types';
+import { mockChannels, mockFriends } from '@/features/main/constants/rooms';
 
 export const useChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);

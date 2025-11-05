@@ -42,7 +42,6 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
     },
   });
 
-  // ✅ 랜덤 방 제목
   useEffect(() => {
     const randomTitle =
       titlePresets[Math.floor(Math.random() * titlePresets.length)];
@@ -50,7 +49,6 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
     form.setValue('name', randomTitle);
   }, []);
 
-  // allowed players
   const allowedPlayers = gameMode === 'TEAM' ? [4, 6] : [3, 4, 5, 6];
   const isMin = maxPlayers === allowedPlayers[0];
   const isMax = maxPlayers === allowedPlayers[allowedPlayers.length - 1];
