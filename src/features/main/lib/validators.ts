@@ -1,8 +1,4 @@
 import { z } from 'zod';
-
-export const RoomModeEnum = z.enum(['SOLO', 'TEAM']);
-
-export const createRoomSchema = z
   .object({
     name: z
       .string()
