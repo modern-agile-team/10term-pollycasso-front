@@ -1,5 +1,7 @@
 export type GameMode = 'SOLO' | 'TEAM';
 
+export type RoomStatus = 'WAITING' | 'IN_PROGRESS';
+
 export interface Room {
   id: number;
   name: string;
@@ -7,16 +9,13 @@ export interface Room {
   maxPlayers: number;
   currentPlayers: number;
   isPrivate: boolean;
-  status: 'WAITING' | 'IN_PROGRESS';
+  status: RoomStatus;
 }
 
-export interface Friend {
-  id: number;
+export interface CreateRoomPayload {
   name: string;
-}
-
-export interface ChatMessage {
-  channel: '전체' | '친구';
-  text: string;
-  targetNickname?: string;
+  mode: GameMode;
+  maxPlayers: number;
+  isPrivate: boolean;
+  password?: string;
 }

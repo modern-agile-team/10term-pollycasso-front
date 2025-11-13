@@ -1,5 +1,5 @@
 import { RoomCard } from './RoomCard';
-import type { Room } from '@/features/main/model/types';
+import type { Room } from '@/entities/room';
 
 interface Props {
   rooms: Room[];

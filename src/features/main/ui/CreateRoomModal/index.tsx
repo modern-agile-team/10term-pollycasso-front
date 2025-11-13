@@ -7,7 +7,7 @@ import {
   createRoomSchema,
   type CreateRoomForm,
 } from '@/features/main/lib/validators';
-import type { GameMode } from '@/features/main/model/types';
+import type { GameMode } from '@/entities/room';
 import { RoomTitleInput } from './RoomTitleInput';
 import { GameModeSelector } from './GameModeSelector';
 import { MaxPlayerSelector } from './MaxPlayerSelector';

@@ -2,8 +2,11 @@ import {
   EllipsisVerticalIcon,
   LockClosedIcon,
 } from '@heroicons/react/24/outline';
-import type { Room } from '@/features/main/model/types';
-import { ROOM_MODE, ROOM_STATUS } from '@/features/main/constants/room';
+import type { Room } from '@/entities/room';
+import {
+  ROOM_MODE,
+  ROOM_STATUS,
+} from '@/entities/room/constants/roomConstants';
 
 interface RoomCardProps {
   room: Room;

@@ -8,7 +8,7 @@ import {
   Chat,
   CreateRoomModal,
 } from '@/features/main/ui';
-import { mockRooms } from '@/features/main/constants/rooms';
+import { mockRooms } from '@/mocks/room.mock';
 
 const MainPage = () => {
   const { clearAuth } = useAuthStore();
