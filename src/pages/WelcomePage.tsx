@@ -1,17 +1,27 @@
 import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/features/auth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     if (!user) {
       navigate('/login');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLeaving(true); // 나가기 애니메이션 트리거
+      setTimeout(() => navigate('/'), 500); // 애니메이션 끝난 뒤 이동
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]);
 
   const goToLoginPage = () => {
     navigate('/login');
@@ -21,10 +31,15 @@ const WelcomePage = () => {
     <div className="flex flex-col items-center justify-center h-screen">
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={
+          leaving
+            ? { opacity: 0, scale: 3 } // 나갈 때 살짝 줄어들며 사라짐
+            : { opacity: 1, scale: 1 } // 들어올 때 상큼하게 등장
+        }
         transition={{
-          duration: 0.4,
-          scale: { type: 'spring', visualDuration: 0.4, bounce: 0.5 },
+          duration: 0.5,
+          ease: 'easeInOut',
+          scale: { type: 'spring', bounce: 0.4 },
         }}
         onClick={goToLoginPage}
         className="w-[250px] h-[250px] bg-white rounded-full shadow-md cursor-pointer"
