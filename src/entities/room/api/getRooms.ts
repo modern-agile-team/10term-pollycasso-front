@@ -2,7 +2,7 @@ import type { Room, RoomFilters } from '@/entities/room/model';
 import { instance } from '@/shared';
 
 interface GetRoomsResponse {
-  data: Room[];
+  rooms: Room[];
   hasNextPage: boolean;
   nextCursor: number | null;
 }
