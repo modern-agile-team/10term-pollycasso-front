@@ -36,7 +36,10 @@ export const useLogin = () => {
         return;
       }
 
+      localStorage.setItem('accessToken', result.accessToken);
+
       const decoded = parseAccessToken(result.accessToken);
+
       setAuth({
         user: {
           id: decoded.sub,
