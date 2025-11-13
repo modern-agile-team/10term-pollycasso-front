@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { SideBar } from '@/features/main/ui/Rooms/SideBar';
 import { MainHeader, RoomList } from '@/features/main/ui/Rooms';
 import { Chat } from '@/features/main/ui/Chat';
-import { CreateRoomModal } from '@/features/main/ui/CreateRooms';
+import { CreateRoomModal } from '@/features/main/ui/CreateRoomModal';
 import { mockRooms } from '@/features/main/constants/rooms';
 
 const MainPage = () => {

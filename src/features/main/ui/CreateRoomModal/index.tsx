@@ -8,14 +8,12 @@ import {
   type CreateRoomForm,
 } from '@/features/main/lib/validators';
 import type { GameMode } from '@/features/main/model/types';
-import {
-  RoomTitleInput,
-  GameModeSelector,
-  MaxPlayerSelector,
-  VisibilitySelector,
-  PasswordInput,
-  CreateConfirmButton,
-} from './';
+import { RoomTitleInput } from './RoomTitleInput';
+import { GameModeSelector } from './GameModeSelector';
+import { MaxPlayerSelector } from './MaxPlayerSelector';
+import { VisibilitySelector } from './VisibilitySelector';
+import { PasswordInput } from './PasswordInput';
+import { CreateConfirmButton } from './CreateConfirmButton';
 import { TITLE_PRESETS } from '@/features/main/constants/titles';
 
 interface CreateRoomModalProps {

@@ -1,3 +1,3 @@
 export * from './Rooms';
 export * from './Chat';
-export * from './CreateRooms';
+export * from './CreateRoomModal';
