@@ -9,13 +9,9 @@ export const createRoomSchema = z
       .trim()
       .min(1, '방 제목을 입력해주세요.')
       .max(15, '최대 15자까지 입력 가능합니다.'),
-
     mode: RoomModeEnum,
-
     maxPlayers: z.number(),
-
     isPrivate: z.boolean(),
-
     password: z.string().optional(),
   })
   .superRefine((data, ctx) => {
