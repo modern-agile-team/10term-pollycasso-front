@@ -24,6 +24,23 @@ export const createRoomSchema = z
         });
       }
     }
+    if (data.mode === 'SOLO') {
+      if (data.maxPlayers < 3 || data.maxPlayers > 6) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['maxPlayers'],
+          message: '개인전 인원은 3명에서 6명까지만 선택 가능합니다.',
+        });
+      }
+    } else if (data.mode === 'TEAM') {
+      if (data.maxPlayers !== 4 && data.maxPlayers !== 6) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['maxPlayers'],
+          message: '팀전 인원은 4명 또는 6명만 선택 가능합니다.',
+        });
+      }
+    }
   });
 
 export type CreateRoomForm = z.infer<typeof createRoomSchema>;

@@ -19,3 +19,10 @@ export interface CreateRoomPayload {
   isPrivate: boolean;
   password?: string;
 }
+
+export interface RoomFilters {
+  name?: string;
+  mode?: GameMode;
+  isPrivate?: boolean;
+  status?: RoomStatus;
+}
