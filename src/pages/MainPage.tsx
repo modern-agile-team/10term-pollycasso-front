@@ -8,8 +8,10 @@ import {
 } from '@/features/main/ui';
 import { useCreateRoomModalStore } from '@/features/main/model/useCreateRoomModalStore';
 import { useSearchStore } from '@/features/main/model/useSearchStore';
+import { useNavigate } from 'react-router';
 
 const MainPage = () => {
+  const navigate = useNavigate();
   const { clearAuth } = useAuthStore();
   const { searchQuery, setSearchQuery, setCommitSearch } = useSearchStore();
 
@@ -22,6 +24,9 @@ const MainPage = () => {
 
   const handleLogout = () => clearAuth();
   const handleSearch = () => setCommitSearch(searchQuery.trim());
+  const handleEnterRoom = (id: number) => {
+    navigate(`/rooms/${id}`);
+  };
 
   return (
     <div className="flex items-center justify-center min-w-[1500px] mx-auto min-h-screen gap-x-10 font-ssrm font-bold">
@@ -45,7 +50,7 @@ const MainPage = () => {
 
         {/* 구현 후 수정 */}
         <RoomList
-          onEnter={(id) => console.log(`방 입장: ${id}`)}
+          onEnter={handleEnterRoom}
           onMenu={(id) => console.log(`메뉴 클릭: ${id}`)}
         />
 
