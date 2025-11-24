@@ -2,27 +2,21 @@ import {
   ROOM_FILTER_COLORS,
   ROOM_FILTERS,
 } from '@/features/main/constants/filters';
-import type { RoomFilter } from '@/features/main/constants/filters';
+import { useRoomFilterStore } from '@/features/main/model/useRoomFilterStore';
 
-interface RoomFilterTabsProps {
-  currentFilter: RoomFilter;
-  onChange: (filter: RoomFilter) => void;
-}
+export const RoomFilterTabs = () => {
+  const { selectedFilter, setFilter } = useRoomFilterStore();
 
-export const RoomFilterTabs = ({
-  currentFilter,
-  onChange,
-}: RoomFilterTabsProps) => {
   return (
     <div className="flex ml-5 p-1 gap-x-1 w-[305px] bg-white/20 rounded-xl">
       {ROOM_FILTERS.map((filter) => {
-        const isAll = currentFilter === '전체';
-        const isActive = currentFilter === filter;
+        const isAll = selectedFilter === '전체';
+        const isActive = selectedFilter === filter;
 
         return (
           <button
             key={filter}
-            onClick={() => onChange(filter)}
+            onClick={() => setFilter(filter)}
             className={`px-4 rounded-lg text-white text-2xl font-bold 
                 ${
                   isAll

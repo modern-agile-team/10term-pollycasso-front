@@ -1,4 +1,3 @@
-import type { RoomFilter } from '@/features/main/constants/filters';
 import { RoomFilterTabs } from './RoomFilterTabs';
 import { SearchBar } from './SearchBar';
 import { NotificationButton } from './NotificationButton';
@@ -8,8 +7,6 @@ interface MainHeaderProps {
   searchQuery: string;
   onChangeSearch: (v: string) => void;
   onSearch: () => void;
-  roomFilter: RoomFilter;
-  onChangeFilter: (v: RoomFilter) => void;
   onClickCreateRoom: () => void;
 }
 
@@ -17,8 +14,6 @@ export const MainHeader = ({
   searchQuery,
   onChangeSearch,
   onSearch,
-  roomFilter,
-  onChangeFilter,
   onClickCreateRoom,
 }: MainHeaderProps) => {
   return (
@@ -28,7 +23,7 @@ export const MainHeader = ({
         onChange={onChangeSearch}
         onSearch={onSearch}
       />
-      <RoomFilterTabs currentFilter={roomFilter} onChange={onChangeFilter} />
+      <RoomFilterTabs />
       <NotificationButton />
       <CreateRoomButton onClick={onClickCreateRoom} />
     </div>

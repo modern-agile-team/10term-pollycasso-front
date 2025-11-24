@@ -1,33 +1,28 @@
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import title from '@/assets/title.svg';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   createRoomSchema,
   type CreateRoomForm,
 } from '@/features/main/lib/validators';
-import type { GameMode } from '@/features/main/model/types';
+import type { GameMode, Room } from '@/entities/room';
 import { RoomTitleInput } from './RoomTitleInput';
 import { GameModeSelector } from './GameModeSelector';
 import { MaxPlayerSelector } from './MaxPlayerSelector';
 import { VisibilitySelector } from './VisibilitySelector';
 import { PasswordInput } from './PasswordInput';
-import { CreateConfirmButton } from './CreateConfirmButton';
 import { TITLE_PRESETS } from '@/features/main/constants/titles';
 
-interface CreateRoomModalProps {
-  onClose: () => void;
-}
+import { useCreateRoomModalStore } from '@/features/main/model/useCreateRoomModalStore';
+import { useCreateRoomMutation } from '@/features/main/model/useCreateRoomMutation';
+import { useNavigate } from 'react-router';
 
-export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
-  const [roomTitle, setRoomTitle] = useState('');
-  const [gameMode, setGameMode] = useState<GameMode | null>(null);
-  const [maxPlayers, setMaxPlayers] = useState(3);
-  const [visibility, setVisibility] = useState<'public' | 'private' | null>(
-    null,
-  );
-  const [password, setPassword] = useState('');
+export const CreateRoomModal = () => {
+  const navigate = useNavigate();
+  const { isOpen, close } = useCreateRoomModalStore();
+  const { mutate, isPending } = useCreateRoomMutation();
 
   const form = useForm<CreateRoomForm>({
     resolver: zodResolver(createRoomSchema),
@@ -41,35 +36,36 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
     },
   });
 
+  const { watch, setValue, handleSubmit, formState } = form;
+
+  const gameMode = watch('mode');
+  const maxPlayers = watch('maxPlayers');
+  const isPrivate = watch('isPrivate');
+  const visibility = isPrivate ? 'private' : 'public';
+  const password = watch('password');
+  const roomTitle = watch('name');
+
   useEffect(() => {
     const randomTitle =
       TITLE_PRESETS[Math.floor(Math.random() * TITLE_PRESETS.length)];
-    setRoomTitle(randomTitle);
-    form.setValue('name', randomTitle);
-  }, []);
+    setValue('name', randomTitle);
+  }, [setValue]);
 
   const allowedPlayers = gameMode === 'TEAM' ? [4, 6] : [3, 4, 5, 6];
   const isMin = maxPlayers === allowedPlayers[0];
   const isMax = maxPlayers === allowedPlayers[allowedPlayers.length - 1];
 
   const selectGameMode = (mode: GameMode) => {
-    setGameMode(mode);
-    form.setValue('mode', mode.toUpperCase() as GameMode);
-    form.trigger('mode');
-
+    setValue('mode', mode, { shouldValidate: true });
     const newPlayers = mode === 'TEAM' ? 4 : 3;
-    setMaxPlayers(newPlayers);
-    form.setValue('maxPlayers', newPlayers);
-    form.trigger('maxPlayers');
+    setValue('maxPlayers', newPlayers, { shouldValidate: true });
   };
 
   const increaseMaxPlayers = () => {
     const idx = allowedPlayers.indexOf(maxPlayers);
     if (idx < allowedPlayers.length - 1) {
       const v = allowedPlayers[idx + 1];
-      setMaxPlayers(v);
-      form.setValue('maxPlayers', v);
-      form.trigger('maxPlayers');
+      setValue('maxPlayers', v, { shouldValidate: true });
     }
   };
 
@@ -77,36 +73,41 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
     const idx = allowedPlayers.indexOf(maxPlayers);
     if (idx > 0) {
       const v = allowedPlayers[idx - 1];
-      setMaxPlayers(v);
-      form.setValue('maxPlayers', v);
-      form.trigger('maxPlayers');
+      setValue('maxPlayers', v, { shouldValidate: true });
     }
   };
 
   const selectVisibility = (v: 'public' | 'private') => {
-    setVisibility(v);
     const isPrivate = v === 'private';
-    form.setValue('isPrivate', isPrivate);
-    form.trigger('isPrivate');
-
+    setValue('isPrivate', isPrivate, { shouldValidate: true });
     if (!isPrivate) {
-      setPassword('');
-      form.setValue('password', '');
-      form.trigger('password');
+      setValue('password', '', { shouldValidate: true });
     }
   };
 
-  const canCreate =
-    gameMode &&
-    visibility &&
-    (visibility === 'public' || password.length === 4) &&
-    form.formState.isValid;
+  const onSubmit = (data: CreateRoomForm) => {
+    if (!data.isPrivate && data.password === '') {
+      delete data.password;
+    }
+
+    mutate(data, {
+      onSuccess: (room: Room) => {
+        close();
+        navigate(`/room/${room.id}`);
+      },
+      onError: () => {
+        alert('방 생성에 실패했습니다.');
+      },
+    });
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
       <div className="relative bg-[#F2F2F2] w-[700px] p-6 rounded-2xl shadow-lg flex flex-col items-center">
         <button
-          onClick={onClose}
+          onClick={close}
           className="absolute top-4 right-4 bg-gray-300 rounded-md p-1"
         >
           <XMarkIcon className="w-7 h-7 text-white" />
@@ -114,11 +115,13 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
 
         <img src={title} alt="Title" className="w-[450px] mt-6" />
 
-        <form onSubmit={form.handleSubmit(onClose)} className="flex flex-col">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
           <RoomTitleInput
             form={form}
             roomTitle={roomTitle}
-            setRoomTitle={setRoomTitle}
+            setRoomTitle={(title) =>
+              setValue('name', title, { shouldValidate: true })
+            }
           />
 
           <div className="grid grid-cols-3 gap-x-6 mt-6 text-center text-2xl">
@@ -141,12 +144,22 @@ export const CreateRoomModal = ({ onClose }: CreateRoomModalProps) => {
 
           <PasswordInput
             visibility={visibility}
-            password={password}
-            setPassword={setPassword}
+            password={password ?? ''}
+            setPassword={(pass) =>
+              setValue('password', pass, { shouldValidate: true })
+            }
             form={form}
           />
 
-          <CreateConfirmButton canCreate={!!canCreate} />
+          <button
+            type="submit"
+            disabled={!formState.isValid || isPending}
+            className="mt-8 bg-black/80 text-white text-4xl font-bold py-4 rounded-xl
+                       hover:bg-black/70 transition
+                       disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {isPending ? '방 생성 중...' : '방 만들기'}
+          </button>
         </form>
       </div>
     </div>

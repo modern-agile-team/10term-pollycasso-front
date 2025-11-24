@@ -1,4 +1,4 @@
-import type { GameMode } from '@/features/main/model/types';
+import type { GameMode } from '@/entities/room';
 
 interface GameModeSelectorProps {
   gameMode: GameMode | null;

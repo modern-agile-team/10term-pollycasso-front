@@ -1,4 +1,4 @@
-import type { ChatMessage } from '@/features/main/model/types';
+import type { ChatMessage } from '@/entities/chat';
 
 interface MessageListProps {
   messages: ChatMessage[];

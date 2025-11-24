@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { useAuthStore } from '@/features/auth/model';
-import { useMain } from '@/features/main/model';
 import {
   SideBar,
   MainHeader,
@@ -8,20 +6,14 @@ import {
   Chat,
   CreateRoomModal,
 } from '@/features/main/ui';
-import { mockRooms } from '@/features/main/constants/rooms';
+import { useCreateRoomModalStore } from '@/features/main/model/useCreateRoomModalStore';
+import { useSearchStore } from '@/features/main/model/useSearchStore';
 
 const MainPage = () => {
   const { clearAuth } = useAuthStore();
-  const {
-    searchQuery,
-    setSearchQuery,
-    roomFilter,
-    setRoomFilter,
-    commitSearch,
-    setCommitSearch,
-  } = useMain();
+  const { searchQuery, setSearchQuery, setCommitSearch } = useSearchStore();
 
-  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
+  const { open: openCreateRoomModal } = useCreateRoomModalStore();
 
   const currentLv = 1;
   const nickname = '밥아저씨';
@@ -30,22 +22,6 @@ const MainPage = () => {
 
   const handleLogout = () => clearAuth();
   const handleSearch = () => setCommitSearch(searchQuery.trim());
-
-  const filteredRooms = mockRooms.filter((room) => {
-    const filterMatch =
-      roomFilter === '전체' ||
-      (roomFilter === '대기' && room.status === 'WAITING') ||
-      (roomFilter === '개인' && room.mode === 'SOLO') ||
-      (roomFilter === '팀' && room.mode === 'TEAM');
-
-    const search = commitSearch.trim().toLowerCase();
-    const searchMatch =
-      !search ||
-      room.name.toLowerCase().includes(search) ||
-      room.id.toString().includes(search);
-
-    return filterMatch && searchMatch;
-  });
 
   return (
     <div className="flex items-center justify-center min-w-[1500px] mx-auto min-h-screen gap-x-10 font-ssrm font-bold">
@@ -64,13 +40,11 @@ const MainPage = () => {
           searchQuery={searchQuery}
           onChangeSearch={setSearchQuery}
           onSearch={handleSearch}
-          roomFilter={roomFilter}
-          onChangeFilter={setRoomFilter}
-          onClickCreateRoom={() => setIsCreateRoomModalOpen(true)}
+          onClickCreateRoom={openCreateRoomModal}
         />
 
+        {/* 구현 후 수정 */}
         <RoomList
-          rooms={filteredRooms}
           onEnter={(id) => console.log(`방 입장: ${id}`)}
           onMenu={(id) => console.log(`메뉴 클릭: ${id}`)}
         />
@@ -78,9 +52,7 @@ const MainPage = () => {
         <Chat />
       </div>
 
-      {isCreateRoomModalOpen && (
-        <CreateRoomModal onClose={() => setIsCreateRoomModalOpen(false)} />
-      )}
+      <CreateRoomModal />
     </div>
   );
 };
