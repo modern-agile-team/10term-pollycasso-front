@@ -43,7 +43,8 @@ export class MockSocket {
       const player = this.roomState.players.find((p) => p.userId === userId);
       if (player) {
         player.isReady = !player.isReady;
-        this.trigger('gameState', this.roomState);
+        const newState = JSON.parse(JSON.stringify(this.roomState));
+        this.trigger('gameState', newState);
       }
     }
 
@@ -52,7 +53,32 @@ export class MockSocket {
       this.roomState.players = this.roomState.players.filter(
         (p) => p.userId !== targetId,
       );
-      this.trigger('gameState', this.roomState);
+      const newState = JSON.parse(JSON.stringify(this.roomState));
+      this.trigger('gameState', newState);
+    }
+
+    if (event === 'sendChat') {
+      const { message, userId } = args[0];
+
+      const sender = this.roomState.players.find((p) => p.userId === userId);
+      const nickname = sender ? sender.nickname : '알 수 없음';
+      const level = sender ? sender.level : 0;
+      const teamId = sender ? sender.teamId : null;
+
+      const newMessage = {
+        id: Date.now().toString(),
+        senderId: userId,
+        senderName: nickname,
+        content: message,
+        timestamp: new Date().toISOString(),
+        level: level,
+        teamId: teamId,
+        type: 'USER', // 'SYSTEM'이면 시스템 메시지
+      };
+
+      console.log(`[Mock Chat] ${nickname}: ${message}`);
+
+      this.trigger('chatMessage', newMessage);
     }
   }
 

@@ -16,7 +16,7 @@ const MOCK_ME: Player = {
   isConnected: true,
   teamId: 'BLUE',
   totalScore: 1200,
-  isReady: true,
+  isReady: false,
   score: 0,
   rank: null,
   expGained: null,
@@ -75,11 +75,36 @@ const MOCK_DISCONNECTED: Player = {
   newLevel: null,
 };
 
+const MOCK_BONUS: Player = {
+  userId: 'user-leaver-111',
+  nickname: '보너스',
+  level: 5,
+  outfit: [
+    'bird_green',
+    'none',
+    'none',
+    'shirt_basic',
+    'pants_short',
+    'shoes_slipper',
+    'none',
+  ],
+  isConnected: false,
+  teamId: 'BLUE',
+  totalScore: 100,
+  isReady: false,
+  score: null,
+  rank: null,
+  expGained: null,
+  coinsGained: null,
+  didLevelUp: null,
+  newLevel: null,
+};
+
 export const MOCK_ROOM_STATE: RoomState = {
   roomStatus: 'waiting',
-  hostId: 'id-1234',
+  hostId: 'user-leaver-111',
   timer: null,
-  players: [MOCK_ME, MOCK_OPPONENT, MOCK_DISCONNECTED],
+  players: [MOCK_ME, MOCK_OPPONENT, MOCK_DISCONNECTED, MOCK_BONUS],
 
   settings: {
     roomTitle: '고수만 (팀전)',
