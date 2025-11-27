@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createRoomSchema } from '@/features/main/lib/validators';
 import type { CreateRoomForm } from '@/features/main/lib/validators';
 import { TITLE_PRESETS } from '@/features/main/constants/titles';
-import type { GameMode } from '@/features/main/model/types';
+import type { GameMode } from '@/entities/room/model';
 
 export const useCreateRoomForm = () => {
   const [roomTitle, setRoomTitle] = useState('');

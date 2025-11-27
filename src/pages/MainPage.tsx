@@ -5,7 +5,7 @@ import {
   RoomList,
   CreateRoomModal,
 } from '@/features/main/ui';
-import { Chat } from '@/entities/chat/ui';
+import { MainChat } from '@/entities/chat';
 import { useCreateRoomModalStore } from '@/features/main/model/useCreateRoomModalStore';
 import { useSearchStore } from '@/features/main/model/useSearchStore';
 import { useNavigate } from 'react-router';
@@ -54,7 +54,7 @@ const MainPage = () => {
           onMenu={(id) => console.log(`메뉴 클릭: ${id}`)}
         />
 
-        <Chat />
+        <MainChat />
       </div>
 
       <CreateRoomModal />
