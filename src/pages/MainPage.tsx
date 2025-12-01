@@ -48,7 +48,7 @@ const MainPage = () => {
           onClickCreateRoom={openCreateRoomModal}
         />
 
-        {/* 구현 후 수정 */}
+        {/* TODO: 메뉴 클릭시 페이지 이동 로직 구현 */}
         <RoomList
           onEnter={handleEnterRoom}
           onMenu={(id) => console.log(`메뉴 클릭: ${id}`)}
