@@ -1,4 +1,4 @@
-import { useRoom } from '@/features/lobby/model/useRoom';
+import { useRoomUI } from '@/features/lobby/ui/useRoomUI';
 import { TeamTab } from '@/features/lobby/ui/TeamTab';
 import { RoomActionButtons } from '@/features/lobby/ui/RoomActionButtons';
 import { TeamSection } from '@/features/lobby/ui/TeamSection';
@@ -6,7 +6,8 @@ import { RoomDashboard } from '@/features/lobby/ui/RoomDashboard';
 import { Spinner } from '@/shared';
 
 const RoomPage = () => {
-  const { roomState, me, derived, actions, constants } = useRoom();
+  const { roomState, me, derived, actions, topGradient, bottomGradient } =
+    useRoomUI();
 
   if (!roomState) {
     return (
@@ -45,19 +46,19 @@ const RoomPage = () => {
 
           <div className="w-full h-full rounded-3xl bg-gray-300/40 flex flex-col overflow-hidden">
             <TeamSection
-              gradient={derived.topGradient}
+              gradient={topGradient}
               players={derived.topTeamPlayers}
               hostId={roomState.hostId}
               amIHost={derived.amIHost}
-              myUserId={constants.MY_USER_ID}
+              myUserId={me?.userId ?? ''}
               onKick={actions.handleKick}
             />
             <TeamSection
-              gradient={derived.bottomGradient}
+              gradient={bottomGradient}
               players={derived.bottomTeamPlayers}
               hostId={roomState.hostId}
               amIHost={derived.amIHost}
-              myUserId={constants.MY_USER_ID}
+              myUserId={me?.userId ?? ''}
               onKick={actions.handleKick}
             />
           </div>
