@@ -7,11 +7,12 @@ import {
   selectMe,
   selectTopBottomTeams,
 } from './roomSelectors';
-
-const MY_USER_ID = 'id-1234'; // 임시 ID
+import { useAuthStore } from '@/features/auth/model/useAuthStore';
 
 export const useRoom = () => {
   const { roomId } = useParams();
+  const { user } = useAuthStore();
+  const myUserId = user?.id;
   const [roomState, setRoomState] = useState<RoomState | null>(null);
 
   useEffect(() => {
@@ -31,12 +32,12 @@ export const useRoom = () => {
     };
   }, [roomId]);
 
-  const me = selectMe(roomState, MY_USER_ID);
+  const me = selectMe(roomState, myUserId ?? '');
   const isSolo = roomState?.settings?.gameMode === 'SOLO';
-  const amIHost = roomState?.hostId === MY_USER_ID;
+  const amIHost = roomState?.hostId === myUserId;
 
   const { topTeamId, bottomTeamId, topTeamPlayers, bottomTeamPlayers } =
-    selectTopBottomTeams(roomState, MY_USER_ID);
+    selectTopBottomTeams(roomState, myUserId ?? '');
 
   const canStartGame = selectCanStartGame(roomState);
 
@@ -46,17 +47,19 @@ export const useRoom = () => {
   };
 
   const toggleReady = () => {
-    if (!me) return;
-    getSocket().emit('toggleReady', { userId: MY_USER_ID });
+    if (!me || !myUserId) return;
+    getSocket().emit('toggleReady', { userId: myUserId });
   };
 
   const leaveRoom = () => {
-    getSocket().emit('leaveRoom', { userId: MY_USER_ID });
+    if (!myUserId) return;
+    getSocket().emit('leaveRoom', { userId: myUserId });
   };
 
   const changeTeam = (targetTeam: 'BLUE' | 'RED') => {
+    if (!myUserId) return;
     if (me?.teamId === targetTeam) return;
-    getSocket().emit('changeTeam', { userId: MY_USER_ID, teamId: targetTeam });
+    getSocket().emit('changeTeam', { userId: myUserId, teamId: targetTeam });
 
     // 낙관적 업데이트
     setRoomState((prev) => {
@@ -64,7 +67,7 @@ export const useRoom = () => {
       return {
         ...prev,
         players: prev.players.map((p) =>
-          p.userId === MY_USER_ID ? { ...p, teamId: targetTeam } : p,
+          p.userId === myUserId ? { ...p, teamId: targetTeam } : p,
         ),
       };
     });
@@ -94,7 +97,7 @@ export const useRoom = () => {
       kickUser,
     },
     constants: {
-      MY_USER_ID,
+      myUserId,
     },
   };
 };
