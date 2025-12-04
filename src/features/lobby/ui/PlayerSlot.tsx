@@ -34,7 +34,12 @@ export const PlayerSlot = ({
   const isReadyVisual = player.isReady || isHost;
 
   return (
-    <div className={cn('w-full px-4 pt-6 rounded-2xl bg-white relative group', className)}>
+    <div
+      className={cn(
+        'w-full px-4 pt-6 rounded-2xl bg-white relative group',
+        className,
+      )}
+    >
       {canKick && (
         <button
           onClick={onKick}
@@ -66,11 +71,19 @@ export const PlayerSlot = ({
         {!isHost && (
           <div className="shrink-0 ml-2">
             {player.isReady ? (
-              <span className={cn('px-2.5 py-1 rounded-full text-md font-bold text-white', 'bg-[#2ADB75]')}>
+              <span
+                className={cn(
+                  'px-2.5 py-1 rounded-full text-md font-bold text-white bg-[#2ADB75]',
+                )}
+              >
                 준비
               </span>
             ) : (
-              <span className={cn('px-2.5 py-1 rounded-full text-md font-bold', 'bg-gray-200 text-gray-500')}>
+              <span
+                className={cn(
+                  'px-2.5 py-1 rounded-full text-md font-bold bg-gray-200 text-gray-500',
+                )}
+              >
                 대기
               </span>
             )}
