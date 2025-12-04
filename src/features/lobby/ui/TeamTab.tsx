@@ -20,7 +20,12 @@ export const TeamTab = ({
   onClick,
   className,
 }: TeamTabProps) => {
-  const positionClass = position === 'top' ? 'top-[100px]' : 'bottom-[100px]';
+  const positionClassName =
+    position === 'top' ? 'top-[100px]' : 'bottom-[100px]';
+
+  const stateClassName = isMyTeam
+    ? DISABLED_STYLE
+    : cn('bg-gradient-to-b', TEAM_COLORS[teamId], ACTIVE_STYLE);
 
   return (
     <button
@@ -28,10 +33,8 @@ export const TeamTab = ({
       disabled={isMyTeam}
       className={cn(
         'absolute -left-10 w-10 py-8 rounded-l-2xl flex flex-col items-center justify-center text-lg leading-5 z-10',
-        positionClass,
-        isMyTeam ? DISABLED_STYLE : 'bg-gradient-to-b',
-        !isMyTeam && TEAM_COLORS[teamId],
-        !isMyTeam && ACTIVE_STYLE,
+        positionClassName,
+        stateClassName,
         className,
       )}
     >
