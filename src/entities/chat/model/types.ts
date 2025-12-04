@@ -1,5 +1,5 @@
 export interface Friend {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -11,5 +11,6 @@ export interface ChatMessage {
   nickname: string;
   message: string;
   channel?: Channel;
+  targetId?: string;
   targetNickname?: string;
 }
