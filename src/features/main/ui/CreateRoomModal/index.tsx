@@ -154,11 +154,11 @@ export const CreateRoomModal = () => {
           <button
             type="submit"
             disabled={!formState.isValid || isPending}
-            className="mt-8 bg-black/80 text-white text-4xl font-bold py-4 rounded-xl
-                       hover:bg-black/70 transition
+            className="mt-8 mb-4 bg-[#003D00] text-white text-3xl font-bold py-6 rounded-xl
+                       hover:scale-105 transition
                        disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {isPending ? '방 생성 중...' : '방 만들기'}
+            {isPending ? '방 생성 중...' : '방만들기'}
           </button>
         </form>
       </div>
