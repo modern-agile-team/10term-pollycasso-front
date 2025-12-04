@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import type { LeafData } from '@/shared/lib/leaf';
-import { cn } from '@/shared/lib/cn';
 
 export const Leaf = ({
   src,
@@ -15,7 +14,7 @@ export const Leaf = ({
   return (
     <motion.img
       src={src}
-      className={cn('absolute pointer-events-none will-change-transform')}
+      className="absolute pointer-events-none will-change-transform"
       style={{ width: size, height: size, top: -100, left: x }}
       initial={{ opacity: 0 }}
       animate={{

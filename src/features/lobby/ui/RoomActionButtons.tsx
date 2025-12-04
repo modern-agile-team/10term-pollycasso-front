@@ -67,7 +67,7 @@ export const RoomActionButtons = ({
         {config.text}
       </BigButton>
 
-      <BigButton onClick={onLeave} className={cn('bg-black hover:bg-black/90')}>
+      <BigButton onClick={onLeave} className="bg-black hover:bg-black/90">
         방 나가기
       </BigButton>
     </div>
