@@ -19,7 +19,6 @@ export const MessageList = ({
   showChannelTag,
 }: MessageListProps) => {
   const isEmpty = messages.length === 0;
-
   return (
     <div
       ref={messagesEndRef}
