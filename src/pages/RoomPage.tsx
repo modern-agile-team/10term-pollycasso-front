@@ -9,7 +9,7 @@ const RoomPage = () => {
   const { roomState, me, derived, actions, topGradient, bottomGradient } =
     useRoomUI();
 
-  // TODO: 방 정보 로딩을 위해 스켈레톤 애니메이션 구현 예정
+  // TODO: 스켈레톤 애니메이션 디자인 이후 적용 예정
   if (!roomState) {
     return <Spinner fixed overlay message="방 정보를 불러오는 중입니다..." />;
   }
