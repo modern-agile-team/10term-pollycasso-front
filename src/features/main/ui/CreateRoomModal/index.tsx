@@ -104,7 +104,7 @@ export const CreateRoomModal = () => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+    <div className="fixed inset-0 flex justify-center items-center bg-black/60 z-50">
       <div className="relative bg-[#F2F2F2] w-[700px] p-6 rounded-2xl shadow-lg flex flex-col items-center">
         <button
           onClick={close}
