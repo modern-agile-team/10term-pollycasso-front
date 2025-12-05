@@ -48,14 +48,13 @@ export const LoginForm = () => {
           <button
             type="submit"
             disabled={isPending}
-            className={`text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl ${
-              isPending ? 'bg-gray-400' : 'bg-[#003D00] hover:bg-green-600'
-            }`}
+            className="relative text-white rounded-xl p-4 my-4 w-full transition-colors duration-200 text-2xl bg-[#003D00] hover:bg-green-600"
           >
-            {isPending ? (
-              <Spinner fixed size="xl" message="로그인 중..." />
-            ) : (
-              '로그인'
+            <span className={isPending ? 'opacity-0' : 'opacity-100'}>
+              로그인
+            </span>
+            {isPending && (
+              <Spinner overlay={true} transparent={true} size="sm" />
             )}
           </button>
         </form>

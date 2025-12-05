@@ -3,7 +3,7 @@ import { cn } from '@/shared/lib/cn';
 import { PasswordVisibilityToggle } from './PasswordVisibilityToggle';
 import { AuthInput } from '@/features/auth/ui';
 import { useSignUp } from '@/features/auth/model';
-import { Spinner } from '@/shared';
+import { Spinner } from '@/shared/ui/Spinner';
 
 export const SignUpForm = () => {
   const {
@@ -62,17 +62,18 @@ export const SignUpForm = () => {
           type="submit"
           disabled={!isValid || isSigningUp}
           className={cn(
-            'text-white rounded-xl p-4 mb-8 w-[450px] h-[80px] transition-colors duration-200 text-2xl',
+            'relative text-white rounded-xl p-4 mb-8 w-[450px] h-[80px] transition-colors duration-200 text-2xl',
             {
               'bg-[#003D00] hover:bg-green-600': isValid && !isSigningUp,
               'bg-[#7A917A]': !isValid || isSigningUp,
             },
           )}
         >
-          {isSigningUp ? (
-            <Spinner fixed size="xl" message="회원가입 중..." />
-          ) : (
-            '회원가입'
+          <span className={isSigningUp ? 'opacity-0' : 'opacity-100'}>
+            회원가입
+          </span>
+          {isSigningUp && (
+            <Spinner overlay={true} transparent={true} size="sm" />
           )}
         </button>
       </form>
