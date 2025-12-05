@@ -18,15 +18,15 @@ export const PasswordInput = ({
 
   return (
     <div className="flex mt-6">
-      <span className="p-4 rounded-l-xl bg-[#027DFF] text-2xl text-white">
+      <span className="py-4 px-4 rounded-l-xl bg-[#027DFF] text-2xl text-white">
         비밀번호
       </span>
-      <div className="rounded-r-xl border border-[#027DFF] bg-white">
+      <div className="rounded-r-xl border border-[#027DFF] bg-white font-light text-lg">
         <input
           type="password"
           maxLength={4}
           inputMode="numeric"
-          placeholder="비밀번호를 입력해주세요. (4자리 숫자)"
+          placeholder="비밀번호 4자리를 입력해주세요."
           value={password}
           onChange={(e) => {
             const val = e.target.value;
@@ -36,7 +36,7 @@ export const PasswordInput = ({
               form.trigger('password');
             }
           }}
-          className="w-[358px] px-5 py-5 rounded-r-xl focus:outline-none"
+          className="w-[358px] px-5 py-4 rounded-r-xl focus:outline-none"
         />
       </div>
     </div>
