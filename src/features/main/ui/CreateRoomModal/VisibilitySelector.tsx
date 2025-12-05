@@ -20,10 +20,10 @@ export const VisibilitySelector = ({
           type="button"
           onClick={() => selectVisibility('public')}
           className={cn(
-            'border-2 rounded-xl py-3 px-8 font-bold',
+            'border-2 rounded-xl py-3 px-8 font-bold bg-white',
             visibility === 'public'
-              ? 'border-[#027DFF] text-[#027DFF] bg-white'
-              : 'border-transparent text-black bg-white/70',
+              ? 'border-[#027DFF] text-[#027DFF]'
+              : 'border-transparent text-black',
           )}
         >
           공개
@@ -33,10 +33,10 @@ export const VisibilitySelector = ({
           type="button"
           onClick={() => selectVisibility('private')}
           className={cn(
-            'border-2 rounded-xl py-3 px-8 font-bold',
+            'border-2 rounded-xl py-3 px-8 font-bold bg-white',
             visibility === 'private'
-              ? 'border-[#027DFF] text-[#027DFF] bg-white'
-              : 'border-transparent text-black bg-white/70',
+              ? 'border-[#027DFF] text-[#027DFF]'
+              : 'border-transparent text-black',
           )}
         >
           비공개
