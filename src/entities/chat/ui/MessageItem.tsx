@@ -35,6 +35,8 @@ export const MessageItem = ({
     );
   }
 
+  console.log('sender: ' + msg.senderId);
+  console.log('current: ' + currentUserId);
   return (
     <p className={containerClassName}>
       {showTag && <span className="font-bold text-[20px] mr-1">[전체]</span>}

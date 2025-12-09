@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import type { Friend } from '@/shared/model/types';
 import { mockChannels, mockFriends } from '@/mocks/chat.mock';
 import { useSocket } from '@/shared/api/socket/socketContext';
+import { useAuthStore } from '@/features/auth';
 
 export const useMainChat = () => {
   const { messages, sendMessage: emitMessage } = useSocket();
@@ -15,6 +16,8 @@ export const useMainChat = () => {
   const [isComposing, setIsComposing] = useState(false);
 
   const [isChannelDropdownOpen, setIsChannelDropdownOpen] = useState(false);
+
+  const userId = useAuthStore((state) => state.user?.id);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -156,5 +159,6 @@ export const useMainChat = () => {
     selectChannel,
     onChannelToggle,
     handleSelectChannel,
+    userId,
   };
 };

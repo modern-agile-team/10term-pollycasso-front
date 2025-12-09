@@ -1,37 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
 import type { KeyboardEvent } from 'react';
-import { getSocket } from '@/shared/api/socket';
+import { useSocket } from '@/shared/api/socket/socketContext';
 import type { ChatMessage } from '@/shared/model/types';
-
-const MY_USER_ID = 'id-1234';
+import { useAuthStore } from '@/features/auth';
 
 export const useGameChat = () => {
+  const { socket } = useSocket();
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isComposing, setIsComposing] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const MY_USER_ID = useAuthStore((state) => state.user?.id);
 
   useEffect(() => {
-    const socket = getSocket();
+    if (!socket) return;
 
-    const handleNewMessage = (newMsg: any) => {
-      const formattedMsg: ChatMessage = {
-        id: newMsg.id || Date.now().toString(),
-        senderId: newMsg.senderId,
-        nickname: newMsg.senderName,
-        message: newMsg.content,
-        channel: '전체',
-      };
-      setMessages((prev) => [...prev, formattedMsg]);
+    const handleNewMessage = (newMsg: ChatMessage) => {
+      setMessages((prev) => [...prev, newMsg]);
     };
 
-    socket.on('chatMessage', handleNewMessage);
+    socket.on('chat:newMessage', handleNewMessage);
 
     return () => {
-      socket.off('chatMessage', handleNewMessage);
+      socket.off('chat:newMessage', handleNewMessage);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollTo({
@@ -41,9 +36,9 @@ export const useGameChat = () => {
   }, [messages]);
 
   const handleSendMessage = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !socket) return;
 
-    getSocket().emit('sendChat', {
+    socket.emit('chat:sendMessage', {
       userId: MY_USER_ID,
       message: input,
     });
@@ -52,7 +47,8 @@ export const useGameChat = () => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !isComposing) {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+      e.preventDefault();
       handleSendMessage();
     }
   };

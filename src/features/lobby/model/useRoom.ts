@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getSocket } from '@/shared/api/socket';
+import { useSocket } from '@/shared/api/socket/socketContext';
 import type { RoomState } from '@/entities/game/model/types';
 import {
   selectCanStartGame,
@@ -12,25 +12,28 @@ import { useAuthStore } from '@/features/auth/model/useAuthStore';
 export const useRoom = () => {
   const { roomId } = useParams();
   const { user } = useAuthStore();
+  const { socket } = useSocket();
+
   const myUserId = user?.id;
   const [roomState, setRoomState] = useState<RoomState | null>(null);
 
   useEffect(() => {
-    if (!roomId) return;
-
-    const socket = getSocket();
+    if (!roomId || !socket) return;
 
     const handleGameState = (newState: RoomState) => {
+      console.log('[Client] 방 상태 수신:', newState);
       setRoomState(newState);
     };
 
-    socket.emit('joinRoom', { roomId });
-    socket.on('gameState', handleGameState);
+    socket.on('room:stateSync', handleGameState);
+
+    socket.emit('room:join', { roomId });
 
     return () => {
-      socket.off('gameState', handleGameState);
+      socket.off('room:stateSync', handleGameState);
+      socket.emit('room:leave');
     };
-  }, [roomId]);
+  }, [roomId, socket]);
 
   const me = selectMe(roomState, myUserId ?? '');
   const isSolo = roomState?.settings?.gameMode === 'SOLO';
@@ -42,26 +45,29 @@ export const useRoom = () => {
   const canStartGame = selectCanStartGame(roomState);
 
   const startGame = () => {
-    if (!roomId) return;
-    getSocket().emit('startGame', { roomId });
+    if (!roomId || !socket) return;
+    socket.emit('room:start', { roomId });
   };
 
   const toggleReady = () => {
-    if (!me || !myUserId) return;
-    getSocket().emit('toggleReady', { userId: myUserId });
+    if (!me || !myUserId || !socket) return;
+    socket.emit('room:readyToggle', { userId: myUserId });
   };
 
   const leaveRoom = () => {
-    if (!myUserId) return;
-    getSocket().emit('leaveRoom', { userId: myUserId });
+    if (!myUserId || !socket) return;
+    socket.emit('room:leave');
   };
 
   const changeTeam = (targetTeam: 'BLUE' | 'RED') => {
-    if (!myUserId) return;
+    if (!myUserId || !socket) return;
     if (me?.teamId === targetTeam) return;
-    getSocket().emit('changeTeam', { userId: myUserId, teamId: targetTeam });
 
-    // 낙관적 업데이트
+    socket.emit('room:changeTeam', {
+      userId: myUserId,
+      targetTeamId: targetTeam,
+    });
+
     setRoomState((prev) => {
       if (!prev) return null;
       return {
@@ -73,8 +79,9 @@ export const useRoom = () => {
     });
   };
 
-  const kickUser = (targetId: string) => {
-    getSocket().emit('kickUser', { targetId });
+  const kickUser = (targetUserId: string) => {
+    if (!socket) return;
+    socket.emit('room:kickUser', { targetUserId });
   };
 
   return {
