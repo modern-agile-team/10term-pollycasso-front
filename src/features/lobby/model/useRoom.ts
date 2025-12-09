@@ -21,7 +21,6 @@ export const useRoom = () => {
     if (!roomId || !socket) return;
 
     const handleGameState = (newState: RoomState) => {
-      console.log('[Client] 방 상태 수신:', newState);
       setRoomState(newState);
     };
 
