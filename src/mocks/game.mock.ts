@@ -1,7 +1,7 @@
 import type { RoomState, Player } from '@/entities/game/model/types';
 
 const MOCK_ME: Player = {
-  userId: 'id-1234',
+  userId: 'id-2',
   nickname: '밥아저씨',
   level: 30,
   outfit: [
@@ -102,7 +102,7 @@ const MOCK_BONUS: Player = {
 
 export const MOCK_ROOM_STATE: RoomState = {
   roomStatus: 'waiting',
-  hostId: 'id-1234',
+  hostId: 'user-leaver-111',
   timer: null,
   players: [MOCK_ME, MOCK_OPPONENT, MOCK_DISCONNECTED, MOCK_BONUS],
   settings: {
