@@ -8,6 +8,7 @@ const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
 const WelcomePage = lazy(() => import('@/pages/WelcomePage'));
 const MainPage = lazy(() => import('@/pages/MainPage'));
 const RoomPage = lazy(() => import('@/pages/RoomPage'));
+const GameWidget = lazy(() => import('@/widgets/game-drawing/ui/'));
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
           {
             path: '/rooms/:roomId',
             element: <RoomPage />,
+          },
+          {
+            path: '/dev/gameWidget',
+            element: <GameWidget />,
           },
         ],
       },
