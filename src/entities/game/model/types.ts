@@ -96,118 +96,83 @@ export interface RoomState {
  * 게임에 참여하는 개별 사용자의 정보 및 상태입니다.
  */
 export interface Player {
-  /** 사용자의 고유 식별자(UUID)입니다. */
   userId: string;
-
-  /** 화면에 표시될 닉네임입니다. */
   nickname: string;
-
-  /** 사용자의 레벨입니다. 레벨에 따라 닉네임 색상이 결정될 수 있습니다. */
   level: number;
 
   /**
-   * 사용자의 착용 아이템 목록입니다. 순서가 중요합니다.
-   * [새, 악세사리, 모자, 상의, 하의, 신발, 효과]
+   * 사용자의 착용 아이템 목록입니다.
    */
-  outfit: string[];
+  outfit: Outfit;
 
   /**
-   * 현재 소켓 연결 여부입니다.
-   * `false`일 경우 탈주한 사용자로 처리됩니다.
+   * 현재 보유 코인입니다.
    */
+  coins: number;
+
   isConnected: boolean;
-
-  /**
-   * 소속된 팀의 ID입니다. (예: 'RED', 'BLUE')
-   * 개인전일 경우 `null`입니다.
-   */
   teamId: string | null;
-
-  /**
-   * 게임 전체 누적 점수입니다.
-   * 최종 순위를 결정하는 기준이 됩니다.
-   */
   totalScore: number | null;
 
-  /**
-   * 현재 페이즈에서의 준비/완료 상태입니다.
-   * - `waiting`: 게임 시작 준비 완료 여부
-   * - `drawing`: 그림 제출 완료 여부
-   * - `evaluating`: 평가 완료 여부
-   * - `round_summary`: 다음 라운드 진행 동의 여부
-   */
   isReady: boolean | null;
-
-  // === 라운드 및 결과 정산용 ===
-
-  /**
-   * 이번 라운드에서 획득한 점수입니다.
-   * `round_summary`에서 그림별 순위를 매길 때 사용됩니다.
-   */
   score: number | null;
-
-  /**
-   * 게임 종료(`finished`) 시 최종 순위입니다.
-   * 동점자 처리 로직이 반영된 결과값입니다.
-   */
   rank: number | null;
-
-  /** 게임 종료 후 획득한 경험치 양입니다. */
   expGained: number | null;
-
-  /** 게임 종료 후 획득한 코인 양입니다. */
   coinsGained: number | null;
-
-  /** 이번 게임 결과로 레벨업을 했는지 여부입니다. */
   didLevelUp: boolean | null;
-
-  /** 레벨업을 했을 경우, 변경된 새로운 레벨입니다. */
   newLevel: number | null;
 }
 
 /**
- * 그리기 단계에서 사용자가 보유한 아이템 및 인벤토리 상태입니다.
+ * 착용 아이템 상세 정보입니다.
+ * bird는 필수이며, 나머지는 착용하지 않을 수(null) 있습니다.
+ */
+export interface Outfit {
+  /** 기본 캐릭터 (새). 탈착 불가하므로 필수값. */
+  bird: string;
+
+  /** 이하 옵션 아이템 (미착용 시 null) */
+  accessory: string | null;
+  hat: string | null;
+  top: string | null;
+  bottom: string | null;
+  shoes: string | null;
+  effect: string | null;
+}
+
+/**
+ * 그리기 단계에서 사용 가능한, 사용자가 보유한 아이템 및 인벤토리 상태입니다.
+ * 분산되어 있던 데이터(usable, cooldowns, inventory)를 하나로 통합했습니다.
  */
 export interface MyItems {
-  /** 현재 사용 가능한 아이템 ID 목록입니다. */
-  usable: string[];
+  items: ItemState[];
+}
+
+/**
+ * 개별 아이템의 상태 데이터
+ */
+export interface ItemState {
+  itemId: string; // 예: "ink_splash"
+  count: number; // 보유 개수
 
   /**
-   * 아이템별 쿨타임 상태입니다.
-   * Key: 아이템 ID, Value: 남은 시간(초) 또는 사용 가능 시각
+   * 쿨타임 종료 시각 (Timestamp)
+   * 남은 시간(초) 대신 절대 시간을 사용하여 네트워크 딜레이로 인한 오차 제거
+   * 쿨타임이 없거나 끝났으면 null
    */
-  cooldowns: Record<string, number>;
+  cooldownEndsAt: number | null;
 
-  /** 현재 보유 코인입니다. */
-  coins: number;
-
-  /**
-   * 보유 중인 아이템 수량입니다.
-   * Key: 아이템 ID, Value: 보유 개수
-   */
-  inventory: Record<string, number>;
+  isUsable: boolean; // 사용 가능 여부 (서버 판정)
 }
 
 /**
  * 방의 기본 설정 정보입니다.
  */
 export interface RoomSettings {
-  /** 방 제목입니다. */
   roomTitle: string;
-
-  /** 게임 모드 (개인전/팀전) */
   gameMode: 'SOLO' | 'TEAM';
-
-  /** 최대 입장 가능한 인원수입니다. */
   maxPlayers: number;
-
-  /** 비공개 방 여부입니다. true일 경우 password가 필요합니다. */
   isPrivate: boolean;
-
-  /**
-   * 비공개 방일 경우 설정된 비밀번호입니다.
-   * `isPrivate`가 false일 경우 null입니다.
-   */
   password?: string | null;
 }
 
@@ -215,18 +180,8 @@ export interface RoomSettings {
  * 주제 선정(`theme_selecting`) 단계의 상태 정보입니다.
  */
 export interface ThemeSelecting {
-  /** 현재 주제를 입력 중인 유저의 ID입니다. */
   userId: string;
-
-  /** 주제를 입력 중인 유저의 닉네임입니다. */
   nickname: string;
-
-  /** 실시간으로 입력 중인 주제 문자열입니다. */
   value: string;
-
-  /**
-   * 주제 입력이 확정되었는지 여부입니다.
-   * true가 되면 해당 주제로 게임이 진행됩니다.
-   */
   isFinalized: boolean;
 }
