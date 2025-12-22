@@ -5,7 +5,7 @@ import { GameCanvas } from '@/features/game/ui/GameCanvas';
 import { useGameDrawing } from '@/widgets/game-drawing/model/useGameDrawing';
 
 const GameWidget = () => {
-  const { players, myInventory, endsAt, currentTheme } = useGameDrawing();
+  const { players, inventory, endsAt, currentTheme } = useGameDrawing();
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
@@ -16,7 +16,7 @@ const GameWidget = () => {
         <GameCanvas />
       </main>
 
-      <InventoryPanel myItems={myInventory} />
+      <InventoryPanel inventory={inventory} />
     </div>
   );
 };

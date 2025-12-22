@@ -1,4 +1,4 @@
-import type { MyItems } from '@/entities/game/model';
+import type { GameItem } from '@/entities/game/model';
 import { useInventory } from './useInventory';
 import { ItemIcon, type ItemIconProps } from '@/entities/game/ui/ItemIcon';
 import { COLORS, UI_TEXT } from '@/features/game/constants/game';
@@ -6,16 +6,16 @@ import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import { cn } from '@/shared/lib/cn';
 
 interface InventoryPanelProps {
-  myItems: MyItems | null;
+  inventory: GameItem[] | null;
   onComplete?: () => void;
 }
 
 export const InventoryPanel = ({
-  myItems,
+  inventory,
   onComplete,
 }: InventoryPanelProps) => {
   const { visibleItems, handlePrev, handleNext, canPrev, canNext } =
-    useInventory(myItems);
+    useInventory(inventory ?? []);
 
   return (
     <aside className="h-auto flex flex-col gap-4">

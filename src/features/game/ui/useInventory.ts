@@ -1,23 +1,31 @@
-import type { MyItems } from '@/entities/game/model';
-import { ALL_ITEMS_META, GAME_CONFIG } from '@/features/game/constants/game';
 import { useMemo, useState } from 'react';
+import type { GameItem } from '@/entities/game/model/types';
+import { ALL_ITEMS_META, GAME_CONFIG } from '@/features/game/constants/game';
 
-export const useInventory = (myItems: MyItems | null) => {
+export const useInventory = (inventory: GameItem[]) => {
   const [startIndex, setStartIndex] = useState(0);
 
   const processedItems = useMemo(() => {
-    const inventory = myItems?.inventory || {};
+    const inventoryMap = new Map(inventory.map((item) => [item.itemId, item]));
 
     return ALL_ITEMS_META.map((meta) => {
-      const count = inventory[meta.id] || 0;
-      return { ...meta, count, isOwned: count > 0 };
+      const myItem = inventoryMap.get(meta.id);
+      const count = myItem?.count || 0;
+
+      return {
+        ...meta,
+        count,
+        cooldownEndsAt: myItem?.cooldownEndsAt || 0,
+        isOwned: count > 0,
+      };
     });
-  }, [myItems]);
+  }, [inventory]);
 
   const visibleItems = processedItems.slice(
     startIndex,
     startIndex + GAME_CONFIG.ITEMS_PER_PAGE,
   );
+
   const canPrev = startIndex > 0;
   const canNext =
     startIndex + GAME_CONFIG.ITEMS_PER_PAGE < processedItems.length;

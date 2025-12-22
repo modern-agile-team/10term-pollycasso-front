@@ -14,7 +14,7 @@ export const useGameDrawing = () => {
     return players.find((p) => p.userId === user.id);
   }, [players, user]);
 
-  const myInventory = myData?.inventory || [];
+  const inventory = myData?.inventory || [];
 
   const currentTheme = useMemo(() => {
     const context = phaseContext as DrawingContext;
@@ -25,7 +25,7 @@ export const useGameDrawing = () => {
     status,
     players,
     endsAt,
-    myInventory,
+    inventory,
     currentTheme,
   };
 };
