@@ -1,15 +1,15 @@
 import Marquee from 'react-fast-marquee';
 import { UI_TEXT, COLORS, GAME_CONFIG } from '@/features/game/constants/game';
+import { useGameTimer } from './useGameTimer';
 
 interface GameHeaderProps {
-  theme: string | null;
-  timer: number | null;
+  currentTheme: string | null;
+  endsAt: number | null;
 }
 
-export const GameHeader = ({ theme, timer }: GameHeaderProps) => {
-  const currentTimer = timer ?? 0;
-  const timeProgress = (currentTimer / GAME_CONFIG.MAX_TIME) * 100;
-
+export const GameHeader = ({ currentTheme, endsAt }: GameHeaderProps) => {
+  const timeLeft = useGameTimer(endsAt);
+  const timeProgress = (timeLeft / GAME_CONFIG.MAX_TIME) * 100;
   const timerStyle = {
     background: `conic-gradient(${COLORS.TIMER_GREEN} ${timeProgress}%, transparent 0)`,
     transform: 'scaleX(-1)',
@@ -30,20 +30,20 @@ export const GameHeader = ({ theme, timer }: GameHeaderProps) => {
         <div></div>
 
         <div className="text-center text-4xl font-bold truncate px-4">
-          {UI_TEXT.THEME_PREFIX} {theme}
+          {UI_TEXT.THEME_PREFIX} {currentTheme ?? '주제 대기 중...'}
         </div>
 
         <div className="flex justify-end mr-2">
           <div className="flex flex-col items-center gap-1 pt-2">
             <div
-              className="w-14 h-14 rounded-full bg-white shadow-sm border"
+              className="w-14 h-14 rounded-full bg-white shadow-sm border transition-all duration-300"
               style={{ ...timerStyle, borderColor: COLORS.TIMER_GREEN }}
             />
             <span
               className="font-bold text-lg font-ssrm"
               style={{ color: COLORS.TIMER_GREEN }}
             >
-              {currentTimer}s
+              {timeLeft}s
             </span>
           </div>
         </div>

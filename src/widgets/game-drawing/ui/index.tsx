@@ -12,7 +12,7 @@ const GameWidget = () => {
       <PlayerSidebar players={players} />
 
       <main className="w-full h-full rounded-3xl bg-white shadow-xl flex flex-col relative overflow-hidden">
-        <GameHeader theme={currentTheme} timer={endsAt} />
+        <GameHeader currentTheme={currentTheme} endsAt={endsAt} />
         <GameCanvas />
       </main>
 
