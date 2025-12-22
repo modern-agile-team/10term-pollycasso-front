@@ -1,5 +1,5 @@
-import type { RoomState } from '@/entities/game/model';
-import { MOCK_ROOM_STATE } from '@/mocks/game.mock';
+import type { RoomState } from '@/entities/game/model/types';
+import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
 import { SOCKET_EVENTS } from '@/shared/api/socket/constants';
 import {
   handleLobbySend,
@@ -20,7 +20,7 @@ export class MockSocket {
   public auth: { token?: string } = {};
 
   constructor() {
-    this.roomState = JSON.parse(JSON.stringify(MOCK_ROOM_STATE));
+    this.roomState = JSON.parse(JSON.stringify(MOCK_GAME_DRAWING));
     this.connect();
   }
 
