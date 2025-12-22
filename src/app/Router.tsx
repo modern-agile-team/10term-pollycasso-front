@@ -9,6 +9,8 @@ const WelcomePage = lazy(() => import('@/pages/WelcomePage'));
 const MainPage = lazy(() => import('@/pages/MainPage'));
 const RoomPage = lazy(() => import('@/pages/RoomPage'));
 const GameWidget = lazy(() => import('@/widgets/game-drawing/ui/'));
+// TODO: 다음 위젯(그림 페이즈) 작업 시 삭제 예정
+const LoadingPage = lazy(() => import('@/widgets/game-loading'));
 
 const router = createBrowserRouter([
   {
@@ -44,6 +46,10 @@ const router = createBrowserRouter([
           {
             path: '/dev/gameWidget',
             element: <GameWidget />,
+          },
+          {
+            path: '/dev/loading',
+            element: <LoadingPage />,
           },
         ],
       },
