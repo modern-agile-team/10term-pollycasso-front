@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+
+import type { RoomState } from '@/entities/game';
+import { useAuthStore } from '@/features/auth/model/useAuthStore'; // TODO: 오류. 다른 features 참고 불가능함
 import { useSocket } from '@/shared/api/socket/socketContext';
-import type { RoomState } from '@/entities/game/model/types';
 import {
   selectCanStartGame,
   selectMe,
   selectTopBottomTeams,
 } from './roomSelectors';
-import { useAuthStore } from '@/features/auth/model/useAuthStore';
 
 export const useRoom = () => {
   const { roomId } = useParams();

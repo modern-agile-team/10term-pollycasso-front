@@ -1,9 +1,5 @@
-import {
-  ACTIVE_STYLE,
-  DISABLED_STYLE,
-  TEAM_COLORS,
-} from '@/features/lobby/constants/colors';
 import { cn } from '@/shared/lib/cn';
+import { ACTIVE_STYLE, DISABLED_STYLE, TEAM_COLORS } from '../constants/colors';
 
 interface TeamTabProps {
   teamId: 'BLUE' | 'RED';

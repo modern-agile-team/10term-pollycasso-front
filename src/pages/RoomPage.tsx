@@ -1,8 +1,10 @@
-import { useRoomUI } from '@/features/lobby/ui/useRoomUI';
-import { TeamTab } from '@/features/lobby/ui/TeamTab';
-import { RoomActionButtons } from '@/features/lobby/ui/RoomActionButtons';
-import { TeamSection } from '@/features/lobby/ui/TeamSection';
-import { RoomDashboard } from '@/features/lobby/ui/RoomDashboard';
+import {
+  RoomActionButtons,
+  RoomDashboard,
+  TeamSection,
+  TeamTab,
+  useRoomUI,
+} from '@/features/lobby';
 import { Spinner } from '@/shared';
 
 const RoomPage = () => {

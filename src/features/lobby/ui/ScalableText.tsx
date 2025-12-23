@@ -1,5 +1,6 @@
-import { useRef, useState, useLayoutEffect } from 'react';
 import type { ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+
 import { cn } from '@/shared/lib/cn';
 
 interface ScalableTextProps {
