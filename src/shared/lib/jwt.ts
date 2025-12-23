@@ -5,7 +5,7 @@ export interface AccessJwtPayload {
   nickname: string;
 }
 
-export function parseAccessToken(token: string) {
+export const parseAccessToken = (token: string) => {
   const decoded = jwtDecode<AccessJwtPayload>(token);
   return decoded;
-}
+};
