@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 
 import { MainChat } from '@/entities/chat';
-import { useAuthStore } from '@/features/auth/model'; // TODO: useAuthStore 경로변경
+import { useAuthStore } from '@/features/auth'; // TODO: useAuthStore 경로변경
 import {
   CreateRoomModal,
   MainHeader,
