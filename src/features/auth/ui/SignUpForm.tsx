@@ -2,7 +2,7 @@ import { FormProvider } from 'react-hook-form';
 
 import { cn } from '@/shared/lib/cn';
 import { Spinner } from '@/shared/ui/Spinner';
-import { useSignup } from '../model/useSignUp';
+import { useSignup } from '../model/useSignup';
 import { AuthInput } from './AuthInput';
 import { PasswordVisibilityToggle } from './PasswordVisibilityToggle';
 

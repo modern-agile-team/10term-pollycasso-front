@@ -1,8 +1,8 @@
 import title from '@/assets/title.svg';
+import { SignupForm } from '@/features/auth';
 import { AuthLayout } from '@/widgets/auth/ui/AuthLayout';
-import { SignUpForm } from '@/features/auth/ui';
 
-const SignUpPage = () => {
+const SignupPage = () => {
   return (
     <AuthLayout>
       <img
@@ -10,9 +10,9 @@ const SignUpPage = () => {
         className="w-full max-w-[405px] mx-auto mt-20 mb-2"
         alt="폴리카소 로고"
       />
-      <SignUpForm />
+      <SignupForm />
     </AuthLayout>
   );
 };
 
-export default SignUpPage;
+export default SignupPage;

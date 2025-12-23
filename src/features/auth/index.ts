@@ -5,6 +5,6 @@ export * from './model/types';
 export { useAuthStore } from './model/useAuthStore';
 export { authQueries } from './queries/authQueries';
 export { LoginForm } from './ui/LoginForm';
-export { SignupForm } from './ui/SignUpForm';
-export { SignupLink } from './ui/SignUpLink';
+export { SignupForm } from './ui/SignupForm';
+export { SignupLink } from './ui/SignupLink';
 export { SocialLoginButtons } from './ui/SocialLoginButtons';
