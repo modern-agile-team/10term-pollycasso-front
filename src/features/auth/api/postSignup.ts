@@ -1,5 +1,5 @@
 import { instance } from '@/shared/api';
-import type { SignupRequest, SignupResponse } from '@/features/auth/model';
+import type { SignupRequest, SignupResponse } from '../model/types';
 
 export const postSignup = async (
   credentials: SignupRequest,

@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema } from '@/features/auth/lib';
-import type { LoginFormValues } from '@/features/auth/lib';
-import { useAuthStore, type LoginFailureResponse } from '@/features/auth/model';
-import { parseAccessToken } from '@/shared/lib/jwt';
 import { useMutation } from '@tanstack/react-query';
-import { authQueries } from '@/features/auth/queries/authQueries';
 import type { AxiosError } from 'axios';
+
+import { parseAccessToken } from '@/shared/lib/jwt';
+import type { LoginFormValues } from '../lib/validators';
+import { loginSchema } from '../lib/validators';
+import type { LoginFailureResponse } from '../model/types';
+import { useAuthStore } from '../model/useAuthStore';
+import { authQueries } from '../queries/authQueries';
 
 export const useLogin = () => {
   const navigate = useNavigate();

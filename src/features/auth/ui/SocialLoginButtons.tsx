@@ -1,5 +1,5 @@
-import { KakaoLoginButton } from './KakaoLoginButton';
 import { GoogleLoginButton } from './GoogleLoginButton';
+import { KakaoLoginButton } from './KakaoLoginButton';
 
 export const SocialLoginButtons = () => {
   return (

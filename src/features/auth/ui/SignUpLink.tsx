@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 
-export const SignUpLink = () => {
+export const SignupLink = () => {
   return (
     <div className="flex justify-center items-center mt-6">
       <p className="text-lg">계정이 없으신가요?</p>

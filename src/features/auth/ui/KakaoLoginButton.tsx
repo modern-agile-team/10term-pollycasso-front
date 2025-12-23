@@ -1,6 +1,7 @@
-import { Button } from '@/shared/ui';
-import kakaoIcon from '@/assets/kakao.svg';
 import { useNavigate } from 'react-router';
+
+import kakaoIcon from '@/assets/kakao.svg';
+import { Button } from '@/shared/ui';
 
 export const KakaoLoginButton = () => {
   const navigate = useNavigate();

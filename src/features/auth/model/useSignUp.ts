@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signUpSchema } from '@/features/auth/lib';
-import type { SignUpFormValues } from '@/features/auth/lib';
-import { useAuthStore } from '@/features/auth/model/useAuthStore';
-import { parseAccessToken } from '@/shared/lib/jwt';
 import { useMutation } from '@tanstack/react-query';
-import { authQueries } from '@/features/auth/queries/authQueries';
 import { AxiosError } from 'axios';
-import type { SignupFailureResponse } from '@/features/auth';
-import { AUTH_MESSAGES } from '@/features/auth/constants';
 
-export const useSignUp = () => {
+import { parseAccessToken } from '@/shared/lib/jwt';
+import { AUTH_MESSAGES } from '../constants/messages';
+import type { SignupFormValues } from '../lib/validators';
+import { signUpSchema } from '../lib/validators';
+import type { SignupFailureResponse } from '../model/types';
+import { useAuthStore } from '../model/useAuthStore';
+import { authQueries } from '../queries/authQueries';
+
+export const useSignup = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const methods = useForm<SignUpFormValues>({
+  const methods = useForm<SignupFormValues>({
     resolver: zodResolver(signUpSchema),
     mode: 'onChange',
   });
@@ -103,7 +104,7 @@ export const useSignUp = () => {
     },
   });
 
-  const onSubmit = (formValues: SignUpFormValues) => {
+  const onSubmit = (formValues: SignupFormValues) => {
     const { confirmPassword, ...payload } = formValues;
     signup(payload);
   };

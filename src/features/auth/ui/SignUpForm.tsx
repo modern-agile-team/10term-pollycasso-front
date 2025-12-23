@@ -1,11 +1,12 @@
 import { FormProvider } from 'react-hook-form';
-import { cn } from '@/shared/lib/cn';
-import { PasswordVisibilityToggle } from './PasswordVisibilityToggle';
-import { AuthInput } from '@/features/auth/ui';
-import { useSignUp } from '@/features/auth/model';
-import { Spinner } from '@/shared/ui/Spinner';
 
-export const SignUpForm = () => {
+import { cn } from '@/shared/lib/cn';
+import { Spinner } from '@/shared/ui/Spinner';
+import { useSignup } from '../model/useSignUp';
+import { AuthInput } from './AuthInput';
+import { PasswordVisibilityToggle } from './PasswordVisibilityToggle';
+
+export const SignupForm = () => {
   const {
     methods,
     handleSubmit,
@@ -17,7 +18,7 @@ export const SignUpForm = () => {
     onSubmit,
     isSigningUp,
     errorMessage,
-  } = useSignUp();
+  } = useSignup();
 
   return (
     <FormProvider {...methods}>
