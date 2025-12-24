@@ -27,9 +27,5 @@ export const PlayerAvatar = ({
     <p className="text-center mt-2 text-white font-bold truncate w-20">
       {nickname}
     </p>
-
-    {!isConnected && (
-      <span className="text-xs text-red-300 font-bold mt-1">OFFLINE</span>
-    )}
   </div>
 );
