@@ -39,7 +39,7 @@ export const ItemIcon = ({
     >
       <div
         className={cn(
-          'relative w-[70px] h-[70px] rounded-full mx-auto shadow-md',
+          'relative w-[70px] h-[70px] rounded-full mx-auto',
           'flex items-center justify-center font-bold text-sm select-none',
           'transition-transform duration-200',
           isOwned
@@ -59,6 +59,8 @@ export const ItemIcon = ({
             {name}
           </span>
         )}
+
+        <div className="absolute inset-0 rounded-full shadow-inner shadow-black/30 pointer-events-none" />
 
         {isOwned && (
           <span className="absolute -bottom-1 -right-1 bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded-full border border-white shadow-sm z-10">

@@ -29,7 +29,7 @@ export const GameHeader = ({ currentTheme, endsAt }: GameHeaderProps) => {
 
   return (
     <>
-      <div className="mt-4 py-2 text-black bg-[#D9D9D9]/45">
+      <div className="mt-4 py-2 text-black bg-[#D9D9D9]/45 shadow-sm shadow-black/40">
         <Marquee gradient={false} speed={50}>
           <span className="mx-4 font-bold">{UI_TEXT.NOTICE}</span>
         </Marquee>
