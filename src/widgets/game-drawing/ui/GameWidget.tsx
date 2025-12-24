@@ -1,6 +1,7 @@
 import {
   GameCanvas,
   GameHeader,
+  GameSubmitButton,
   InventoryPanel,
   PlayerSidebar,
 } from '@/features/game';
@@ -8,6 +9,10 @@ import { useGameDrawing } from '../model/useGameDrawing';
 
 const GameWidget = () => {
   const { players, inventory, endsAt, currentTheme } = useGameDrawing();
+
+  const completedCount = 3;
+  const totalCount = 6;
+  const handleComplete = () => console.log('제출');
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
@@ -18,7 +23,15 @@ const GameWidget = () => {
         <GameCanvas />
       </main>
 
-      <InventoryPanel inventory={inventory} />
+      <aside className="h-full flex flex-col justify-center gap-y-20">
+        <InventoryPanel inventory={inventory} />
+
+        <GameSubmitButton
+          onComplete={handleComplete}
+          completedCount={completedCount}
+          totalCount={totalCount}
+        />
+      </aside>
     </div>
   );
 };

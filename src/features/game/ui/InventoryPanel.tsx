@@ -1,20 +1,19 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import type { GameItem, InventoryUIItem } from '@/entities/game';
 import { ItemIcon } from '@/entities/game';
 import { cn } from '@/shared/lib';
-import { COLORS, UI_TEXT } from '../constants/game';
+import { COLORS } from '../constants/game';
 import { useInventory } from './useInventory';
 
 interface InventoryPanelProps {
   inventory: GameItem[] | null;
   onComplete?: () => void;
+  completedCount?: number;
+  totalCount?: number;
 }
 
-export const InventoryPanel = ({
-  inventory,
-  onComplete,
-}: InventoryPanelProps) => {
+export const InventoryPanel = ({ inventory }: InventoryPanelProps) => {
   const { visibleItems, handlePrev, handleNext, canPrev, canNext } =
     useInventory(inventory ?? []);
 
@@ -34,7 +33,7 @@ export const InventoryPanel = ({
               : 'text-white/30 cursor-not-allowed',
           )}
         >
-          <ChevronUpIcon className="w-10 h-10 stroke-2" />
+          <ChevronUpIcon className="w-10 h-10 scale-x-125 stroke-[4px]" />
         </button>
 
         <div className="flex flex-col gap-6 my-2 h-[450px]">
@@ -61,20 +60,9 @@ export const InventoryPanel = ({
               : 'text-white/30 cursor-not-allowed',
           )}
         >
-          <ChevronDownIcon className="w-10 h-10 stroke-2" />
+          <ChevronDownIcon className="w-10 h-10 scale-x-125 stroke-[4px]" />
         </button>
       </div>
-
-      <button
-        onClick={onComplete}
-        className={cn(
-          'w-full h-14 bg-white rounded-full text-xl font-extrabold shadow-lg',
-          'hover:bg-gray-100 transition-colors',
-        )}
-        style={{ color: COLORS.PRIMARY_DARK }}
-      >
-        {UI_TEXT.BTN_COMPLETE}
-      </button>
     </aside>
   );
 };
