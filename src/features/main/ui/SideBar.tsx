@@ -1,4 +1,4 @@
-import { Cog8ToothIcon, CircleStackIcon } from '@heroicons/react/24/solid';
+import { CircleStackIcon, Cog8ToothIcon } from '@heroicons/react/24/solid';
 
 interface SideBarProps {
   nickname: string;

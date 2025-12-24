@@ -1,9 +1,9 @@
-import { MessageList } from './MessageList';
-import { useMainChat } from '@/entities/chat/model';
+import { useMainChat } from '../model/useMainChat';
 import { ChannelSelect } from './ChannelSelect';
 import { ChatInput } from './ChatInput';
 import { ChatSendButton } from './ChatSendButton';
 import { MentionDropdown } from './MentionDropdown';
+import { MessageList } from './MessageList';
 
 export const MainChat = () => {
   const {

@@ -1,5 +1,6 @@
-import type { CreateRoomForm } from '@/features/main/lib/validators';
 import type { UseFormReturn } from 'react-hook-form';
+
+import type { CreateRoomForm } from '../../lib/validators';
 
 interface PasswordInputProps {
   visibility: 'public' | 'private' | null;

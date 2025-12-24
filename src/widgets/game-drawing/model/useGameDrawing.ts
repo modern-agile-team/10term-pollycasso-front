@@ -1,7 +1,8 @@
-import { useAuthStore } from '@/features/auth/model'; // TODO: useAuthStore 위치변경(shared)
-import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
-import type { DrawingContext } from '@/entities/game/model/types';
 import { useMemo } from 'react';
+
+import type { DrawingContext, Player } from '@/entities/game';
+import { useAuthStore } from '@/entities/user';
+import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
 
 export const useGameDrawing = () => {
   const user = useAuthStore((state) => state.user);
@@ -11,7 +12,7 @@ export const useGameDrawing = () => {
 
   const myData = useMemo(() => {
     if (!user) return null;
-    return players.find((p) => p.userId === user.id);
+    return players.find((p: Player) => p.userId === user.id);
   }, [players, user]);
 
   const inventory = myData?.inventory || [];

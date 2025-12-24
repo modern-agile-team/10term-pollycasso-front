@@ -1,18 +1,5 @@
-import { io as realIo, Socket as RealSocket } from 'socket.io-client';
-import type { ManagerOptions, SocketOptions } from 'socket.io-client';
-import { MockSocket } from './mockSocket';
-
-export type Socket = RealSocket;
-
-export const io = (
-  uri: string,
-  opts?: Partial<ManagerOptions & SocketOptions>,
-): RealSocket => {
-  const useMock = import.meta.env.VITE_USE_MOCK === 'true';
-
-  if (useMock) {
-    return new MockSocket() as unknown as RealSocket;
-  }
-
-  return realIo(uri, opts);
-};
+export * from './constants';
+export type { Socket } from './io';
+export { io } from './io';
+export { useSocket } from './socketContext';
+export { SocketContext } from './socketContext';

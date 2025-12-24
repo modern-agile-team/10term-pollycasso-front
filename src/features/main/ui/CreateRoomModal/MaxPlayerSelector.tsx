@@ -1,5 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { cn } from '@/shared/lib/cn';
+
+import { cn } from '@/shared/lib';
 
 interface MaxPlayerSelectorProps {
   maxPlayers: number;

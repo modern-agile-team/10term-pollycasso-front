@@ -1,0 +1,1 @@
+export { ValidationIcon } from './ValidationIcon';

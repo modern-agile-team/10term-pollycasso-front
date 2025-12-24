@@ -1,3 +1,3 @@
-export * from './axios';
+export { instance } from './axios';
+export { queryClient } from './queryClient';
 export * from './types';
-export * from './queryClient';

@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react';
-import { cn } from '@/shared/lib/cn';
+
+import { cn } from '@/shared/lib';
 
 type InputProps = Pick<
   ComponentProps<'input'>,

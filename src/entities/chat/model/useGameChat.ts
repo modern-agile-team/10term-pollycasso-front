@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
 import type { KeyboardEvent } from 'react';
-import { useSocket } from '@/shared/api/socket/socketContext';
-import type { ChatMessage } from '@/shared/model/types';
-import { useAuthStore } from '@/features/auth';
+import { useEffect, useRef, useState } from 'react';
+
+import { useAuthStore } from '@/entities/user';
+import { useSocket } from '@/shared/api/socket';
+import type { ChatMessage } from '@/shared/model';
 
 export const useGameChat = () => {
   const { socket } = useSocket();

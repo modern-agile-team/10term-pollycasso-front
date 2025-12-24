@@ -1,11 +1,13 @@
-import type { ChatMessage } from '@/shared/model/types';
+import type { ReactNode } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { io } from '@/shared/api/socket';
-import type { Socket } from '@/shared/api/socket';
-import { useAuthStore } from '@/features/auth/model/useAuthStore';
-import { SocketContext } from '@/shared/api/socket/socketContext';
 
-export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+import { useAuthStore } from '@/entities/user';
+import type { Socket } from '@/shared/api/socket';
+import { io } from '@/shared/api/socket';
+import { SocketContext } from '@/shared/api/socket';
+import type { ChatMessage } from '@/shared/model';
+
+export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const socketRef = useRef<Socket | null>(null);
 
   const [isConnected, setIsConnected] = useState(false);

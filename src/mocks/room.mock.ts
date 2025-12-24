@@ -1,10 +1,11 @@
+import { http, HttpResponse } from 'msw';
+
 import type {
   CreateRoomPayload,
   GameMode,
   Room,
   RoomStatus,
 } from '@/entities/room';
-import { http, HttpResponse } from 'msw';
 
 export const mockRooms: Room[] = [
   {

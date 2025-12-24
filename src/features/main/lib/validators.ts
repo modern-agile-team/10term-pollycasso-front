@@ -1,12 +1,13 @@
 import { z } from 'zod';
+
 import {
-  ROOM_MODE,
-  SOLO_PLAYER_RANGE,
-  TEAM_PLAYER_OPTIONS,
   PRIVATE_ROOM,
+  ROOM_MODE,
   ROOM_TITLE,
   ROOM_TITLE_MESSAGE,
-} from '@/features/main/constants/roomSettings';
+  SOLO_PLAYER_RANGE,
+  TEAM_PLAYER_OPTIONS,
+} from '../constants/roomSettings';
 
 export const RoomModeEnum = z.enum([ROOM_MODE.SOLO, ROOM_MODE.TEAM]);
 

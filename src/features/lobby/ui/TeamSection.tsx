@@ -1,6 +1,6 @@
+import type { Player } from '@/entities/game';
+import { cn } from '@/shared/lib';
 import { PlayerSlot } from './PlayerSlot';
-import type { Player } from '@/entities/game/model/types';
-import { cn } from '@/shared/lib/cn';
 
 interface TeamSectionProps {
   gradient: string;

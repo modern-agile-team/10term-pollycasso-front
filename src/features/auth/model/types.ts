@@ -1,5 +1,3 @@
-import type { User } from '@/entities/user';
-
 export interface LoginRequest {
   username: string;
   password: string;
@@ -33,11 +31,4 @@ export interface SignupFailureResponse {
   code: number;
   message: string;
   errors?: { field: string; reason: string }[];
-}
-
-export interface AuthState {
-  user: User | null;
-  accessToken: string | null;
-  setAuth: (data: { user: User; accessToken: string }) => void;
-  clearAuth: () => void;
 }

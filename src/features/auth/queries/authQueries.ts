@@ -1,5 +1,7 @@
 import { mutationOptions } from '@tanstack/react-query';
-import { postLogin, postSignup } from '@/features/auth/api';
+
+import { postLogin } from '../api/postLogin';
+import { postSignup } from '../api/postSignup';
 
 export const authQueries = {
   auth: () => ['auth'] as const,

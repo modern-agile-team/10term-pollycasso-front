@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createRoomSchema } from '@/features/main/lib/validators';
-import type { CreateRoomForm } from '@/features/main/lib/validators';
-import { TITLE_PRESETS } from '@/features/main/constants/titles';
-import type { GameMode } from '@/entities/room/model';
+
+import type { GameMode } from '@/entities/room';
+import { TITLE_PRESETS } from '../constants/titles';
+import type { CreateRoomForm } from '../lib/validators';
+import { createRoomSchema } from '../lib/validators';
 
 export const useCreateRoomForm = () => {
   const [roomTitle, setRoomTitle] = useState('');

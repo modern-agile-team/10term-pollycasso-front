@@ -1,8 +1,11 @@
 import { FormProvider } from 'react-hook-form';
-import { AuthInput, PasswordVisibilityToggle } from '@/features/auth/ui';
-import { useLogin } from '@/features/auth/model';
+
+import { ErrorMessage } from '@/shared/ui/ErrorMessage';
+import { Spinner } from '@/shared/ui/Spinner';
+import { useLogin } from '../model/useLogin';
+import { AuthInput } from './AuthInput';
+import { PasswordVisibilityToggle } from './PasswordVisibilityToggle';
 import { SocialGuide } from './SocialGuide';
-import { ErrorMessage, Spinner } from '@/shared/ui';
 
 export const LoginForm = () => {
   const {

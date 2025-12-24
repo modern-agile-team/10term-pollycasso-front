@@ -1,8 +1,8 @@
 import type { RefObject } from 'react';
-import type { ChatMessage } from '@/shared/model/types';
-import { cn } from '@/shared/lib/cn';
 
-import { MessageItem } from '@/entities/chat/ui/MessageItem';
+import { cn } from '@/shared/lib';
+import type { ChatMessage } from '@/shared/model';
+import { MessageItem } from './MessageItem';
 
 interface MessageListProps {
   messages: ChatMessage[];

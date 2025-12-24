@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import type { Friend, Channel } from '@/entities/chat/model/types';
+
+import type { Channel, Friend } from '@/shared/model';
 
 interface ChannelOption {
   label: string;

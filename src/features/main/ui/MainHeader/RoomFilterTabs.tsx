@@ -1,9 +1,6 @@
-import { cn } from '@/shared/lib/cn';
-import {
-  ROOM_FILTER_COLORS,
-  ROOM_FILTERS,
-} from '@/features/main/constants/filters';
-import { useRoomFilterStore } from '@/features/main/model/useRoomFilterStore';
+import { cn } from '@/shared/lib';
+import { ROOM_FILTER_COLORS, ROOM_FILTERS } from '../../constants/filters';
+import { useRoomFilterStore } from '../../model/useRoomFilterStore';
 
 export const RoomFilterTabs = () => {
   const { selectedFilter, setFilter } = useRoomFilterStore();

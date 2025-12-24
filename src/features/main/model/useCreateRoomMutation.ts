@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { roomQueries } from '@/entities/room/queries/roomQueries';
+
+import { roomQueries } from '@/entities/room';
 
 export const useCreateRoomMutation = () => {
   const queryClient = useQueryClient();

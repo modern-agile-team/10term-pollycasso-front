@@ -1,5 +1,5 @@
-import type { Room, RoomFilters } from '@/entities/room/model';
-import { instance } from '@/shared';
+import { instance } from '@/shared/api';
+import type { Room, RoomFilters } from '../model/types';
 
 interface GetRoomsResponse {
   rooms: Room[];

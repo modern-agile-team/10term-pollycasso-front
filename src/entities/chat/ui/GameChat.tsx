@@ -1,7 +1,7 @@
-import { MessageList } from '@/entities/chat/ui/MessageList';
-import { ChatInput } from '@/entities/chat/ui/ChatInput';
-import { ChatSendButton } from '@/entities/chat/ui/ChatSendButton';
-import { useGameChat } from '@/entities/chat/model/useGameChat';
+import { useGameChat } from '../model/useGameChat';
+import { ChatInput } from './ChatInput';
+import { ChatSendButton } from './ChatSendButton';
+import { MessageList } from './MessageList';
 
 export const GameChat = () => {
   const { state, actions, messagesEndRef } = useGameChat();

@@ -1,5 +1,5 @@
-import { instance } from '@/shared/api/axios';
-import type { LoginRequest, LoginResponse } from '@/features/auth/model';
+import { instance } from '@/shared/api';
+import type { LoginRequest, LoginResponse } from '../model/types';
 
 export const postLogin = async (
   credentials: LoginRequest,

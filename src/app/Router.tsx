@@ -1,14 +1,16 @@
-import { createBrowserRouter, RouterProvider } from 'react-router';
 import { lazy, Suspense } from 'react';
-import { RootLayout, Spinner } from '@/shared/ui';
+import { createBrowserRouter, RouterProvider } from 'react-router';
+
+import { RootLayout } from '@/shared/ui/RootLayout';
+import { Spinner } from '@/shared/ui/Spinner';
 import PrivateRoute from './PrivateRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
-const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
+const SignupPage = lazy(() => import('@/pages/SignupPage'));
 const WelcomePage = lazy(() => import('@/pages/WelcomePage'));
 const MainPage = lazy(() => import('@/pages/MainPage'));
 const RoomPage = lazy(() => import('@/pages/RoomPage'));
-const GameWidget = lazy(() => import('@/widgets/game-drawing/ui/'));
+const GameWidget = lazy(() => import('@/widgets/game-drawing/ui/GameWidget'));
 // TODO: 다음 위젯(그림 페이즈) 작업 시 삭제 예정
 const LoadingPage = lazy(() => import('@/widgets/game-loading'));
 
@@ -26,7 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/signup',
-        element: <SignUpPage />,
+        element: <SignupPage />,
       },
       {
         path: '/welcome',

@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
-import { useAuthStore } from '@/features/auth/model';
+
+import { useAuthStore } from '@/entities/user';
 
 const PrivateRoute = () => {
   const { accessToken } = useAuthStore();

@@ -1,5 +1,6 @@
 import { UserIcon } from '@heroicons/react/24/outline';
-import { cn } from '@/shared/lib/cn';
+
+import { cn } from '@/shared/lib';
 
 interface ChannelSelectProps {
   selected: { label: string; value: string };

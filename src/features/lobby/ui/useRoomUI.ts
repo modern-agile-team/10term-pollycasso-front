@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
-import { useRoom } from '@/features/lobby/model/useRoom';
+
+import { useRoom } from '../model/useRoom';
 
 export const useRoomUI = () => {
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { Socket } from 'socket.io-client';
-import type { ChatMessage } from '@/shared/model/types';
+
+import type { ChatMessage } from '@/shared/model';
 
 export interface SocketContextProps {
   socket: Socket | null;

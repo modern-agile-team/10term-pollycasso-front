@@ -1,9 +1,4 @@
-import type {
-  RoomState,
-  Player,
-  Outfit,
-  GameItem,
-} from '@/entities/game/model/types';
+import type { GameItem, Outfit, Player, RoomState } from '@/entities/game';
 
 const MOCK_OUTFIT_ME: Outfit = {
   bird: 'bird_blue',

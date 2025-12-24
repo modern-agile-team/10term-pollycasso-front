@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
-import { useAuthStore } from '@/features/auth';
-import { useEffect, useState } from 'react';
+
+import { useAuthStore } from '@/entities/user';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -16,8 +17,8 @@ const WelcomePage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLeaving(true); // 나가기 애니메이션 트리거
-      setTimeout(() => navigate('/'), 500); // 애니메이션 끝난 뒤 이동
+      setLeaving(true);
+      setTimeout(() => navigate('/'), 500);
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -31,11 +32,7 @@ const WelcomePage = () => {
     <div className="flex flex-col items-center justify-center h-screen">
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
-        animate={
-          leaving
-            ? { opacity: 0, scale: 3 } // 나갈 때 살짝 줄어들며 사라짐
-            : { opacity: 1, scale: 1 } // 들어올 때 상큼하게 등장
-        }
+        animate={leaving ? { opacity: 0, scale: 3 } : { opacity: 1, scale: 1 }}
         transition={{
           duration: 0.5,
           ease: 'easeInOut',

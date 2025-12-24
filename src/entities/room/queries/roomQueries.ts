@@ -1,6 +1,8 @@
-import { mutationOptions, infiniteQueryOptions } from '@tanstack/react-query';
-import { getRooms, createRoom } from '@/entities/room/api';
-import type { RoomFilters } from '@/entities/room/model/types';
+import { infiniteQueryOptions, mutationOptions } from '@tanstack/react-query';
+
+import { createRoom } from '../api/createRoom';
+import { getRooms } from '../api/getRooms';
+import type { RoomFilters } from '../model/types';
 
 export const roomQueries = {
   rooms: () => ['rooms'] as const,

@@ -1,11 +1,11 @@
 import type {
-  ThemeSelectingContext,
   DrawingContext,
   EvaluatingContext,
-  RoundSummaryContext,
   FinishContext,
-} from './phases.ts';
-import type { Player } from './player.ts';
+  RoundSummaryContext,
+  ThemeSelectingContext,
+} from './phases';
+import type { Player } from './player';
 
 export interface RoomState {
   status: RoomStatus;

@@ -1,6 +1,7 @@
-import { COLOR_MAP } from '@/features/lobby/constants/colors';
 import type { ReactNode } from 'react';
-import { cn } from '@/shared/lib/cn';
+
+import { cn } from '@/shared/lib';
+import { COLOR_MAP } from '../constants/colors';
 
 interface MenuButtonProps {
   icon: ReactNode;

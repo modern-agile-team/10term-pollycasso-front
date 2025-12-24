@@ -1,6 +1,6 @@
 import title from '@/assets/title.svg';
+import { LoginForm, SignupLink, SocialLoginButtons } from '@/features/auth';
 import { AuthLayout } from '@/widgets/auth/ui/AuthLayout';
-import { LoginForm, SocialLoginButtons, SignUpLink } from '@/features/auth/ui';
 
 const LoginPage = () => {
   return (
@@ -12,7 +12,7 @@ const LoginPage = () => {
       />
       <LoginForm />
       <SocialLoginButtons />
-      <SignUpLink />
+      <SignupLink />
     </AuthLayout>
   );
 };

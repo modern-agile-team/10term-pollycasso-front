@@ -1,6 +1,7 @@
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { Cog8ToothIcon } from '@heroicons/react/24/solid';
-import { GameChat } from '@/entities/chat/ui/GameChat';
+
+import { GameChat } from '@/entities/chat';
 import { MenuButton } from './MenuButton';
 
 export const RoomDashboard = () => {

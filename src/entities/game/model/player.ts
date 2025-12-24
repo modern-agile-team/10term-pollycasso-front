@@ -40,3 +40,19 @@ export interface PlayerResult {
   coinsGained: number;
   didLevelUp: boolean;
 }
+
+export interface ItemMeta {
+  id: string;
+  name: string;
+  description: string;
+  imagePath: string;
+  price: number;
+  category: string;
+  effect?: string;
+}
+
+export interface InventoryUIItem extends ItemMeta {
+  count: number;
+  cooldownEndsAt: number;
+  isOwned: boolean;
+}

@@ -1,10 +1,10 @@
 export { default as Background } from './background.svg';
+export { default as BackgroundMain } from './background_main.svg';
+export { default as Crown } from './crown.svg';
 export { default as Favicon } from './favicon.svg';
 export { default as Google } from './google.svg';
 export { default as Kakao } from './kakao.svg';
-export { default as LeafYellow } from './leaf_yellow.svg';
 export { default as LeafGreen } from './leaf_green.svg';
-export { default as Title } from './title.svg';
-export { default as BackgroundMain } from './background_main.svg';
-export { default as Crown } from './crown.svg';
+export { default as LeafYellow } from './leaf_yellow.svg';
 export { default as Spinner } from './spinner.svg';
+export { default as Title } from './title.svg';

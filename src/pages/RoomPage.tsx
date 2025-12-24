@@ -1,9 +1,11 @@
-import { useRoomUI } from '@/features/lobby/ui/useRoomUI';
-import { TeamTab } from '@/features/lobby/ui/TeamTab';
-import { RoomActionButtons } from '@/features/lobby/ui/RoomActionButtons';
-import { TeamSection } from '@/features/lobby/ui/TeamSection';
-import { RoomDashboard } from '@/features/lobby/ui/RoomDashboard';
-import { Spinner } from '@/shared';
+import {
+  RoomActionButtons,
+  RoomDashboard,
+  TeamSection,
+  TeamTab,
+  useRoomUI,
+} from '@/features/lobby';
+import { Spinner } from '@/shared/ui/Spinner';
 
 const RoomPage = () => {
   const { roomState, me, derived, actions, topGradient, bottomGradient } =

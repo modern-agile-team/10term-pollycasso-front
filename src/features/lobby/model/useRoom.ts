@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useSocket } from '@/shared/api/socket/socketContext';
-import type { RoomState } from '@/entities/game/model/types';
+
+import type { RoomState } from '@/entities/game';
+import { useAuthStore } from '@/entities/user';
+import { useSocket } from '@/shared/api/socket';
 import {
   selectCanStartGame,
   selectMe,
   selectTopBottomTeams,
 } from './roomSelectors';
-import { useAuthStore } from '@/features/auth/model/useAuthStore';
 
 export const useRoom = () => {
   const { roomId } = useParams();

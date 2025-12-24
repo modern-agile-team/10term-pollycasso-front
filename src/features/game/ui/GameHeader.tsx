@@ -1,5 +1,6 @@
 import Marquee from 'react-fast-marquee';
-import { UI_TEXT, COLORS, GAME_CONFIG } from '@/features/game/constants/game';
+
+import { COLORS, GAME_CONFIG, UI_TEXT } from '../constants/game';
 import { useGameTimer } from './useGameTimer';
 
 interface GameHeaderProps {

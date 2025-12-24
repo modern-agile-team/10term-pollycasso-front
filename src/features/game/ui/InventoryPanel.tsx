@@ -1,9 +1,10 @@
-import type { GameItem } from '@/entities/game/model';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
+
+import type { GameItem, InventoryUIItem } from '@/entities/game';
+import { ItemIcon } from '@/entities/game';
+import { cn } from '@/shared/lib';
+import { COLORS, UI_TEXT } from '../constants/game';
 import { useInventory } from './useInventory';
-import { ItemIcon, type ItemIconProps } from '@/entities/game/ui/ItemIcon';
-import { COLORS, UI_TEXT } from '@/features/game/constants/game';
-import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
-import { cn } from '@/shared/lib/cn';
 
 interface InventoryPanelProps {
   inventory: GameItem[] | null;
@@ -37,8 +38,16 @@ export const InventoryPanel = ({
         </button>
 
         <div className="flex flex-col gap-6 my-2 h-[450px]">
-          {visibleItems.map((item: ItemIconProps) => (
-            <ItemIcon key={item.id} {...item} />
+          {visibleItems.map((item: InventoryUIItem) => (
+            <ItemIcon
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              imagePath={item.imagePath}
+              effect={item.effect}
+              count={item.count}
+              isOwned={item.isOwned}
+            />
           ))}
         </div>
 

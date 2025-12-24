@@ -1,14 +1,14 @@
 import type { RoomState } from '@/entities/game/model/types';
 import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
-import { SOCKET_EVENTS } from '@/shared/api/socket/constants';
+import { SOCKET_EVENTS } from '@/shared/api/socket';
 import {
+  handleChatSendMessage,
   handleLobbySend,
-  handleRoomJoin,
-  handleRoomReadyToggle,
   handleRoomChangeTeam,
+  handleRoomJoin,
   handleRoomKickUser,
   handleRoomLeave,
-  handleChatSendMessage,
+  handleRoomReadyToggle,
 } from './socketHandlers';
 
 type Listener = (...args: any[]) => void;

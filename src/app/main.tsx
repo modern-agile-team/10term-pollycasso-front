@@ -1,14 +1,15 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './global.css';
-import App from './App';
 
-async function enableMSW() {
+import App from './App';
+import './global.css';
+
+export const enableMSW = async () => {
   if (import.meta.env.DEV && import.meta.env.VITE_USE_MSW) {
     const { worker } = await import('@/mocks/browser');
     await worker.start({});
   }
-}
+};
 
 enableMSW().then(() => {
   createRoot(document.getElementById('root')!).render(

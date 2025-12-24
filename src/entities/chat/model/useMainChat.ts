@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
-import type { Friend } from '@/shared/model/types';
+import { useEffect, useRef, useState } from 'react';
+
+import { useAuthStore } from '@/entities/user';
 import { mockChannels, mockFriends } from '@/mocks/chat.mock';
-import { useSocket } from '@/shared/api/socket/socketContext';
-import { useAuthStore } from '@/features/auth';
+import { useSocket } from '@/shared/api/socket';
+import type { Friend } from '@/shared/model';
 
 export const useMainChat = () => {
   const { messages, sendMessage: emitMessage } = useSocket();

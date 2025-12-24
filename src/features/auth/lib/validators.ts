@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { AUTH_MESSAGES } from '@/features/auth/constants';
+
+import { AUTH_MESSAGES } from '../constants/messages';
 
 export const usernameSchema = z
   .string()
@@ -41,5 +42,5 @@ export const loginSchema = z.object({
   password: passwordSchema,
 });
 
-export type SignUpFormValues = z.infer<typeof signUpSchema>;
+export type SignupFormValues = z.infer<typeof signUpSchema>;
 export type LoginFormValues = z.infer<typeof loginSchema>;

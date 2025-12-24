@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import type { RoomFilter } from '@/features/main/constants/filters';
+
+import type { RoomFilter } from '../constants/filters';
 
 interface RoomFilterStore {
   selectedFilter: RoomFilter;

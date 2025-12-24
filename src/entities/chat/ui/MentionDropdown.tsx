@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
-import type { Friend } from '@/entities/chat';
-import { cn } from '@/shared/lib/cn';
+
+import { cn } from '@/shared/lib';
+import type { Friend } from '@/shared/model';
 
 interface MentionDropdownProps {
   friends: Friend[];

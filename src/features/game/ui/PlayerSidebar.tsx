@@ -1,6 +1,6 @@
-import type { Player } from '@/entities/game/model';
-import { PlayerAvatar } from '@/entities/game/ui/PlayerAvatar';
-import { COLORS } from '@/features/game/constants/game';
+import type { Player } from '@/entities/game';
+import { PlayerAvatar } from '@/entities/game';
+import { COLORS } from '../constants/game';
 
 interface PlayerSidebarProps {
   players: Player[];

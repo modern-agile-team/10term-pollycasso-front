@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
 import { MegaphoneIcon } from '@heroicons/react/24/outline';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface SocialGuideProps {
   visible: boolean;

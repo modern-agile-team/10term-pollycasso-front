@@ -1,9 +1,10 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { roomQueries } from '@/entities/room/queries/roomQueries';
+
+import type { RoomFilters } from '@/entities/room';
+import { roomQueries } from '@/entities/room';
+import type { RoomFilter } from '../constants/filters';
 import { useRoomFilterStore } from './useRoomFilterStore';
 import { useSearchStore } from './useSearchStore';
-import type { RoomFilter } from '@/features/main/constants/filters';
-import type { RoomFilters } from '@/entities/room/model/types';
 
 const translateFilterToParams = (filter: RoomFilter): RoomFilters => {
   if (filter === '대기') return { status: 'WAITING' };

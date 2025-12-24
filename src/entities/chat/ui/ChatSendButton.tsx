@@ -1,5 +1,6 @@
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
-import { cn } from '@/shared/lib/cn';
+
+import { cn } from '@/shared/lib';
 
 interface ChatSendButtonProps {
   disabled: boolean;

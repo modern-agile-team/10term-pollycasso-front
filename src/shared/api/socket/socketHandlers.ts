@@ -1,71 +1,78 @@
-import { SOCKET_EVENTS } from '@/shared/api/socket/constants';
+import { SOCKET_EVENTS } from '@/shared/api/socket';
 import type { MockSocket } from './mockSocket';
 
-export function handleLobbySend(socket: MockSocket, payload: any) {
+export const handleLobbySend = (socket: MockSocket, payload: any) => {
   const { message } = payload;
+
   const mainChatMsg = {
     id: Date.now().toString(),
     senderId: 'test-user',
     nickname: '테스트유저(Mock1)',
-    message: message,
+    message,
   };
+
   socket['trigger'](SOCKET_EVENTS.LOBBY_MESSAGE, mainChatMsg);
-}
+};
 
-export function handleRoomJoin(socket: MockSocket) {
+export const handleRoomJoin = (socket: MockSocket) => {
   socket['broadcastRoomState']();
-}
+};
 
-export function handleRoomReadyToggle(socket: MockSocket, payload: any) {
+export const handleRoomReadyToggle = (socket: MockSocket, payload: any) => {
   const userId = payload.userId || socket['roomState'].players[0]?.userId;
+
   const player = socket['roomState'].players.find(
     (p: any) => p.userId === userId,
   );
 
-  if (player) {
-    player.isReady = !player.isReady;
-    socket['broadcastRoomState']();
-  }
-}
+  if (!player) return;
 
-export function handleRoomChangeTeam(socket: MockSocket, payload: any) {
+  player.isReady = !player.isReady;
+  socket['broadcastRoomState']();
+};
+
+export const handleRoomChangeTeam = (socket: MockSocket, payload: any) => {
   const { targetTeamId, userId } = payload;
-  const targetUser = userId || socket['roomState'].players[0]?.userId;
+  const targetUserId = userId || socket['roomState'].players[0]?.userId;
+
   const player = socket['roomState'].players.find(
-    (p: any) => p.userId === targetUser,
+    (p: any) => p.userId === targetUserId,
   );
 
-  if (player) {
-    player.teamId = targetTeamId;
-    player.isReady = false;
-    socket['broadcastRoomState']();
-  }
-}
+  if (!player) return;
 
-export function handleRoomKickUser(socket: MockSocket, payload: any) {
+  player.teamId = targetTeamId;
+  player.isReady = false;
+  socket['broadcastRoomState']();
+};
+
+export const handleRoomKickUser = (socket: MockSocket, payload: any) => {
   const { targetUserId } = payload;
+
   socket['roomState'].players = socket['roomState'].players.filter(
     (p: any) => p.userId !== targetUserId,
   );
+
   socket['broadcastRoomState']();
-}
+};
 
-export function handleRoomLeave(socket: MockSocket) {
+export const handleRoomLeave = (socket: MockSocket) => {
   socket.broadcastRoomState();
-}
+};
 
-export function handleChatSendMessage(socket: MockSocket, payload: any) {
+export const handleChatSendMessage = (socket: MockSocket, payload: any) => {
   const { message, userId } = payload;
+
   const sender =
-    socket['roomState'].players.find((p: any) => p.userId === userId) ||
+    socket['roomState'].players.find((p: any) => p.userId === userId) ??
     socket['roomState'].players[0];
 
   const newChatMessage = {
     id: Date.now().toString(),
     senderId: sender?.userId,
     nickname: sender?.nickname,
-    message: message,
+    message,
   };
 
   socket['trigger'](SOCKET_EVENTS.CHAT_NEW_MESSAGE, newChatMessage);
-}
+};

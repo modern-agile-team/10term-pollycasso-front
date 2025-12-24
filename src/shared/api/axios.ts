@@ -1,7 +1,8 @@
+import type { AxiosError, AxiosRequestConfig } from 'axios';
 import axios from 'axios';
-import type { AxiosRequestConfig, AxiosError } from 'axios';
-import { postRefreshToken } from '@/features/auth';
 import queryString from 'query-string';
+
+import { postRefreshToken } from '@/features/auth';
 
 interface APIRequest extends Omit<AxiosRequestConfig, 'data' | 'method'> {
   url: string;

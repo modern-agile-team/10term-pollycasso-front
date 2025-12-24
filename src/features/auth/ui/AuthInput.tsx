@@ -1,9 +1,13 @@
+import type { FocusEvent, ReactNode } from 'react';
 import { useState } from 'react';
-import type { ReactNode, FocusEvent } from 'react';
-import { useFormContext, get } from 'react-hook-form';
 import type { FieldValues, Path, RegisterOptions } from 'react-hook-form';
-import { FormField, Input, ValidationIcon, ErrorMessage } from '@/shared/ui';
-import { cn } from '@/shared/lib/cn';
+import { get, useFormContext } from 'react-hook-form';
+
+import { cn } from '@/shared/lib';
+import { ErrorMessage } from '@/shared/ui/ErrorMessage';
+import { FormField } from '@/shared/ui/FormField';
+import { Input } from '@/shared/ui/Input';
+import { ValidationIcon } from '@/shared/ui/ValidationIcon';
 
 interface AuthInputProps<T extends FieldValues> {
   name: Path<T>;

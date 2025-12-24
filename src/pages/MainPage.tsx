@@ -1,14 +1,15 @@
-import { useAuthStore } from '@/features/auth/model';
+import { useNavigate } from 'react-router';
+
+import { MainChat } from '@/entities/chat';
+import { useAuthStore } from '@/entities/user';
 import {
-  SideBar,
+  CreateRoomModal,
   MainHeader,
   RoomList,
-  CreateRoomModal,
-} from '@/features/main/ui';
-import { MainChat } from '@/entities/chat';
-import { useCreateRoomModalStore } from '@/features/main/model/useCreateRoomModalStore';
-import { useSearchStore } from '@/features/main/model/useSearchStore';
-import { useNavigate } from 'react-router';
+  SideBar,
+  useCreateRoomModalStore,
+  useSearchStore,
+} from '@/features/main';
 
 const MainPage = () => {
   const navigate = useNavigate();
