@@ -5,15 +5,12 @@ import { useSocket } from '@/shared/api/socket';
 
 const ITEM_EFFECTS: Record<string, () => void> = {
   ink_splash: () => {
-    console.log('🦑 [Effect] 먹물 뿌리기 발동!');
     // TODO: 먹물 이펙트 적용
   },
   blur: () => {
-    console.log('🌫️ [Effect] 화면 흐리게 하기 발동!');
     // TODO: 화면 흐리게 하기 이펙트 적용
   },
   bomb: () => {
-    console.log('💣 [Effect] 캔버스 폭파 발동!');
     // TODO: 캔버스 폭파 이펙트 적용
   },
 };

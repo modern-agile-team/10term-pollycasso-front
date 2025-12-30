@@ -1,4 +1,5 @@
-import { type DragEvent, useEffect, useState } from 'react'; // useState, useEffect 추가
+import type { DragEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import { ItemIcon } from '@/entities/game';
