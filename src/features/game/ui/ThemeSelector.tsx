@@ -3,7 +3,7 @@ import { THEME_STYLES, UI_TEXT } from '../constants/game';
 interface ThemeSelectorProps {
   isSelector: boolean;
   inputValue: string;
-  onChange: (val: string) => void;
+  onChange: (value: string) => void;
   onRandom?: () => void;
 }
 
