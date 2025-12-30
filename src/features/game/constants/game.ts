@@ -3,8 +3,11 @@ import type { ItemMeta } from '@/entities/game';
 export const COLORS = {
   PRIMARY_DARK: '#003D00',
   TIMER_GREEN: '#0ABC22',
+  TIMER_YELLOW: '#FFE100',
+  TIMER_RED: '#F20000',
   NOTICE_BG: '#D9D9D9',
   NOTICE_TEXT: '#000000',
+  BADGE_PINK: '#E597FF',
 };
 
 export const GAME_CONFIG = { MAX_TIME: 90, ITEMS_PER_PAGE: 5 };

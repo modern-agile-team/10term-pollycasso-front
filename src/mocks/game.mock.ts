@@ -47,7 +47,7 @@ const MOCK_ME: Player = {
 
   status: 'IDLE',
   isConnected: true,
-  isReady: true,
+  isReady: false,
   teamId: 'BLUE',
   totalScore: 1200,
 };
@@ -140,7 +140,7 @@ export const MOCK_GAME_DRAWING: RoomState = {
     isPrivate: false,
   },
 
-  players: [MOCK_ME, MOCK_OPPONENT],
+  players: [MOCK_ME, MOCK_OPPONENT, MOCK_DISCONNECTED, MOCK_BONUS],
 
   phaseContext: {
     currentTheme: '우주비행사들의 대축제',
