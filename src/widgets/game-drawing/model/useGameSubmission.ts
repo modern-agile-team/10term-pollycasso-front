@@ -1,39 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
+import { useAuthStore } from '@/entities/user';
+import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
 import type { Player } from '@/shared/model';
-import { useGameDrawing } from './useGameDrawing';
+import { useGameState } from './useGameState';
 
 interface GameSubmissionState {
   players: Player[];
   isMeReady: boolean;
   completedCount: number;
   totalCount: number;
+  toggleReady: () => void;
 }
 
 export const useGameSubmission = (): GameSubmissionState => {
-  const { players: initialPlayers } = useGameDrawing();
+  const { socket } = useSocket();
+  const user = useAuthStore((state) => state.user);
 
-  const MOCK_ID = 'id-2';
-
-  const [players, setPlayers] = useState<Player[]>(initialPlayers);
-
-  useEffect(() => {
-    if (initialPlayers && initialPlayers.length > 0) {
-      setPlayers(initialPlayers);
-    }
-  }, [initialPlayers]);
+  const { players } = useGameState();
 
   const totalCount = players.length;
-  const completedCount = players.filter((p) => p.isReady).length;
 
-  const myPlayer = players.find((p) => p.userId === MOCK_ID);
+  const completedCount = useMemo(() => {
+    return players.filter((p) => p.isReady).length;
+  }, [players]);
 
-  const isMeReady = myPlayer?.isReady ?? false;
+  const isMeReady = useMemo(() => {
+    if (!user) return false;
+    return players.find((p) => p.userId === user.id)?.isReady ?? false;
+  }, [players, user]);
+
+  const toggleReady = useCallback(() => {
+    if (!socket) return;
+
+    socket.emit(SOCKET_EVENTS.ROOM_READY_TOGGLE);
+  }, [socket]);
 
   return {
     players,
     isMeReady,
     completedCount,
     totalCount,
+    toggleReady,
   };
 };

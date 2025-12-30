@@ -17,7 +17,8 @@ import { useThemeSelecting } from '../model/useThemeSelecting';
 const GameWidget = () => {
   const { status, players, endsAt, inventory, currentTheme } = useGameState();
   const { isMyTurn } = useThemeSelecting();
-  const { completedCount, totalCount, isMeReady } = useGameSubmission();
+  const { completedCount, totalCount, isMeReady, toggleReady } =
+    useGameSubmission();
   const { socket } = useSocket();
   const [localInput, setLocalInput] = useState('');
 
@@ -29,15 +30,18 @@ const GameWidget = () => {
   };
 
   const handleComplete = useCallback(() => {
-    if (!isMyTurn) return;
-
-    if (!localInput.trim()) {
-      alert('주제를 입력해주세요!');
+    if (status === 'THEME_SELECTING') {
+      if (!isMyTurn) return;
+      if (!localInput.trim()) {
+        alert('주제를 입력해주세요!');
+        return;
+      }
+      socket?.emit(SOCKET_EVENTS.GAME_THEME_SUBMIT, { theme: localInput });
       return;
     }
 
-    socket?.emit(SOCKET_EVENTS.GAME_THEME_SUBMIT, { theme: localInput });
-  }, [localInput, isMyTurn, socket]);
+    toggleReady();
+  }, [status, isMyTurn, localInput, socket, toggleReady]);
 
   useEffect(() => {
     if (!socket) return;
@@ -96,8 +100,12 @@ const GameWidget = () => {
           totalTime={totalTime}
         />
 
-        <div className="flex-1 flex justify-center bg-white pt-44">
-          {status === 'THEME_SELECTING' ? (
+        <div
+          className={`flex-1 flex justify-center bg-white ${
+            isThemeSelecting ? 'pt-44' : 'py-5 items-center'
+          }`}
+        >
+          {isThemeSelecting ? (
             <ThemeSelector
               isSelector={isMyTurn}
               inputValue={localInput}
