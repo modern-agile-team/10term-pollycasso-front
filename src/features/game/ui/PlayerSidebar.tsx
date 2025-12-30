@@ -17,6 +17,7 @@ export const PlayerSidebar = ({ players }: PlayerSidebarProps) => {
   const { socket } = useSocket();
 
   const handleDragOver = (e: DragEvent, userId: string) => {
+    e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
     setHoveredUserId(userId);
   };
