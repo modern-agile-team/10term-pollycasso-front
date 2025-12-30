@@ -1,8 +1,10 @@
-import type { RoomState } from '@/entities/game/model/types';
 import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
 import { SOCKET_EVENTS } from '@/shared/api/socket';
+import type { RoomState } from '@/shared/model';
 import {
   handleChatSendMessage,
+  handleGameThemeSubmit,
+  handleGameTyping,
   handleLobbySend,
   handleRoomChangeTeam,
   handleRoomJoin,
@@ -97,6 +99,14 @@ export class MockSocket {
 
       case SOCKET_EVENTS.CHAT_SEND_MESSAGE:
         handleChatSendMessage(this, payload);
+        break;
+
+      case SOCKET_EVENTS.GAME_TYPING:
+        handleGameTyping(this, payload);
+        break;
+
+      case SOCKET_EVENTS.GAME_THEME_SUBMIT:
+        handleGameThemeSubmit(this, payload);
         break;
 
       default:

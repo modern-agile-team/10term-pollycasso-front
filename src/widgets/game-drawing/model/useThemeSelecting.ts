@@ -15,15 +15,7 @@ export const useThemeSelecting = () => {
     return context.selectorId === user.id;
   }, [user, status, phaseContext]);
 
-  const selectingValue = useMemo(() => {
-    if (status !== 'THEME_SELECTING') return '';
-
-    const context = phaseContext as ThemeSelectingContext;
-    return context.value || '';
-  }, [status, phaseContext]);
-
   return {
     isMyTurn,
-    selectingValue,
   };
 };

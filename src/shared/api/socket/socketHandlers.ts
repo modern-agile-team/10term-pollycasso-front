@@ -80,14 +80,11 @@ export const handleChatSendMessage = (socket: MockSocket, payload: any) => {
 
 export const handleGameTyping = (socket: MockSocket, payload: any) => {
   const { value } = payload;
-  console.log(`[MockServer] 타이핑 수신중: ${value}`);
   socket['trigger'](SOCKET_EVENTS.GAME_TYPING_SHARE, { value });
 };
 
 export const handleGameThemeSubmit = (socket: MockSocket, payload: any) => {
   const { theme } = payload;
-
-  console.log(`[MockServer] 주제 확정됨: ${theme}, 그리기 단계로 전환합니다.`);
 
   socket['roomState'].status = 'DRAWING';
 

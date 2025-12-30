@@ -8,7 +8,6 @@ interface GameSubmissionState {
   isMeReady: boolean;
   completedCount: number;
   totalCount: number;
-  toggleReady: () => void;
 }
 
 export const useGameSubmission = (): GameSubmissionState => {
@@ -31,19 +30,10 @@ export const useGameSubmission = (): GameSubmissionState => {
 
   const isMeReady = myPlayer?.isReady ?? false;
 
-  const toggleReady = () => {
-    setPlayers((prevPlayers) =>
-      prevPlayers.map((p) =>
-        p.userId === MOCK_ID ? { ...p, isReady: !p.isReady } : p,
-      ),
-    );
-  };
-
   return {
     players,
     isMeReady,
     completedCount,
     totalCount,
-    toggleReady,
   };
 };

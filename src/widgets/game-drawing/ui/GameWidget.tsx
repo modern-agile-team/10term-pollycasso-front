@@ -5,27 +5,51 @@ import {
   GameHeader,
   GameSubmitButton,
   InventoryPanel,
-  PHASE_TIME,
   PlayerSidebar,
   RANDOM_THEMES,
+  ThemeSelector,
 } from '@/features/game';
-import { ThemeSelector } from '@/features/game/ui/ThemeSelector';
+import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
+import { PHASE_TIME } from '@/shared/model';
 import { useGameState } from '../model/useGameState';
 import { useGameSubmission } from '../model/useGameSubmission';
 import { useThemeSelecting } from '../model/useThemeSelecting';
 
 const GameWidget = () => {
   const { status, players, endsAt, inventory, currentTheme } = useGameState();
-  const { isMyTurn, selectingValue } = useThemeSelecting();
-  const { completedCount, totalCount, isMeReady, toggleReady } =
-    useGameSubmission();
+  const { isMyTurn } = useThemeSelecting();
+  const { completedCount, totalCount, isMeReady } = useGameSubmission();
+  const { socket } = useSocket();
   const [localInput, setLocalInput] = useState('');
 
-  useEffect(() => {
-    if (!isMyTurn) {
-      setLocalInput(selectingValue);
+  const handleInputChange = (value: string) => {
+    setLocalInput(value);
+    if (isMyTurn) {
+      socket?.emit(SOCKET_EVENTS.GAME_TYPING, { value });
     }
-  }, [isMyTurn, selectingValue]);
+  };
+
+  const handleComplete = useCallback(() => {
+    if (!localInput || !isMyTurn) return;
+
+    socket?.emit(SOCKET_EVENTS.GAME_THEME_SUBMIT, { theme: localInput });
+  }, [localInput, isMyTurn, socket]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleTypingShare = (data: { value: string }) => {
+      if (!isMyTurn) {
+        setLocalInput(data.value);
+      }
+    };
+
+    socket.on(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
+
+    return () => {
+      socket.off(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
+    };
+  }, [socket, isMyTurn]);
 
   const handleRandomTheme = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * RANDOM_THEMES.length);
@@ -33,9 +57,10 @@ const GameWidget = () => {
 
     setLocalInput(randomTheme);
 
-    // TODO: 백엔드 구현 이후 소켓 전송 진행
-    // socket.emit('typing', randomTheme);
-  }, []);
+    if (socket) {
+      socket.emit(SOCKET_EVENTS.GAME_TYPING, { value: randomTheme });
+    }
+  }, [socket]);
 
   const totalTime = useMemo(() => {
     switch (status) {
@@ -72,7 +97,7 @@ const GameWidget = () => {
             <ThemeSelector
               isSelector={isMyTurn}
               inputValue={localInput}
-              onChange={setLocalInput}
+              onChange={handleInputChange}
               onRandom={handleRandomTheme}
             />
           ) : (
@@ -85,7 +110,7 @@ const GameWidget = () => {
         <InventoryPanel inventory={inventory} />
 
         <GameSubmitButton
-          onComplete={toggleReady}
+          onComplete={handleComplete}
           completedCount={completedCount}
           totalCount={totalCount}
           isReady={isMeReady}
