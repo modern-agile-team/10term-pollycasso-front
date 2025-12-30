@@ -1,5 +1,13 @@
 import type { DrawData } from './drawing';
 
+export const PHASE_TIME = {
+  THEME_SELECT: 22,
+  DRAWING: 92,
+  EVALUATING: 92,
+  ROUND_SUMMARY: 32,
+  FINISHED: 32,
+} as const;
+
 export interface ThemeSelectingContext {
   selectorId: string;
   nickname: string;

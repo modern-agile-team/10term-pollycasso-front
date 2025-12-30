@@ -1,4 +1,5 @@
 import { SOCKET_EVENTS } from '@/shared/api/socket';
+import { PHASE_TIME } from '@/shared/model';
 import type { MockSocket } from './mockSocket';
 
 export const handleLobbySend = (socket: MockSocket, payload: any) => {
@@ -75,4 +76,27 @@ export const handleChatSendMessage = (socket: MockSocket, payload: any) => {
   };
 
   socket['trigger'](SOCKET_EVENTS.CHAT_NEW_MESSAGE, newChatMessage);
+};
+
+export const handleGameTyping = (socket: MockSocket, payload: any) => {
+  const { value } = payload;
+  console.log(`[MockServer] 타이핑 수신중: ${value}`);
+  socket['trigger'](SOCKET_EVENTS.GAME_TYPING_SHARE, { value });
+};
+
+export const handleGameThemeSubmit = (socket: MockSocket, payload: any) => {
+  const { theme } = payload;
+
+  console.log(`[MockServer] 주제 확정됨: ${theme}, 그리기 단계로 전환합니다.`);
+
+  socket['roomState'].status = 'DRAWING';
+
+  socket['roomState'].phaseContext = {
+    currentTheme: theme,
+  };
+
+  const drawingTimeMs = PHASE_TIME.DRAWING * 1000;
+  socket['roomState'].endsAt = Date.now() + drawingTimeMs;
+
+  socket['broadcastRoomState']();
 };

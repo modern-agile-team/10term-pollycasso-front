@@ -87,14 +87,6 @@ export const ALL_ITEMS_META: ItemMeta[] = [
   },
 ];
 
-export const PHASE_TIME = {
-  THEME_SELECT: 22,
-  DRAWING: 92,
-  EVALUATING: 92,
-  ROUND_SUMMARY: 32,
-  FINISHED: 32,
-} as const;
-
 export const UI_TEXT = {
   THEME_PREFIX: '주제 :',
   NOTICE: '🦜🦜 서버 안정화 작업이 예정되어 있습니다. 🦜🦜',
