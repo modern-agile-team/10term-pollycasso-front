@@ -67,7 +67,7 @@ const GameWidget = () => {
           totalTime={totalTime}
         />
 
-        <div className="flex-1 flex justify-center bg-white pt-32">
+        <div className="flex-1 flex justify-center bg-white pt-44">
           {status === 'THEME_SELECTING' ? (
             <ThemeSelector
               isSelector={isMyTurn}
