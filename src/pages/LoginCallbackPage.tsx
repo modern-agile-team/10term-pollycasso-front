@@ -1,25 +1,36 @@
-import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router';
 
 import { useAuthStore } from '@/entities/user';
+import { instance } from '@/shared/api/axios';
 import { parseAccessToken } from '@/shared/lib';
 import { Spinner } from '@/shared/ui/Spinner';
 
 const LoginCallbackPage = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
 
-  useEffect(() => {
-    const accessToken = searchParams.get('accessToken');
+  const isRun = useRef(false);
 
-    if (accessToken) {
+  useEffect(() => {
+    if (isRun.current) return;
+    isRun.current = true;
+
+    const loginProcess = async () => {
       try {
+        const response = await instance.post('/auth/refresh');
+
+        const { accessToken } = response.data;
+
+        if (!accessToken) throw new Error('토큰 없음');
+
+        localStorage.setItem('accessToken', accessToken);
+
         const decoded = parseAccessToken(accessToken);
 
         setAuth({
           user: {
-            id: decoded.sub,
+            id: decoded.sub || decoded.id,
             nickname: decoded.nickname,
           },
           accessToken: accessToken,
@@ -27,18 +38,16 @@ const LoginCallbackPage = () => {
 
         navigate('/welcome', { replace: true });
       } catch (error) {
-        alert('로그인 정보가 올바르지 않습니다.');
+        console.error('로그인 실패:', error);
+        alert('소셜 로그인 처리에 실패했습니다.');
         navigate('/login', { replace: true });
       }
-    } else {
-      alert('소셜 로그인 처리에 실패했습니다.');
-      navigate('/login', { replace: true });
-    }
-  }, [searchParams, navigate, setAuth]);
+    };
 
-  return (
-    <Spinner fixed transparent size="xl" message="소셜 로그인 중입니다..." />
-  );
+    loginProcess();
+  }, [navigate, setAuth]);
+
+  return <Spinner fixed transparent size="xl" message="로그인 확인 중..." />;
 };
 
 export default LoginCallbackPage;

@@ -6,27 +6,28 @@ import { useAuthStore } from '@/entities/user';
 
 const WelcomePage = () => {
   const navigate = useNavigate();
+
   const user = useAuthStore((state) => state.user);
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
     if (!user) {
-      navigate('/login');
+      navigate('/login', { replace: true });
     }
   }, [user, navigate]);
 
   useEffect(() => {
+    if (!user) return;
+
     const timer = setTimeout(() => {
       setLeaving(true);
-      setTimeout(() => navigate('/'), 500);
-    }, 3000);
+      setTimeout(() => navigate('/', { replace: true }), 500);
+    }, 2000);
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [user, navigate]);
 
-  const goToLoginPage = () => {
-    navigate('/login');
-  };
+  if (!user) return null;
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -38,12 +39,11 @@ const WelcomePage = () => {
           ease: 'easeInOut',
           scale: { type: 'spring', bounce: 0.4 },
         }}
-        onClick={goToLoginPage}
-        className="w-[250px] h-[250px] bg-white rounded-full shadow-md cursor-pointer"
+        className="w-[250px] h-[250px] bg-white rounded-full shadow-md"
       />
 
       <div className="mt-10 text-center font-ssrm font-bold">
-        <span className="text-4xl text-green-500">{user?.nickname}</span>
+        <span className="text-4xl text-green-500">{user.nickname}</span>
         <span className="text-4xl">
           님<br />
         </span>

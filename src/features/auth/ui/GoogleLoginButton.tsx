@@ -4,7 +4,10 @@ import { Button } from '@/shared/ui/Button';
 export const GoogleLoginButton = () => {
   const handleLogin = () => {
     const baseUrl = import.meta.env.VITE_SOCIAL_LOGIN_URL;
-    window.location.href = `${baseUrl}/auth/google`;
+    const currentDomain = window.location.origin;
+    const targetUrl = `${currentDomain}/auth/callback`;
+
+    window.location.href = `${baseUrl}/auth/google?state=${encodeURIComponent(targetUrl)}`;
   };
 
   return (
