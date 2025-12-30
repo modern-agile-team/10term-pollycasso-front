@@ -1,5 +1,6 @@
+import { RANDOM_THEMES } from '@/features/game/constants/game';
 import { SOCKET_EVENTS } from '@/shared/api/socket';
-import { PHASE_TIME } from '@/shared/model';
+import { PHASE_TIME, type ThemeSelectingContext } from '@/shared/model';
 import type { MockSocket } from './mockSocket';
 
 export const handleLobbySend = (socket: MockSocket, payload: any) => {
@@ -80,6 +81,14 @@ export const handleChatSendMessage = (socket: MockSocket, payload: any) => {
 
 export const handleGameTyping = (socket: MockSocket, payload: any) => {
   const { value } = payload;
+
+  if (
+    socket.roomState.status === 'THEME_SELECTING' &&
+    socket.roomState.phaseContext
+  ) {
+    (socket.roomState.phaseContext as ThemeSelectingContext).value = value;
+  }
+
   socket['trigger'](SOCKET_EVENTS.GAME_TYPING_SHARE, { value });
 };
 
@@ -87,7 +96,6 @@ export const handleGameThemeSubmit = (socket: MockSocket, payload: any) => {
   const { theme } = payload;
 
   socket['roomState'].status = 'DRAWING';
-
   socket['roomState'].phaseContext = {
     currentTheme: theme,
   };
@@ -95,5 +103,25 @@ export const handleGameThemeSubmit = (socket: MockSocket, payload: any) => {
   const drawingTimeMs = PHASE_TIME.DRAWING * 1000;
   socket['roomState'].endsAt = Date.now() + drawingTimeMs;
 
+  socket['broadcastRoomState']();
+};
+
+export const handleGameThemeAutoSelect = (socket: MockSocket) => {
+  const context = socket.roomState.phaseContext as ThemeSelectingContext | null;
+  const savedInput = context?.value || '';
+
+  let selectedTheme = savedInput;
+
+  if (!selectedTheme.trim()) {
+    const randomIndex = Math.floor(Math.random() * RANDOM_THEMES.length);
+    selectedTheme = RANDOM_THEMES[randomIndex];
+  }
+
+  socket['roomState'].status = 'DRAWING';
+  socket['roomState'].phaseContext = {
+    currentTheme: selectedTheme,
+  };
+
+  socket['roomState'].endsAt = Date.now() + PHASE_TIME.DRAWING * 1000;
   socket['broadcastRoomState']();
 };
