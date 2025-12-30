@@ -1,6 +1,6 @@
-import { RANDOM_THEMES } from '@/features/game/constants/game';
 import { SOCKET_EVENTS } from '@/shared/api/socket';
-import { PHASE_TIME, type ThemeSelectingContext } from '@/shared/model';
+import type { ThemeSelectingContext } from '@/shared/model';
+import { PHASE_TIME, RANDOM_THEMES } from '@/shared/model';
 import type { MockSocket } from './mockSocket';
 
 export const handleLobbySend = (socket: MockSocket, payload: any) => {

@@ -1,6 +1,7 @@
-import { MOCK_GAME_DRAWING, MOCK_GAME_SELECTING } from '@/mocks/game.mock';
+import { MOCK_GAME_SELECTING } from '@/mocks/game.mock';
 import { SOCKET_EVENTS } from '@/shared/api/socket';
-import { PHASE_TIME, type RoomState } from '@/shared/model';
+import type { RoomState } from '@/shared/model';
+import { PHASE_TIME } from '@/shared/model';
 import {
   handleChatSendMessage,
   handleGameThemeAutoSelect,

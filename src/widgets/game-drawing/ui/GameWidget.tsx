@@ -6,11 +6,10 @@ import {
   GameSubmitButton,
   InventoryPanel,
   PlayerSidebar,
-  RANDOM_THEMES,
   ThemeSelector,
 } from '@/features/game';
 import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
-import { PHASE_TIME } from '@/shared/model';
+import { PHASE_TIME, RANDOM_THEMES } from '@/shared/model';
 import { useGameState } from '../model/useGameState';
 import { useGameSubmission } from '../model/useGameSubmission';
 import { useThemeSelecting } from '../model/useThemeSelecting';
