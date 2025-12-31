@@ -1,5 +1,5 @@
+import { GameCanvas } from '@/features/drawing/ui/GameCanvas';
 import {
-  GameCanvas,
   GameHeader,
   GameSubmitButton,
   InventoryPanel,
