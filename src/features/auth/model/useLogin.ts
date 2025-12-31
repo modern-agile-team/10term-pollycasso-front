@@ -15,6 +15,7 @@ import { authQueries } from '../queries/authQueries';
 export const useLogin = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+
   const [isAnyFieldFocused, setIsAnyFieldFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -38,8 +39,6 @@ export const useLogin = () => {
         return;
       }
 
-      localStorage.setItem('accessToken', result.accessToken);
-
       const decoded = parseAccessToken(result.accessToken);
 
       setAuth({
@@ -53,12 +52,13 @@ export const useLogin = () => {
       setErrorMessage(null);
       navigate('/welcome');
     },
+
     onError: (err: AxiosError<LoginFailureResponse>) => {
       setErrorMessage(err.response?.data?.message ?? '로그인에 실패했습니다.');
     },
   });
 
-  const onSubmit = (form: { username: string; password: string }) => {
+  const onSubmit = (form: LoginFormValues) => {
     login(form);
   };
 
