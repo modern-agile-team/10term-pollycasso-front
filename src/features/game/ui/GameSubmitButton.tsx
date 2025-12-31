@@ -6,6 +6,7 @@ interface GameSubmitButtonProps {
   completedCount: number;
   totalCount: number;
   isReady: boolean;
+  showBadge?: boolean;
 }
 
 export const GameSubmitButton = ({
@@ -13,15 +14,18 @@ export const GameSubmitButton = ({
   completedCount,
   totalCount,
   isReady,
+  showBadge = true,
 }: GameSubmitButtonProps) => {
   return (
     <div className="relative w-full mt-4">
-      <div
-        className="absolute left-1/2 -translate-x-1/2 -top-7 px-6 py-2 rounded-t-xl text-white font-bold text-sm shadow-md flex items-center justify-center z-0 whitespace-nowrap"
-        style={{ backgroundColor: COLORS.BADGE_PINK }}
-      >
-        {completedCount}/{totalCount} 완료
-      </div>
+      {showBadge && (
+        <div
+          className="absolute left-1/2 -translate-x-1/2 -top-7 px-6 py-2 rounded-t-xl text-white font-bold text-sm shadow-md flex items-center justify-center z-0 whitespace-nowrap"
+          style={{ backgroundColor: COLORS.BADGE_PINK }}
+        >
+          {completedCount}/{totalCount} 완료
+        </div>
+      )}
 
       <button
         onClick={onComplete}
@@ -34,7 +38,7 @@ export const GameSubmitButton = ({
           backgroundColor: isReady ? COLORS.TIMER_RED : undefined,
         }}
       >
-        {isReady ? '취소' : UI_TEXT.BTN_COMPLETE}
+        {isReady ? UI_TEXT.BUTTON.CANCEL : UI_TEXT.BUTTON.COMPLETE}
       </button>
     </div>
   );

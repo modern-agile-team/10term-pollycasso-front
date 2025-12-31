@@ -125,6 +125,32 @@ export const MOCK_ROOM_WAITING: RoomState = {
   },
 };
 
+export const MOCK_GAME_SELECTING: RoomState = {
+  status: 'THEME_SELECTING',
+  hostId: 'id-2',
+  endsAt: Date.now() + 1000 * 22,
+
+  currentRound: 1,
+  totalRounds: 3,
+
+  settings: {
+    roomTitle: '즐거운 게임방',
+    gameMode: 'SOLO',
+    maxPlayers: 8,
+    isPrivate: false,
+  },
+
+  players: [MOCK_ME, MOCK_OPPONENT, MOCK_DISCONNECTED, MOCK_BONUS],
+
+  phaseContext: {
+    selectorId: 'id-2',
+    nickname: '폴리',
+    value: '',
+  },
+
+  teamScore: null,
+};
+
 export const MOCK_GAME_DRAWING: RoomState = {
   status: 'DRAWING',
   hostId: 'id-2',
@@ -143,7 +169,7 @@ export const MOCK_GAME_DRAWING: RoomState = {
   players: [MOCK_ME, MOCK_OPPONENT, MOCK_DISCONNECTED, MOCK_BONUS],
 
   phaseContext: {
-    currentTheme: '우주비행사들의 대축제',
+    currentTheme: '',
   },
 
   teamScore: null,

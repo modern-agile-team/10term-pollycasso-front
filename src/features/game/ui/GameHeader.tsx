@@ -1,26 +1,30 @@
 import { useMemo } from 'react';
 import Marquee from 'react-fast-marquee';
 
-import { COLORS, GAME_CONFIG, UI_TEXT } from '../constants/game';
+import { COLORS, UI_TEXT } from '../constants/game';
 import { useGameTimer } from './useGameTimer';
 
 interface GameHeaderProps {
   currentTheme: string | null;
   endsAt: number | null;
+  totalTime: number;
 }
 
-export const GameHeader = ({ currentTheme, endsAt }: GameHeaderProps) => {
+export const GameHeader = ({
+  currentTheme,
+  endsAt,
+  totalTime,
+}: GameHeaderProps) => {
   const timeLeft = useGameTimer(endsAt);
 
-  const timeProgress = (timeLeft / GAME_CONFIG.MAX_TIME) * 100;
+  const timeProgress = (timeLeft / totalTime) * 100;
 
   const timerColor = useMemo(() => {
-    const ratio = timeLeft / GAME_CONFIG.MAX_TIME;
-
+    const ratio = timeLeft / totalTime;
     if (ratio <= 1 / 3) return COLORS.TIMER_RED;
     if (ratio <= 2 / 3) return COLORS.TIMER_YELLOW;
     return COLORS.TIMER_GREEN;
-  }, [timeLeft]);
+  }, [timeLeft, totalTime]);
 
   const timerStyle = {
     background: `conic-gradient(${timerColor} ${timeProgress}%, transparent 0)`,
@@ -38,8 +42,12 @@ export const GameHeader = ({ currentTheme, endsAt }: GameHeaderProps) => {
       <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center w-full px-6">
         <div></div>
 
-        <div className="text-center text-4xl font-bold truncate px-4">
-          {UI_TEXT.THEME_PREFIX} {currentTheme ?? '주제 대기 중...'}
+        <div className="text-center text-4xl font-bold truncate px-4 h-10 flex items-center justify-center">
+          {currentTheme && (
+            <span>
+              {UI_TEXT.THEME_PREFIX} {currentTheme}
+            </span>
+          )}
         </div>
 
         <div className="flex justify-end mr-2">
@@ -55,7 +63,7 @@ export const GameHeader = ({ currentTheme, endsAt }: GameHeaderProps) => {
               className="font-bold text-lg font-ssrm transition-colors duration-300"
               style={{ color: timerColor }}
             >
-              {timeLeft}s
+              {Math.ceil(timeLeft)}s
             </span>
           </div>
         </div>

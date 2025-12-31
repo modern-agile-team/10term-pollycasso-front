@@ -2,12 +2,13 @@ import { useMemo } from 'react';
 
 import type { DrawingContext, Player } from '@/entities/game';
 import { useAuthStore } from '@/entities/user';
-import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
+import { MOCK_GAME_SELECTING } from '@/mocks/game.mock';
 
-export const useGameDrawing = () => {
+export const useGameState = () => {
   const user = useAuthStore((state) => state.user);
 
-  const gameState = MOCK_GAME_DRAWING;
+  const gameState = MOCK_GAME_SELECTING;
+  //   const gameState = MOCK_GAME_DRAWING;
   const { status, players, endsAt, phaseContext } = gameState;
 
   const myData = useMemo(() => {
@@ -18,9 +19,11 @@ export const useGameDrawing = () => {
   const inventory = myData?.inventory || [];
 
   const currentTheme = useMemo(() => {
+    if (status !== 'DRAWING') return null;
+
     const context = phaseContext as DrawingContext;
     return context?.currentTheme || null;
-  }, [phaseContext]);
+  }, [status, phaseContext]);
 
   return {
     status,

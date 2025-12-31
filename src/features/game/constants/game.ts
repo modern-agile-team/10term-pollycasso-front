@@ -12,12 +12,6 @@ export const COLORS = {
 
 export const GAME_CONFIG = { MAX_TIME: 90, ITEMS_PER_PAGE: 5 };
 
-export const UI_TEXT = {
-  NOTICE: '📢 [공지] 서버 안정화 작업이 예정되어 있습니다.',
-  THEME_PREFIX: '주제: ',
-  BTN_COMPLETE: '완료',
-};
-
 export const ALL_ITEMS_META: ItemMeta[] = [
   {
     id: 'ink_splash',
@@ -91,4 +85,75 @@ export const ALL_ITEMS_META: ItemMeta[] = [
     price: 200,
     effect: '현재 적용 중인 조작 방해(거울, 흔들림) 효과를 즉시 해제합니다.',
   },
+];
+
+export const PHASE_TIME = {
+  THEME_SELECT: 22,
+  DRAWING: 92,
+  EVALUATING: 92,
+  ROUND_SUMMARY: 32,
+  FINISHED: 32,
+  DEFAULT: 90,
+} as const;
+
+export const UI_TEXT = {
+  THEME_PREFIX: '주제 :',
+  NOTICE: '🦜🦜 서버 안정화 작업이 예정되어 있습니다. 🦜🦜',
+  BUTTON: {
+    COMPLETE: '완료',
+    CANCEL: '취소',
+  },
+  PLACEHOLDER: {
+    DEFAULT: '글자를 입력하세요',
+    WAITING: '출제자가 주제를 선정 중입니다...',
+  },
+  HELPER: {
+    THEME_LIMIT: '(최대 20자 이내로 선정해 주세요)',
+  },
+};
+
+export const THEME_STYLES = {
+  RAINBOW_GRADIENT: `linear-gradient(90deg, 
+    #FF7676 0%, #FC8070 18%, #F8BF8C 33%, #D2DD8D 44%, 
+    #A1DCB0 61%, #7BB0CB 75%, #BB4AE0 94%
+  )`,
+
+  COLORS: {
+    BG_OUTER: '#EEEEEE',
+    TEXT_TITLE: '#333333',
+    TEXT_INPUT: '#555555',
+    TEXT_PLACEHOLDER: '#CCCCCC',
+    BTN_RANDOM_BG: '#777777',
+    BTN_RANDOM_HOVER: '#666666',
+    BTN_TEXT: '#FFFFFF',
+  },
+};
+
+export const RANDOM_THEMES = [
+  '중세 시대 귀족 드레스',
+  '2050년 미래 우주복',
+  '사이버펑크 네온 룩',
+  '90년대 레트로 청청패션',
+  '조선시대 퓨전 한복',
+  '그리스 로마 신화 의상',
+  '서부 영화 카우보이 룩',
+  '알록달록 히피 스타일',
+
+  '레드카펫 시상식 드레스',
+  '설레는 첫 데이트 룩',
+  '신나는 락 페스티벌 룩',
+  '럭셔리 호캉스 수영복',
+  '한겨울 스키장 패션',
+  '공포의 핼러윈 코스튬',
+  '화려한 가면무도회 복장',
+  '편안한 파자마 파티 룩',
+
+  '신인 아이돌 무대 의상',
+  '마법학교 신입생 교복',
+  '지구를 지키는 히어로',
+  '명탐정의 코트와 모자',
+  '5성급 호텔 셰프 유니폼',
+  '동화 속 악당의 드레스',
+  '산타클로스의 여름 휴가',
+  '우아한 발레리나 의상',
 ];
