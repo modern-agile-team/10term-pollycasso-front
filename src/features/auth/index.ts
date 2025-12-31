@@ -2,6 +2,7 @@ export { postLogin } from './api/postLogin';
 export { postRefreshToken } from './api/postRefreshToken';
 export { postSignup } from './api/postSignup';
 export * from './model/types';
+export { useLoginCallback } from './model/useLoginCallback';
 export { authQueries } from './queries/authQueries';
 export { LoginForm } from './ui/LoginForm';
 export { SignupForm } from './ui/SignupForm';

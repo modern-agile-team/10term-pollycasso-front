@@ -1,6 +1,7 @@
 import { mutationOptions } from '@tanstack/react-query';
 
 import { postLogin } from '../api/postLogin';
+import { postRefreshToken } from '../api/postRefreshToken';
 import { postSignup } from '../api/postSignup';
 
 export const authQueries = {
@@ -16,5 +17,11 @@ export const authQueries = {
     mutationOptions({
       mutationKey: [...authQueries.auth(), 'signup'] as const,
       mutationFn: postSignup,
+    }),
+
+  refresh: () =>
+    mutationOptions({
+      mutationKey: [...authQueries.auth(), 'refresh'] as const,
+      mutationFn: postRefreshToken,
     }),
 };
