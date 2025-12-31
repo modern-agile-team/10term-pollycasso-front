@@ -39,8 +39,6 @@ export const useLoginCallback = () => {
 
         navigate('/welcome', { replace: true });
       } catch (error) {
-        console.error('자동 로그인(리프레시) 실패:', error);
-
         alert('로그인 정보를 불러오는데 실패했습니다. 다시 로그인해주세요.');
         navigate('/login', { replace: true });
       }

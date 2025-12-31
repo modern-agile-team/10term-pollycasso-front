@@ -69,9 +69,6 @@ export const useSignup = () => {
         setErrorMessage(null);
         navigate('/welcome');
       } catch (err: unknown) {
-        if (err instanceof AxiosError) {
-          console.error('자동 로그인 실패:', err.response?.data?.message);
-        }
         alert('회원가입에 성공했어요! 로그인 페이지로 이동합니다.');
         navigate('/login');
       }

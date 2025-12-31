@@ -62,7 +62,6 @@ instance.interceptors.response.use(
         const res = await postRefreshToken();
 
         if (!res.success) {
-          console.error(res.data.message);
           return Promise.reject(new Error('토큰 갱신 실패'));
         }
 
@@ -75,8 +74,6 @@ instance.interceptors.response.use(
 
         return instance(originalRequest);
       } catch (err) {
-        console.error('리프레시 실패');
-
         localStorage.clear();
 
         window.location.href = '/login';
