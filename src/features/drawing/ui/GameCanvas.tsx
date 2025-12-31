@@ -1,92 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Layer, Line, Stage } from 'react-konva';
-import type { KonvaEventObject } from 'konva/lib/Node';
 
 import { Mannequin } from '@/assets';
 import { CanvasBackground } from '@/widgets/game-drawing/ui/CanvasBackground';
-import type { DrawLine } from '../model/types';
+import { useCanvasSize } from '../model/useCanvasSize';
+import { useDrawing } from '../model/useDrawing';
 
 export const GameCanvas = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const [size, setSize] = useState({ width: 0, height: 0 });
-
-  const [lines, setLines] = useState<DrawLine[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const isDrawingRef = useRef(false);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const updateFromEl = () => {
-      const rect = el.getBoundingClientRect();
-      setSize({
-        width: Math.floor(rect.width),
-        height: Math.floor(rect.height),
-      });
-    };
-
-    updateFromEl();
-
-    const ro = new ResizeObserver(() => {
-      updateFromEl();
-    });
-
-    ro.observe(el);
-
-    return () => {
-      ro.disconnect();
-    };
-  }, []);
-
-  const handleDown = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    if (e.evt?.preventDefault) e.evt.preventDefault();
-
-    isDrawingRef.current = true;
-    setIsDrawing(true);
-
-    const stage = e.target.getStage();
-    const pos = stage?.getPointerPosition();
-    if (!pos) return;
-
-    setLines((prev) => [
-      ...prev,
-      {
-        tool: 'pen',
-        color: '#000000',
-        size: 5,
-        points: [pos.x, pos.y],
-      },
-    ]);
-  };
-
-  const handleMove = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    if (!isDrawingRef.current) return;
-
-    if (e.evt?.preventDefault) e.evt.preventDefault();
-
-    const stage = e.target.getStage();
-    const point = stage?.getPointerPosition();
-    if (!point) return;
-
-    setLines((prev) => {
-      if (prev.length === 0) return prev;
-
-      const last = prev[prev.length - 1];
-      const updatedLast: DrawLine = {
-        ...last,
-        points: [...last.points, point.x, point.y],
-      };
-
-      return [...prev.slice(0, -1), updatedLast];
-    });
-  };
-
-  const handleUp = () => {
-    isDrawingRef.current = false;
-    setIsDrawing(false);
-  };
+  const size = useCanvasSize(containerRef);
+  const { lines, handleDown, handleMove, handleUp } = useDrawing();
 
   return (
     <div
