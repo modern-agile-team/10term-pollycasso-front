@@ -2,7 +2,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
+import { setupAxiosInterceptors } from './config/setupAxios';
 import './global.css';
+
+setupAxiosInterceptors();
 
 export const enableMSW = async () => {
   if (import.meta.env.DEV && import.meta.env.VITE_USE_MSW) {
