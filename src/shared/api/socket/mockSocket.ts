@@ -1,8 +1,12 @@
-import type { RoomState } from '@/entities/game/model/types';
-import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
+import { MOCK_GAME_SELECTING } from '@/mocks/game.mock';
 import { SOCKET_EVENTS } from '@/shared/api/socket';
+import type { RoomState } from '@/shared/model';
+import { PHASE_TIME } from '@/shared/model';
 import {
   handleChatSendMessage,
+  handleGameThemeAutoSelect,
+  handleGameThemeSubmit,
+  handleGameTyping,
   handleLobbySend,
   handleRoomChangeTeam,
   handleRoomJoin,
@@ -15,12 +19,18 @@ type Listener = (...args: any[]) => void;
 
 export class MockSocket {
   private listeners: Record<string, Listener[]> = {};
-  private roomState: RoomState;
+  private phaseTimer: ReturnType<typeof setTimeout> | null = null;
+  public roomState: RoomState;
   public connected: boolean = false;
   public auth: { token?: string } = {};
 
   constructor() {
-    this.roomState = JSON.parse(JSON.stringify(MOCK_GAME_DRAWING));
+    this.roomState = JSON.parse(JSON.stringify(MOCK_GAME_SELECTING));
+
+    if (this.roomState.status === 'THEME_SELECTING') {
+      this.roomState.endsAt = Date.now() + PHASE_TIME.THEME_SELECT * 1000;
+    }
+
     this.connect();
   }
 
@@ -30,6 +40,8 @@ export class MockSocket {
     setTimeout(() => {
       this.trigger(SOCKET_EVENTS.CONNECT);
       this.trigger(SOCKET_EVENTS.ROOM_STATE_SYNC, this.roomState);
+
+      this.schedulePhaseTimer();
     }, 100);
   }
 
@@ -67,6 +79,24 @@ export class MockSocket {
     }
   }
 
+  private schedulePhaseTimer() {
+    if (this.phaseTimer) clearTimeout(this.phaseTimer);
+
+    const { status, endsAt } = this.roomState;
+
+    if (status === 'THEME_SELECTING' && endsAt) {
+      const timeLeft = endsAt - Date.now();
+
+      if (timeLeft > 0) {
+        this.phaseTimer = setTimeout(() => {
+          handleGameThemeAutoSelect(this);
+        }, timeLeft);
+      } else {
+        handleGameThemeAutoSelect(this);
+      }
+    }
+  }
+
   emit(event: string, ...args: any[]) {
     const payload = args[0] || {};
 
@@ -97,6 +127,15 @@ export class MockSocket {
 
       case SOCKET_EVENTS.CHAT_SEND_MESSAGE:
         handleChatSendMessage(this, payload);
+        break;
+
+      case SOCKET_EVENTS.GAME_TYPING:
+        handleGameTyping(this, payload);
+        break;
+
+      case SOCKET_EVENTS.GAME_THEME_SUBMIT:
+        if (this.phaseTimer) clearTimeout(this.phaseTimer);
+        handleGameThemeSubmit(this, payload);
         break;
 
       default:

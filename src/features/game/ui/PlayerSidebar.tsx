@@ -1,5 +1,5 @@
-import type { Player } from '@/entities/game';
 import { PlayerAvatar } from '@/entities/game';
+import type { Player } from '@/shared/model';
 import { COLORS } from '../constants/game';
 
 interface PlayerSidebarProps {

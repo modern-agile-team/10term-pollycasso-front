@@ -1,15 +1,31 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import type { DrawingContext, Player } from '@/entities/game';
 import { useAuthStore } from '@/entities/user';
 import { MOCK_GAME_SELECTING } from '@/mocks/game.mock';
+import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
+import type { DrawingContext, Player, RoomState } from '@/shared/model';
 
 export const useGameState = () => {
   const user = useAuthStore((state) => state.user);
+  const { socket } = useSocket();
 
-  const gameState = MOCK_GAME_SELECTING;
-  //   const gameState = MOCK_GAME_DRAWING;
-  const { status, players, endsAt, phaseContext } = gameState;
+  const [roomState, setRoomState] = useState<RoomState>(MOCK_GAME_SELECTING);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleStateSync = (newState: RoomState) => {
+      setRoomState(newState);
+    };
+
+    socket.on(SOCKET_EVENTS.ROOM_STATE_SYNC, handleStateSync);
+
+    return () => {
+      socket.off(SOCKET_EVENTS.ROOM_STATE_SYNC, handleStateSync);
+    };
+  }, [socket]);
+
+  const { status, players, endsAt, phaseContext } = roomState;
 
   const myData = useMemo(() => {
     if (!user) return null;

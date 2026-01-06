@@ -1,4 +1,4 @@
-import type { GameItem, Outfit, Player, RoomState } from '@/entities/game';
+import type { GameItem, Outfit, Player, RoomState } from '@/shared/model';
 
 const MOCK_OUTFIT_ME: Outfit = {
   bird: 'bird_blue',

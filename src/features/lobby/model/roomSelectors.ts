@@ -1,4 +1,4 @@
-import type { RoomState } from '@/entities/game';
+import type { RoomState } from '@/shared/model';
 
 export const selectMe = (state: RoomState | null, myId: string) =>
   state?.players.find((p) => p.userId === myId) ?? null;
