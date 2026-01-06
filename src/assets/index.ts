@@ -7,5 +7,6 @@ export { default as Kakao } from './kakao.svg';
 export { default as LeafGreen } from './leaf_green.svg';
 export { default as LeafYellow } from './leaf_yellow.svg';
 export { default as Mannequin } from './mannequin.png';
+export { default as Pen } from './pen.svg';
 export { default as Spinner } from './spinner.svg';
 export { default as Title } from './title.svg';
