@@ -1,4 +1,5 @@
-import { type ComponentRef, useRef } from 'react';
+import type { ComponentRef } from 'react';
+import { useRef } from 'react';
 import { Layer, Line, Stage } from 'react-konva';
 
 import { Mannequin } from '@/assets';
