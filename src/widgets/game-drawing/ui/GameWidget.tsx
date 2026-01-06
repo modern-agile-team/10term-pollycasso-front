@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { GameCanvas } from '@/features/drawing/ui/GameCanvas';
+import { GameCanvas } from '@/features/drawing';
 import {
   GameHeader,
   GameSubmitButton,

@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { GameCanvas } from '@/features/drawing/ui/GameCanvas';
+import { GameCanvas } from '@/features/drawing';
 import {
+  DrawingToolbox,
   GameHeader,
   GameSubmitButton,
+  GameTimer,
   InventoryPanel,
   PlayerSidebar,
   ThemeSelector,
@@ -95,16 +97,16 @@ const DrawingWidget = () => {
       <PlayerSidebar players={players} />
 
       <main className="w-full h-full rounded-3xl bg-white shadow-xl flex flex-col relative overflow-hidden">
-        <GameHeader
-          currentTheme={currentTheme}
+        <GameTimer
           endsAt={endsAt}
           totalTime={totalTime}
+          className="absolute top-24 right-16 z-10"
         />
 
+        <GameHeader currentTheme={currentTheme} />
+
         <div
-          className={`flex-1 flex justify-center bg-white ${
-            isThemeSelecting ? 'pt-44' : 'pt-0 items-start'
-          }`}
+          className={`flex-1 flex justify-center bg-white pt-0 items-start relative`}
         >
           {isThemeSelecting ? (
             <ThemeSelector
@@ -114,7 +116,13 @@ const DrawingWidget = () => {
               onRandom={handleRandomTheme}
             />
           ) : (
-            <GameCanvas />
+            <>
+              <GameCanvas />
+
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+                <DrawingToolbox />
+              </div>
+            </>
           )}
         </div>
       </main>
