@@ -1,20 +1,13 @@
-import { useNavigate } from 'react-router';
-
 import kakaoIcon from '@/assets/kakao.svg';
 import { Button } from '@/shared/ui/Button';
+import { navigateToSocialLogin } from '../lib/auth';
 
 export const KakaoLoginButton = () => {
-  const navigate = useNavigate();
-
-  const handleLogin = () => {
-    navigate('/welcome');
-  };
-
   return (
     <Button
       variant="kakao"
       className="w-full justify-between hover:underline"
-      onClick={handleLogin}
+      onClick={() => navigateToSocialLogin('kakao')}
     >
       <img src={kakaoIcon} className="w-6" alt="카카오" />
       <p className="text-lg">카카오 로그인</p>

@@ -14,6 +14,10 @@ export const SOCKET_EVENTS = {
 
   CHAT_SEND_MESSAGE: 'chat:sendMessage',
   CHAT_NEW_MESSAGE: 'chat:newMessage',
+
+  GAME_TYPING: 'game:typing',
+  GAME_TYPING_SHARE: 'game:shareTyping',
+  GAME_THEME_SUBMIT: 'game:themeSubmit',
 } as const;
 
 export type SocketEventName =

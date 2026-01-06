@@ -8,9 +8,9 @@ const SPINNER_SIZES = {
 type SpinnerSize = keyof typeof SPINNER_SIZES;
 
 export interface SpinnerStyleProps {
-  fixed: boolean;
-  overlay: boolean;
-  transparent: boolean;
+  fixed?: boolean;
+  overlay?: boolean;
+  transparent?: boolean;
   size: SpinnerSize;
 }
 

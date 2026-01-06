@@ -1,4 +1,4 @@
-import type { ItemMeta } from '@/entities/game';
+import type { ItemMeta } from '@/shared/model';
 
 export const COLORS = {
   PRIMARY_DARK: '#003D00',
@@ -11,12 +11,6 @@ export const COLORS = {
 };
 
 export const GAME_CONFIG = { MAX_TIME: 90, ITEMS_PER_PAGE: 5 };
-
-export const UI_TEXT = {
-  NOTICE: '📢 [공지] 서버 안정화 작업이 예정되어 있습니다.',
-  THEME_PREFIX: '주제: ',
-  BTN_COMPLETE: '완료',
-};
 
 export const ALL_ITEMS_META: ItemMeta[] = [
   {
@@ -92,3 +86,45 @@ export const ALL_ITEMS_META: ItemMeta[] = [
     effect: '현재 적용 중인 조작 방해(거울, 흔들림) 효과를 즉시 해제합니다.',
   },
 ];
+
+export const PHASE_TIME = {
+  THEME_SELECT: 22,
+  DRAWING: 92,
+  EVALUATING: 92,
+  ROUND_SUMMARY: 32,
+  FINISHED: 32,
+  DEFAULT: 90,
+} as const;
+
+export const UI_TEXT = {
+  THEME_PREFIX: '주제 :',
+  NOTICE: '🦜🦜 서버 안정화 작업이 예정되어 있습니다. 🦜🦜',
+  BUTTON: {
+    COMPLETE: '완료',
+    CANCEL: '취소',
+  },
+  PLACEHOLDER: {
+    DEFAULT: '글자를 입력하세요',
+    WAITING: '출제자가 주제를 선정 중입니다...',
+  },
+  HELPER: {
+    THEME_LIMIT: '(최대 20자 이내로 선정해 주세요)',
+  },
+};
+
+export const THEME_STYLES = {
+  RAINBOW_GRADIENT: `linear-gradient(90deg, 
+    #FF7676 0%, #FC8070 18%, #F8BF8C 33%, #D2DD8D 44%, 
+    #A1DCB0 61%, #7BB0CB 75%, #BB4AE0 94%
+  )`,
+
+  COLORS: {
+    BG_OUTER: '#EEEEEE',
+    TEXT_TITLE: '#333333',
+    TEXT_INPUT: '#555555',
+    TEXT_PLACEHOLDER: '#CCCCCC',
+    BTN_RANDOM_BG: '#777777',
+    BTN_RANDOM_HOVER: '#666666',
+    BTN_TEXT: '#FFFFFF',
+  },
+};

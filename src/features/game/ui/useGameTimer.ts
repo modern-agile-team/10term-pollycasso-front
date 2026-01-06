@@ -11,12 +11,12 @@ export const useGameTimer = (endsAt: number | null) => {
 
     const updateTimer = () => {
       const now = Date.now();
-      const diff = Math.max(0, Math.ceil((endsAt - now) / 1000));
+      const diff = Math.max(0, (endsAt - now) / 1000);
       setTimeLeft(diff);
     };
 
     updateTimer();
-    const intervalId = setInterval(updateTimer, 1000);
+    const intervalId = setInterval(updateTimer, 50);
 
     return () => clearInterval(intervalId);
   }, [endsAt]);

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import type { DrawingContext, Player } from '@/entities/game';
 import { useAuthStore } from '@/entities/user';
 import { MOCK_GAME_DRAWING } from '@/mocks/game.mock';
+import type { DrawingContext, Player } from '@/shared/model';
 
 export const useGameDrawing = () => {
   const user = useAuthStore((state) => state.user);
@@ -19,7 +19,7 @@ export const useGameDrawing = () => {
 
   const currentTheme = useMemo(() => {
     const context = phaseContext as DrawingContext;
-    return context?.currentTheme || '주제 대기 중...';
+    return context?.currentTheme || null;
   }, [phaseContext]);
 
   return {

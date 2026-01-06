@@ -6,6 +6,7 @@ import { Spinner } from '@/shared/ui/Spinner';
 import PrivateRoute from './PrivateRoute';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
+const LoginCallbackPage = lazy(() => import('@/pages/LoginCallbackPage'));
 const SignupPage = lazy(() => import('@/pages/SignupPage'));
 const WelcomePage = lazy(() => import('@/pages/WelcomePage'));
 const MainPage = lazy(() => import('@/pages/MainPage'));
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: '/login',
         element: <LoginPage />,
+      },
+      {
+        path: '/auth/callback',
+        element: <LoginCallbackPage />,
       },
       {
         path: '/signup',

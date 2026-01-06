@@ -13,13 +13,13 @@ import {
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const { clearAuth } = useAuthStore();
+  const { user, clearAuth } = useAuthStore();
   const { searchQuery, setSearchQuery, setCommitSearch } = useSearchStore();
 
   const { open: openCreateRoomModal } = useCreateRoomModalStore();
 
   const currentLv = 1;
-  const nickname = '밥아저씨';
+  const nickname = user!.nickname;
   const currentXp = 30;
   const maxXp = 50;
 
