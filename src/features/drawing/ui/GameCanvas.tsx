@@ -3,9 +3,8 @@ import { useRef } from 'react';
 import { Layer, Line, Stage } from 'react-konva';
 
 import { Mannequin } from '@/assets';
-import { CanvasBackground } from '@/widgets/game-drawing/ui/CanvasBackground';
-import { useCanvasSize } from '../model/useCanvasSize';
-import { useDrawing } from '../model/useDrawing';
+import { useCanvasSize, useDrawing } from '@/features/drawing';
+import { CanvasBackground } from './CanvasBackground';
 
 export const GameCanvas = () => {
   const containerRef = useRef<ComponentRef<'div'>>(null);
@@ -16,7 +15,7 @@ export const GameCanvas = () => {
     <div
       ref={containerRef}
       style={{ touchAction: 'none' }}
-      className="w-3/4 h-3/4 flex items-center justify-center text-gray-300 bg-gray-50 mx-6 rounded-xl border border-dashed border-gray-300 overflow-hidden relative"
+      className="w-3/5 h-4/5 flex items-center justify-center text-gray-300 bg-gray-50 mx-6 rounded-xl border border-dashed border-gray-300 overflow-hidden relative"
     >
       <div className="absolute inset-0">
         {size.width > 0 && size.height > 0 ? (
