@@ -6,7 +6,9 @@ import { Mannequin } from '@/assets';
 import type { DrawingTool } from '../model/types';
 import { useCanvasSize } from '../model/useCanvasSize';
 import { useDrawing } from '../model/useDrawing';
+import { useTextureLoader } from '../model/useTextureLoader';
 import { CanvasBackground } from './CanvasBackground';
+import { TexturedLine } from './TexturedLine';
 
 interface GameCanvasProps {
   activeTool: DrawingTool;
@@ -21,6 +23,8 @@ export const GameCanvas = ({
 }: GameCanvasProps) => {
   const containerRef = useRef<ComponentRef<'div'>>(null);
   const size = useCanvasSize(containerRef);
+
+  const { textures } = useTextureLoader();
 
   const { lines, handleDown, handleMove, handleUp } = useDrawing({
     tool: activeTool,
@@ -57,20 +61,56 @@ export const GameCanvas = ({
             </Layer>
 
             <Layer>
-              {lines.map((line, i) => (
-                <Line
-                  key={i}
-                  points={line.points}
-                  stroke={line.color}
-                  strokeWidth={line.size}
-                  tension={0.5}
-                  lineCap="round"
-                  lineJoin="round"
-                  globalCompositeOperation={
-                    line.tool === 'eraser' ? 'destination-out' : 'source-over'
-                  }
-                />
-              ))}
+              {lines.map((line, i) => {
+                const texture = textures[line.tool];
+
+                if (texture && line.tool !== 'eraser') {
+                  return (
+                    <TexturedLine
+                      key={i}
+                      points={line.points}
+                      color={line.color}
+                      size={line.size}
+                      textureImage={texture}
+                      spacing={line.tool === 'pencil' ? 0.3 : 0.1}
+                    />
+                  );
+                }
+
+                if (line.tool === 'neon') {
+                  return (
+                    <Line
+                      key={i}
+                      points={line.points}
+                      stroke={line.color}
+                      strokeWidth={line.size}
+                      tension={0.5}
+                      lineCap="round"
+                      lineJoin="round"
+                      shadowColor={line.color}
+                      shadowBlur={15}
+                      shadowOpacity={1}
+                      shadowOffset={{ x: 0, y: 0 }}
+                      globalCompositeOperation="source-over"
+                    />
+                  );
+                }
+
+                return (
+                  <Line
+                    key={i}
+                    points={line.points}
+                    stroke={line.color}
+                    strokeWidth={line.size}
+                    tension={0.5}
+                    lineCap="round"
+                    lineJoin="round"
+                    globalCompositeOperation={
+                      line.tool === 'eraser' ? 'destination-out' : 'source-over'
+                    }
+                  />
+                );
+              })}
             </Layer>
           </Stage>
         ) : (

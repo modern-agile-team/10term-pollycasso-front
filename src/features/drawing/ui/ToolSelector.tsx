@@ -1,7 +1,11 @@
 import type { ComponentProps } from 'react';
-import { PaintBrushIcon, PencilIcon } from '@heroicons/react/24/solid';
+import {
+  BeakerIcon,
+  PaintBrushIcon,
+  PencilIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/solid';
 
-import { Pen } from '@/assets';
 import { DRAWING_TOOLS } from '../constants/drawingConstants';
 
 export type DrawingToolType = (typeof DRAWING_TOOLS)[number]['id'];
@@ -11,9 +15,8 @@ type IconProps = ComponentProps<'svg'>;
 const TOOL_ICONS = {
   PencilIcon: (props: IconProps) => <PencilIcon {...props} />,
   PaintBrushIcon: (props: IconProps) => <PaintBrushIcon {...props} />,
-  MarkerIcon: ({ className }: { className?: string }) => (
-    <img src={Pen} alt="Marker" className={`${className} grayscale`} />
-  ),
+  SparklesIcon: (props: IconProps) => <SparklesIcon {...props} />,
+  BeakerIcon: (props: IconProps) => <BeakerIcon {...props} />,
 };
 
 interface ToolSelectorProps {
@@ -32,6 +35,8 @@ export const ToolSelector = ({
       {DRAWING_TOOLS.map((tool) => {
         const isActive = activeTool === tool.id;
         const IconComponent = TOOL_ICONS[tool.Icon as keyof typeof TOOL_ICONS];
+
+        if (!IconComponent) return null;
 
         return (
           <button
