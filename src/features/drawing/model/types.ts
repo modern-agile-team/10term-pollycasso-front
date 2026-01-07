@@ -16,6 +16,7 @@ export interface DrawLine {
   color: string;
   size: number;
   points: number[];
+  filledImage?: HTMLImageElement;
 }
 
 export interface DrawData {
