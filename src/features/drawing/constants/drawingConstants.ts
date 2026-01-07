@@ -8,7 +8,7 @@ export const DRAWING_CONSTANTS = {
 
 export const DRAWING_TOOLS = [
   { id: 'pencil', Icon: 'PencilIcon', label: '연필' },
-  { id: 'pen', Icon: 'PaintBrushIcon', label: '펜' },
+  { id: 'pen', Icon: 'PaintBrushIcon', label: '브러시' },
   { id: 'neon', Icon: 'SparklesIcon', label: '네온' },
   { id: 'bucket', Icon: 'BeakerIcon', label: '채우기' },
 ] as const;

@@ -42,13 +42,18 @@ export const ToolSelector = ({
           <button
             key={tool.id}
             onClick={() => onSelectTool(tool.id)}
-            className="w-14 h-14 bg-white rounded-xl flex justify-center items-center cursor-pointer hover:bg-gray-100 shadow-sm transition-all"
+            className="group relative w-14 h-14 bg-white rounded-xl flex justify-center items-center cursor-pointer hover:bg-gray-100 shadow-sm transition-all"
             style={{
               boxShadow: isActive ? `0 0 0 3px ${activeColor}` : 'none',
             }}
-            aria-label={`Select ${tool.id}`}
+            aria-label={`Select ${tool.label}`}
           >
             <IconComponent className="w-8 h-8 text-[#909090]" />
+
+            <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+              {tool.label}
+              <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
+            </span>
           </button>
         );
       })}
