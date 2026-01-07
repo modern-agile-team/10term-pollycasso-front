@@ -1,4 +1,10 @@
-export type DrawingTool = 'pencil' | 'brush' | 'pen' | 'eraser';
+export type DrawingTool =
+  | 'pencil'
+  | 'brush'
+  | 'pen'
+  | 'neon'
+  | 'bucket'
+  | 'eraser';
 
 export interface Point {
   x: number;
