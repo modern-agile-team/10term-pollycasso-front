@@ -92,7 +92,7 @@ const GameWidget = () => {
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
-      <PlayerSidebar players={players} />
+      <PlayerSidebar players={players} currentUserId={socket?.id || ''} />
 
       <main className="w-full h-full rounded-3xl bg-white shadow-xl flex flex-col relative overflow-hidden">
         <GameHeader
