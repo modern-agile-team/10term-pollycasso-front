@@ -3,24 +3,15 @@ import type { KonvaEventObject } from 'konva/lib/Node';
 
 import type { DrawLine } from './types';
 
-interface DrawingOptions {
-  initialTool?: DrawLine['tool'];
-  initialColor?: string;
-  initialSize?: number;
+interface UseDrawingProps {
+  tool: DrawLine['tool'];
+  color: string;
+  size: number;
 }
 
-export const useDrawing = (options: DrawingOptions = {}) => {
-  const {
-    initialTool = 'pen',
-    initialColor = '#000000',
-    initialSize = 5,
-  } = options;
-
+export const useDrawing = ({ tool, color, size }: UseDrawingProps) => {
   const [lines, setLines] = useState<DrawLine[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [tool, setTool] = useState<DrawLine['tool']>(initialTool);
-  const [color, setColor] = useState(initialColor);
-  const [size, setSize] = useState(initialSize);
   const isDrawingRef = useRef(false);
 
   const handleDown = useCallback(
@@ -44,6 +35,7 @@ export const useDrawing = (options: DrawingOptions = {}) => {
         },
       ]);
     },
+
     [tool, color, size],
   );
 
@@ -89,12 +81,6 @@ export const useDrawing = (options: DrawingOptions = {}) => {
     lines,
     setLines,
     isDrawing,
-    tool,
-    setTool,
-    color,
-    setColor,
-    size,
-    setSize,
     handleDown,
     handleMove,
     handleUp,
