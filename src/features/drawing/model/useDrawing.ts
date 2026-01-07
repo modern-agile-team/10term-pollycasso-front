@@ -9,6 +9,8 @@ interface UseDrawingProps {
   size: number;
 }
 
+const SCALE_FACTOR = 0.25;
+
 export const useDrawing = ({ tool, color, size }: UseDrawingProps) => {
   const [lines, setLines] = useState<DrawLine[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -30,7 +32,7 @@ export const useDrawing = ({ tool, color, size }: UseDrawingProps) => {
         {
           tool,
           color: tool === 'eraser' ? '#000000' : color,
-          size,
+          size: size * SCALE_FACTOR,
           points: [pos.x, pos.y],
         },
       ]);
