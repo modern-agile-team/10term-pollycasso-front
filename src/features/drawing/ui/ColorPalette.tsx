@@ -1,4 +1,5 @@
-import { DRAWING_COLORS } from '@/features/drawing';
+import { DRAWING_COLORS } from '../constants/drawingConstants';
+import { isWhiteColor } from '../utils/colorUtils';
 
 interface ColorPaletteProps {
   selectedColor: string;
@@ -11,16 +12,14 @@ export const ColorPalette = ({
   onSelectColor,
   activeColor,
 }: ColorPaletteProps) => {
-  const isWhite = (color: string) => color.toUpperCase() === '#FFFFFF';
-
   return (
     <div className="grid grid-cols-7 gap-x-2.5 gap-y-2">
       {DRAWING_COLORS.map((color) => {
         const isSelected = selectedColor === color;
-        const isWhiteColor = isWhite(color);
+        const isWhite = isWhiteColor(color);
 
         const ringShadow = isSelected ? `0 0 0 2px ${activeColor}` : '';
-        const innerShadow = isWhiteColor ? 'inset 0 0 3px rgba(0,0,0,0.2)' : '';
+        const innerShadow = isWhite ? 'inset 0 0 3px rgba(0,0,0,0.2)' : '';
         const combinedShadow =
           [ringShadow, innerShadow].filter(Boolean).join(', ') || 'none';
 
@@ -31,8 +30,7 @@ export const ColorPalette = ({
             className="w-4 h-4 rounded-full transition-transform focus:outline-none"
             style={{
               backgroundColor: color,
-              border:
-                isWhiteColor && !isSelected ? '1px solid #E5E7EB' : 'none',
+              border: isWhite && !isSelected ? '1px solid #E5E7EB' : 'none',
               boxShadow: combinedShadow,
               transform: isSelected ? 'scale(1.3)' : 'scale(1)',
             }}

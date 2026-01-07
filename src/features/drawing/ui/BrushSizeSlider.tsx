@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { BRUSH_SIZES, DRAWING_CONSTANTS } from '@/features/drawing';
+import { BRUSH_SIZES, DRAWING_CONSTANTS } from '../constants/drawingConstants';
+import { getSliderPercentage, isWhiteColor } from '../utils/colorUtils';
 
 interface BrushSizeSliderProps {
   strokeWidth: number;
@@ -16,14 +17,6 @@ export const BrushSizeSlider = ({
   activeColor,
 }: BrushSizeSliderProps) => {
   const [isDragging, setIsDragging] = useState(false);
-
-  const isWhite = (color: string) => color.toUpperCase() === '#FFFFFF';
-
-  const getSliderPercentage = (value: number) => {
-    const min = DRAWING_CONSTANTS.MIN_SIZE;
-    const max = DRAWING_CONSTANTS.MAX_SIZE;
-    return ((value - min) / (max - min)) * 100;
-  };
 
   return (
     <div className="flex flex-col justify-between w-[175px] h-full">
@@ -42,7 +35,9 @@ export const BrushSizeSlider = ({
           >
             <div
               className={`rounded-full transition-colors ${
-                isWhite(selectedColor) ? 'shadow-inner shadow-gray-400' : ''
+                isWhiteColor(selectedColor)
+                  ? 'shadow-inner shadow-gray-400'
+                  : ''
               }`}
               style={{
                 width: Math.min(Math.max(size * 0.2 + 4, 6), 20),
@@ -58,7 +53,7 @@ export const BrushSizeSlider = ({
         <div className="relative w-full h-[6px]">
           <div
             className={`w-full h-full rounded-full opacity-90 transition-colors ${
-              isWhite(selectedColor) ? 'shadow-inner shadow-gray-400' : ''
+              isWhiteColor(selectedColor) ? 'shadow-inner shadow-gray-400' : ''
             }`}
             style={{ backgroundColor: selectedColor }}
           />

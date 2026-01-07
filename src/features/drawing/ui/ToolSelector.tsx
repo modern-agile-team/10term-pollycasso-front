@@ -1,19 +1,24 @@
+import type { ComponentProps } from 'react';
 import { PaintBrushIcon, PencilIcon } from '@heroicons/react/24/solid';
 
 import { Pen } from '@/assets';
-import { DRAWING_TOOLS } from '@/features/drawing/constants/drawingConstants';
+import { DRAWING_TOOLS } from '../constants/drawingConstants';
+
+export type DrawingToolType = (typeof DRAWING_TOOLS)[number]['id'];
+
+type IconProps = ComponentProps<'svg'>;
 
 const TOOL_ICONS = {
-  PencilIcon: (props: any) => <PencilIcon {...props} />,
-  PaintBrushIcon: (props: any) => <PaintBrushIcon {...props} />,
+  PencilIcon: (props: IconProps) => <PencilIcon {...props} />,
+  PaintBrushIcon: (props: IconProps) => <PaintBrushIcon {...props} />,
   MarkerIcon: ({ className }: { className?: string }) => (
     <img src={Pen} alt="Marker" className={`${className} grayscale`} />
   ),
 };
 
 interface ToolSelectorProps {
-  activeTool: string;
-  onSelectTool: (toolId: any) => void;
+  activeTool: DrawingToolType;
+  onSelectTool: (toolId: DrawingToolType) => void;
   activeColor: string;
 }
 

@@ -3,13 +3,30 @@ import { useRef } from 'react';
 import { Layer, Line, Stage } from 'react-konva';
 
 import { Mannequin } from '@/assets';
-import { useCanvasSize, useDrawing } from '@/features/drawing';
+import type { DrawingTool } from '../model/types';
+import { useCanvasSize } from '../model/useCanvasSize';
+import { useDrawing } from '../model/useDrawing';
 import { CanvasBackground } from './CanvasBackground';
 
-export const GameCanvas = () => {
+interface GameCanvasProps {
+  activeTool: DrawingTool;
+  strokeWidth: number;
+  selectedColor: string;
+}
+
+export const GameCanvas = ({
+  activeTool,
+  strokeWidth,
+  selectedColor,
+}: GameCanvasProps) => {
   const containerRef = useRef<ComponentRef<'div'>>(null);
   const size = useCanvasSize(containerRef);
-  const { lines, handleDown, handleMove, handleUp } = useDrawing();
+
+  const { lines, handleDown, handleMove, handleUp } = useDrawing({
+    tool: activeTool,
+    color: selectedColor,
+    size: strokeWidth,
+  });
 
   return (
     <div
