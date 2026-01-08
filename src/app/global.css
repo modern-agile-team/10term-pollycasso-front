@@ -28,3 +28,20 @@
 .scrollbar-stable {
   scrollbar-gutter: stable;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 25px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 20px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
