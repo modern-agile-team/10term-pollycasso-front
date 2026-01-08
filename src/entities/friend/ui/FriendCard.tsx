@@ -6,15 +6,11 @@ import {
 } from '@heroicons/react/24/solid';
 
 import { getLevelBadgeColor } from '../lib/badgeColor';
-import type { FriendRelation } from '../model/types';
+import type { FriendProfile, FriendRelation } from '../model/types';
 
-interface FriendCardProps {
-  userId: number | string;
-  nickname: string;
-  outfit?: string;
-  level: number;
+interface FriendCardProps extends FriendProfile {
   relation: FriendRelation;
-  isOnline: boolean;
+
   onAccept?: () => void;
   onReject?: () => void;
   onCancel?: () => void;

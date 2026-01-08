@@ -1,62 +1,74 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import type { FriendRelation } from '@/entities/friend';
+import type { FriendProfile, FriendRelation } from '@/entities/friend';
 
-const DUMMY_DATA = [
+type Friend = FriendProfile & { relation: FriendRelation };
+
+const DUMMY_DATA: Friend[] = [
   {
-    id: 1,
+    userId: 1,
     nickname: '차단한사람#1111',
     level: 10,
     relation: 'BLOCKED',
     isOnline: false,
+    outfit: undefined,
   },
   {
-    id: 2,
+    userId: 2,
     nickname: '짱친#1234',
     level: 60,
     relation: 'FRIEND',
     isOnline: true,
+    outfit: undefined,
   },
   {
-    id: 3,
+    userId: 3,
     nickname: '친구신청받아#5555',
     level: 1,
     relation: 'REQUEST_RECEIVED',
     isOnline: true,
+    outfit: undefined,
   },
   {
-    id: 4,
+    userId: 4,
     nickname: '내가신청보냄#7777',
     level: 25,
     relation: 'REQUEST_SENT',
     isOnline: false,
+    outfit: undefined,
   },
   {
-    id: 5,
+    userId: 5,
     nickname: '자러감#9999',
     level: 40,
     relation: 'FRIEND',
     isOnline: false,
+    outfit: undefined,
   },
-] as const;
+];
 
 export const useFriendList = (searchKeyword: string) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [friends, setFriends] = useState<any[]>(DUMMY_DATA as any);
 
-  const acceptFriend = (id: number) => {
+  const [friends, setFriends] = useState<Friend[]>([]);
+
+  const acceptFriend = (targetId: number | string) => {
     setFriends((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, relation: 'FRIEND' } : f)),
+      prev.map((f) =>
+        f.userId === targetId ? { ...f, relation: 'FRIEND' } : f,
+      ),
     );
   };
 
-  const removeFriend = (id: number) => {
-    setFriends((prev) => prev.filter((f) => f.id !== id));
+  const removeFriend = (targetId: number | string) => {
+    setFriends((prev) => prev.filter((f) => f.userId !== targetId));
   };
 
-  const blockFriend = (id: number) => {
+  const blockFriend = (targetId: number | string) => {
     setFriends((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, relation: 'BLOCKED' } : f)),
+      prev.map((f) =>
+        f.userId === targetId ? { ...f, relation: 'BLOCKED' } : f,
+      ),
     );
   };
 
@@ -83,6 +95,7 @@ export const useFriendList = (searchKeyword: string) => {
             return 99;
         }
       };
+
       const priorityA = getPriority(a.relation, a.isOnline);
       const priorityB = getPriority(b.relation, b.isOnline);
 
@@ -93,7 +106,7 @@ export const useFriendList = (searchKeyword: string) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setFriends(DUMMY_DATA as any);
+      setFriends(DUMMY_DATA);
       setIsLoading(false);
     }, 1000);
 

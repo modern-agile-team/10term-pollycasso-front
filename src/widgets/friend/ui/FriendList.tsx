@@ -29,6 +29,7 @@ export const FriendList = ({ searchKeyword }: FriendListProps) => {
               key={friend.id}
               userId={friend.id}
               nickname={friend.nickname}
+              outfit={friend.outfit}
               level={friend.level}
               relation={friend.relation as FriendRelation}
               isOnline={friend.isOnline}
