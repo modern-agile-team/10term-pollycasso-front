@@ -1,6 +1,8 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { BellIcon } from '@heroicons/react/24/solid';
 
+import { AddFriendButton } from '@/features/add-friend';
+
 export const FriendHeader = () => {
   return (
     <div className="flex items-center justify-between pl-4 pr-5 pt-10 w-full">
@@ -13,11 +15,7 @@ export const FriendHeader = () => {
           <BellIcon className="w-8 h-8 text-white" />
         </button>
 
-        <div className="p-1.5 mr-4 rounded-[20px] bg-white/10 border border-white/10">
-          <button className="px-6 py-1 rounded-[14px] bg-[#2ADB75] hover:bg-[#52c97a] text-white text-2xl font-bold shadow-[0_0_20px_rgba(99,230,141,0.3)] transition-all">
-            친구추가
-          </button>
-        </div>
+        <AddFriendButton />
 
         <div className="flex items-center w-[460px] h-12 bg-white rounded-2xl overflow-hidden shadow-xl">
           <input
