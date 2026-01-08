@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import type { FriendRelation } from '@/entities/friend';
 
@@ -41,8 +41,26 @@ const DUMMY_DATA = [
 ] as const;
 
 export const useFriendList = (searchKeyword: string) => {
-  const friends = useMemo(() => {
-    const filtered = DUMMY_DATA.filter((friend) => {
+  const [friends, setFriends] = useState<any[]>(DUMMY_DATA as any);
+
+  const acceptFriend = (id: number) => {
+    setFriends((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, relation: 'FRIEND' } : f)),
+    );
+  };
+
+  const removeFriend = (id: number) => {
+    setFriends((prev) => prev.filter((f) => f.id !== id));
+  };
+
+  const blockFriend = (id: number) => {
+    setFriends((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, relation: 'BLOCKED' } : f)),
+    );
+  };
+
+  const processedFriends = useMemo(() => {
+    const filtered = friends.filter((friend) => {
       if (!searchKeyword) return true;
       return friend.nickname
         .toLowerCase()
@@ -64,16 +82,18 @@ export const useFriendList = (searchKeyword: string) => {
             return 99;
         }
       };
+      const priorityA = getPriority(a.relation, a.isOnline);
+      const priorityB = getPriority(b.relation, b.isOnline);
 
-      const priorityA = getPriority(a.relation as FriendRelation, a.isOnline);
-      const priorityB = getPriority(b.relation as FriendRelation, b.isOnline);
-
-      if (priorityA !== priorityB) {
-        return priorityA - priorityB;
-      }
+      if (priorityA !== priorityB) return priorityA - priorityB;
       return a.nickname.localeCompare(b.nickname);
     });
-  }, [searchKeyword]);
+  }, [searchKeyword, friends]);
 
-  return friends;
+  return {
+    processedFriends,
+    acceptFriend,
+    removeFriend,
+    blockFriend,
+  };
 };

@@ -9,13 +9,14 @@ interface FriendListProps {
 }
 
 export const FriendList = ({ searchKeyword }: FriendListProps) => {
-  const friends = useFriendList(searchKeyword);
+  const { processedFriends, acceptFriend, removeFriend, blockFriend } =
+    useFriendList(searchKeyword);
 
   return (
     <div className="flex-1 px-5 pb-10 overflow-y-auto custom-scrollbar">
-      {friends.length > 0 ? (
+      {processedFriends.length > 0 ? (
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-          {friends.map((friend) => (
+          {processedFriends.map((friend) => (
             <FriendCard
               key={friend.id}
               userId={friend.id}
@@ -23,6 +24,12 @@ export const FriendList = ({ searchKeyword }: FriendListProps) => {
               level={friend.level}
               relation={friend.relation as FriendRelation}
               isOnline={friend.isOnline}
+              onAccept={() => acceptFriend(friend.id)}
+              onReject={() => removeFriend(friend.id)}
+              onCancel={() => removeFriend(friend.id)}
+              onDelete={() => removeFriend(friend.id)}
+              onBlock={() => blockFriend(friend.id)}
+              onUnblock={() => removeFriend(friend.id)}
             />
           ))}
         </div>
