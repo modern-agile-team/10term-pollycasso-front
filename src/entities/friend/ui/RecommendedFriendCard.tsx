@@ -59,7 +59,7 @@ export const RecommendedFriendCard = ({
       </div>
 
       <button onClick={onAdd} className="shrink-0 p-1 group">
-        <PlusIcon className="w-6 h-6 text-white bg-black rounded-full p-0.5 group-hover:bg-[#2ADB75] transition-colors" />
+        <PlusIcon className="w-6 h-6 text-white bg-gray-700 rounded-full p-0.5 group-hover:bg-black transition-colors" />
       </button>
     </div>
   );
