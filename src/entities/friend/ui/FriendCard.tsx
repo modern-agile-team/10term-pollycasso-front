@@ -28,7 +28,7 @@ export const FriendCard = ({
       className={`flex justify-between p-4 lg:p-5 h-24 lg:h-28 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow ${relation === 'BLOCKED' ? 'opacity-50 grayscale' : ''}`}
     >
       <div className="flex items-center gap-x-3 lg:gap-x-4 overflow-hidden">
-        <div className="shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-full bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
+        <div className="shrink-0 w-16 h-16 lg:w-18 lg:h-18 rounded-full bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
           {outfit ? (
             <img
               src={outfit}
