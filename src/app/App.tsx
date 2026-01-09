@@ -1,12 +1,32 @@
+import { ToastContainer } from 'react-toastify';
+
+import { SocketGlobalAlert } from '@/shared/ui/SocketGlobalAlert';
 import QueryProvider from './queryProvider';
 import Router from './Router';
 import { SocketProvider } from './socketProvider';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
     <QueryProvider>
       <SocketProvider>
+        <SocketGlobalAlert />
+
         <Router />
+
+        <ToastContainer
+          position="top-center"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable
+          pauseOnHover={false}
+          theme="light"
+          limit={3}
+        />
       </SocketProvider>
     </QueryProvider>
   );
