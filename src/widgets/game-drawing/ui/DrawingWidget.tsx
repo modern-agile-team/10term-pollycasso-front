@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { DrawingToolbox, GameCanvas } from '@/features/drawing';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@/features/game';
 import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
 import { PHASE_TIME } from '@/shared/model';
+import { useDrawingShortcuts } from '../model/useDrawingShortcuts';
 import { useDrawingTools } from '../model/useDrawingTools';
 import { useGameState } from '../model/useGameState';
 import { useGameSubmission } from '../model/useGameSubmission';
@@ -37,6 +38,8 @@ const DrawingWidget = () => {
 
   const { localInput, handleInputChange, handleRandomTheme } =
     useThemeInput(isMyTurn);
+
+  useDrawingShortcuts({ setActiveTool, setStrokeWidth });
 
   const handleComplete = useCallback(() => {
     if (status === 'THEME_SELECTING') {
@@ -69,50 +72,6 @@ const DrawingWidget = () => {
   }, [status]);
 
   const isThemeSelecting = false;
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
-
-      switch (e.key) {
-        case '1':
-          setActiveTool('pencil');
-          break;
-        case '2':
-          setActiveTool('brush');
-          break;
-        case '3':
-          setActiveTool('neon');
-          break;
-        case '4':
-          setActiveTool('bucket');
-          break;
-        case '5':
-          setActiveTool('eraser');
-          break;
-
-        case '[':
-          setStrokeWidth((prev) => Math.max(1, prev - 5));
-          break;
-        case ']':
-          setStrokeWidth((prev) => Math.min(100, prev + 5));
-          break;
-
-        case 'e':
-        case 'E':
-          setActiveTool('eraser');
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [setActiveTool, setStrokeWidth]);
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
