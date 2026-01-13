@@ -30,6 +30,7 @@
     "framer-motion": "^12.23.12",
     "jwt-decode": "^4.0.0",
     "konva": "9.0.0",
+    "overlay-kit": "^1.8.6",
     "query-string": "^9.3.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

@@ -6,17 +6,15 @@ import {
 } from '@heroicons/react/24/solid';
 
 import { getLevelBadgeColor } from '../lib/badgeColor';
-import type { FriendProfile, FriendRelation } from '../model/types';
+import type {
+  FriendAction,
+  FriendProfile,
+  FriendRelation,
+} from '../model/types';
 
 interface FriendCardProps extends FriendProfile {
   relation: FriendRelation;
-
-  onAccept?: () => void;
-  onReject?: () => void;
-  onCancel?: () => void;
-  onBlock?: () => void;
-  onDelete?: () => void;
-  onUnblock?: () => void;
+  onAction: (action: FriendAction) => void;
 }
 
 export const FriendCard = ({
@@ -26,17 +24,17 @@ export const FriendCard = ({
   level,
   relation,
   isOnline,
-  onAccept,
-  onReject,
-  onCancel,
-  onBlock,
-  onDelete,
-  onUnblock,
+  onAction,
 }: FriendCardProps) => {
   const [displayName, displayTag] = nickname.split('#');
   const safeTag = displayTag || '0000';
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleActionClick = (action: FriendAction, message?: string) => {
+    if (message && !window.confirm(message)) return;
+    onAction(action);
+    setIsMenuOpen(false);
+  };
 
   return (
     <div
@@ -90,28 +88,25 @@ export const FriendCard = ({
                   className="fixed inset-0 z-10"
                   onClick={() => setIsMenuOpen(false)}
                 />
-
                 <div className="absolute right-0 top-8 w-32 bg-white rounded-xl shadow-xl border border-gray-100 z-20 overflow-hidden py-1 flex flex-col">
                   <button
-                    onClick={() => {
-                      if (
-                        window.confirm(`${displayName}님을 차단하시겠습니까?`)
+                    onClick={() =>
+                      handleActionClick(
+                        'BLOCK',
+                        `${displayName}님을 차단하시겠습니까?`,
                       )
-                        onBlock?.();
-                    }}
+                    }
                     className="w-full flex items-center gap-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left"
                   >
                     <NoSymbolIcon className="w-4 h-4" /> 차단하기
                   </button>
                   <button
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          `${displayName}님을 친구 목록에서 삭제하시겠습니까?`,
-                        )
+                    onClick={() =>
+                      handleActionClick(
+                        'DELETE',
+                        `${displayName}님을 친구 목록에서 삭제하시겠습니까?`,
                       )
-                        onDelete?.();
-                    }}
+                    }
                     className="w-full flex items-center gap-x-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors text-left font-medium"
                   >
                     <TrashIcon className="w-4 h-4" /> 친구 삭제
@@ -124,9 +119,9 @@ export const FriendCard = ({
 
         {relation === 'REQUEST_SENT' && (
           <button
-            onClick={() => {
-              if (window.confirm('친구 신청을 취소하시겠습니까?')) onCancel?.();
-            }}
+            onClick={() =>
+              handleActionClick('CANCEL', '친구 신청을 취소하시겠습니까?')
+            }
             className="px-3 py-1 bg-gray-700 hover:bg-gray-800 text-white text-sm lg:text-base font-bold rounded-lg transition-colors"
           >
             취소
@@ -136,16 +131,15 @@ export const FriendCard = ({
         {relation === 'REQUEST_RECEIVED' && (
           <div className="flex items-center gap-x-2">
             <button
-              onClick={onAccept}
+              onClick={() => handleActionClick('ACCEPT')}
               className="px-3 py-1 bg-[#2ADB75] hover:bg-[#25c468] text-white text-sm lg:text-base font-bold rounded-lg shadow-sm transition-all"
             >
               수락
             </button>
             <button
-              onClick={() => {
-                if (window.confirm('친구 신청을 거절하시겠습니까?'))
-                  onReject?.();
-              }}
+              onClick={() =>
+                handleActionClick('REJECT', '친구 신청을 거절하시겠습니까?')
+              }
               className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-500 text-sm lg:text-base font-bold rounded-lg transition-colors"
             >
               거절
@@ -155,9 +149,9 @@ export const FriendCard = ({
 
         {relation === 'BLOCKED' && (
           <button
-            onClick={() => {
-              if (window.confirm('차단을 해제하시겠습니까?')) onUnblock?.();
-            }}
+            onClick={() =>
+              handleActionClick('UNBLOCK', '차단을 해제하시겠습니까?')
+            }
             className="text-xs lg:text-sm text-red-500 font-bold border border-red-200 px-2 py-1 rounded hover:bg-red-50 transition-colors"
           >
             차단됨

@@ -1,3 +1,4 @@
+import { OverlayProvider } from 'overlay-kit';
 import { ToastContainer } from 'react-toastify';
 
 import { SocketGlobalAlert } from '@/shared/ui/SocketGlobalAlert';
@@ -12,7 +13,9 @@ const App = () => {
       <SocketProvider>
         <SocketGlobalAlert />
 
-        <Router />
+        <OverlayProvider>
+          <Router />
+        </OverlayProvider>
 
         <ToastContainer
           position="top-center"

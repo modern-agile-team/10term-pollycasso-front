@@ -11,3 +11,11 @@ export interface FriendProfile {
   level: number;
   isOnline: boolean;
 }
+
+export type FriendAction =
+  | 'ACCEPT'
+  | 'CANCEL'
+  | 'REJECT'
+  | 'DELETE'
+  | 'BLOCK'
+  | 'UNBLOCK';
