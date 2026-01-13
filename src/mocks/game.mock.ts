@@ -32,7 +32,7 @@ const MOCK_OUTFIT_DEFAULT: Outfit = {
 
 const MOCK_INVENTORY_ME: GameItem[] = [
   { itemId: 'blur', count: 1, cooldownEndsAt: 0 },
-  { itemId: 'ink_splash', count: 2, cooldownEndsAt: Date.now() + 1000 * 30 },
+  { itemId: 'ink_splash', count: 2, cooldownEndsAt: 0 },
   { itemId: 'bomb', count: 5, cooldownEndsAt: 0 },
 ];
 

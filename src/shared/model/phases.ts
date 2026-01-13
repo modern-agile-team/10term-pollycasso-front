@@ -6,6 +6,7 @@ export const PHASE_TIME = {
   EVALUATING: 92,
   ROUND_SUMMARY: 32,
   FINISHED: 32,
+  DEFAULT: 30,
 } as const;
 
 export interface ThemeSelectingContext {

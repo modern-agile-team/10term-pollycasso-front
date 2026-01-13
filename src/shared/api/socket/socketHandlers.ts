@@ -1,5 +1,6 @@
 import { SOCKET_EVENTS } from '@/shared/api/socket';
-import type { ThemeSelectingContext } from '@/shared/model';
+import { ITEM_METADATA } from '@/shared/constants/item';
+import type { GameItem, Player, ThemeSelectingContext } from '@/shared/model';
 import { PHASE_TIME, RANDOM_THEMES } from '@/shared/model';
 import type { MockSocket } from './mockSocket';
 
@@ -124,4 +125,44 @@ export const handleGameThemeAutoSelect = (socket: MockSocket) => {
 
   socket['roomState'].endsAt = Date.now() + PHASE_TIME.DRAWING * 1000;
   socket['broadcastRoomState']();
+};
+
+export const handleGameUseItem = (socket: MockSocket, payload: any) => {
+  const { itemId, targetUserId } = payload;
+  const now = Date.now();
+
+  const attacker = socket.roomState.players[0];
+  const target = socket.roomState.players.find(
+    (player: Player) => player.userId === targetUserId,
+  );
+
+  if (!attacker || !target) return;
+
+  const itemInInven = attacker.inventory?.find((item: GameItem) => {
+    return item.itemId === itemId;
+  });
+
+  if (!itemInInven || itemInInven.count <= 0) return;
+
+  if (itemInInven.cooldownEndsAt && itemInInven.cooldownEndsAt > now) {
+    return;
+  }
+
+  itemInInven.count -= 1;
+  const duration = ITEM_METADATA[itemId]?.cooldown || 5000;
+  itemInInven.cooldownEndsAt = now + duration;
+
+  socket.broadcastRoomState();
+
+  socket.trigger('game:itemNotification', {
+    id: Date.now().toString(),
+    message: `${attacker.nickname}님이 ${target.nickname}님에게 [${ITEM_METADATA[itemId]?.name || itemId}] 공격!`,
+    type: 'attack',
+  });
+
+  socket.trigger('game:applyEffect', {
+    itemId,
+    targetUserId: target.userId,
+    duration: 5000,
+  });
 };

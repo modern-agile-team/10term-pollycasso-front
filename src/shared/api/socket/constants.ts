@@ -35,6 +35,7 @@ export const SOCKET_EVENTS = {
   FRIEND_DELETE: 'friends:delete',
 
   FRIEND_STATUS_UPDATE: 'friends:statusUpdate',
+  GAME_USE_ITEM: 'game:useItem',
 } as const;
 
 export type SocketEventName =

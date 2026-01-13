@@ -16,6 +16,7 @@ import {
   handleGameThemeAutoSelect,
   handleGameThemeSubmit,
   handleGameTyping,
+  handleGameUseItem,
   handleLobbySend,
   handleRoomChangeTeam,
   handleRoomJoin,
@@ -177,6 +178,8 @@ export class MockSocket {
 
       case SOCKET_EVENTS.FRIEND_SEARCH:
         handleFriendSearch(this, payload);
+      case SOCKET_EVENTS.GAME_USE_ITEM:
+        handleGameUseItem(this, payload);
         break;
 
       default:

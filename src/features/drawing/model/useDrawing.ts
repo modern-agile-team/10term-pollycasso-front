@@ -1,45 +1,128 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { KonvaEventObject } from 'konva/lib/Node';
 
+import { performFloodFill } from '../utils/floodFillUtils';
 import type { DrawLine } from './types';
 
-interface DrawingOptions {
-  initialTool?: DrawLine['tool'];
-  initialColor?: string;
-  initialSize?: number;
+interface UseDrawingProps {
+  tool: DrawLine['tool'];
+  color: string;
+  size: number;
 }
 
-export const useDrawing = (options: DrawingOptions = {}) => {
-  const {
-    initialTool = 'pen',
-    initialColor = '#000000',
-    initialSize = 5,
-  } = options;
+const SCALE_FACTOR = 0.25;
 
+export const useDrawing = ({ tool, color, size }: UseDrawingProps) => {
   const [lines, setLines] = useState<DrawLine[]>([]);
+  const [redoStack, setRedoStack] = useState<DrawLine[]>([]);
+
   const [isDrawing, setIsDrawing] = useState(false);
-  const [tool, setTool] = useState<DrawLine['tool']>(initialTool);
-  const [color, setColor] = useState(initialColor);
-  const [size, setSize] = useState(initialSize);
   const isDrawingRef = useRef(false);
+
+  const undo = useCallback(() => {
+    if (lines.length === 0 || isDrawingRef.current) return;
+
+    setLines((prev) => {
+      const lastLine = prev[prev.length - 1];
+      setRedoStack((prevStack) => [...prevStack, lastLine]);
+      return prev.slice(0, -1);
+    });
+  }, [lines]);
+
+  const redo = useCallback(() => {
+    if (redoStack.length === 0 || isDrawingRef.current) return;
+
+    setRedoStack((prev) => {
+      const lineToRestore = prev[prev.length - 1];
+      setLines((prevLines) => [...prevLines, lineToRestore]);
+      return prev.slice(0, -1);
+    });
+  }, [redoStack]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isDrawingRef.current) return;
+
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+      if (isCtrlOrCmd && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          redo();
+        } else {
+          undo();
+        }
+      }
+
+      if (isCtrlOrCmd && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        redo();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [undo, redo]);
 
   const handleDown = useCallback(
     (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
       if (e.evt?.preventDefault) e.evt.preventDefault();
 
-      isDrawingRef.current = true;
-      setIsDrawing(true);
-
       const stage = e.target.getStage();
       const pos = stage?.getPointerPosition();
-      if (!pos) return;
+      if (!pos || !stage) return;
+
+      setRedoStack([]);
+
+      if (tool === 'bucket') {
+        const backgroundLayer = stage.getLayers()[0];
+        backgroundLayer.hide();
+
+        const tempCanvas = stage.toCanvas({
+          pixelRatio: 1,
+          x: 0,
+          y: 0,
+          width: stage.width(),
+          height: stage.height(),
+        });
+
+        backgroundLayer.show();
+
+        const ctx = tempCanvas.getContext('2d');
+        if (!ctx) return;
+
+        const imageData = ctx.getImageData(0, 0, stage.width(), stage.height());
+        const filledImage = performFloodFill(
+          imageData,
+          Math.floor(pos.x),
+          Math.floor(pos.y),
+          color,
+        );
+
+        if (filledImage) {
+          setLines((prev) => [
+            ...prev,
+            {
+              tool: 'bucket',
+              color,
+              size: 0,
+              points: [0, 0],
+              filledImage,
+            },
+          ]);
+        }
+        return;
+      }
+
+      isDrawingRef.current = true;
+      setIsDrawing(true);
 
       setLines((prev) => [
         ...prev,
         {
           tool,
           color: tool === 'eraser' ? '#000000' : color,
-          size,
+          size: size * SCALE_FACTOR,
           points: [pos.x, pos.y],
         },
       ]);
@@ -50,7 +133,6 @@ export const useDrawing = (options: DrawingOptions = {}) => {
   const handleMove = useCallback(
     (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
       if (!isDrawingRef.current) return;
-
       if (e.evt?.preventDefault) e.evt.preventDefault();
 
       const stage = e.target.getStage();
@@ -59,8 +141,9 @@ export const useDrawing = (options: DrawingOptions = {}) => {
 
       setLines((prev) => {
         if (prev.length === 0) return prev;
-
         const last = prev[prev.length - 1];
+        if (last.tool === 'bucket') return prev;
+
         const updatedLast: DrawLine = {
           ...last,
           points: [...last.points, point.x, point.y],
@@ -79,26 +162,18 @@ export const useDrawing = (options: DrawingOptions = {}) => {
 
   const clearCanvas = useCallback(() => {
     setLines([]);
-  }, []);
-
-  const undo = useCallback(() => {
-    setLines((prev) => prev.slice(0, -1));
+    setRedoStack([]);
   }, []);
 
   return {
     lines,
     setLines,
     isDrawing,
-    tool,
-    setTool,
-    color,
-    setColor,
-    size,
-    setSize,
     handleDown,
     handleMove,
     handleUp,
     clearCanvas,
     undo,
+    redo,
   };
 };

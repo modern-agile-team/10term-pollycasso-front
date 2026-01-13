@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Image as KonvaImage } from 'react-konva';
 
-interface Props {
+interface CanvasBackgroundProps {
   src: string;
   width: number;
   height: number;
 }
 
-export const CanvasBackground = ({ src, width, height }: Props) => {
+export const CanvasBackground = ({
+  src,
+  width,
+  height,
+}: CanvasBackgroundProps) => {
   const [image, setImage] = useState<HTMLImageElement | undefined>(undefined);
   const [naturalSize, setNaturalSize] = useState({ w: 0, h: 0 });
   const [imgConfig, setImgConfig] = useState({ x: 0, y: 0, w: 0, h: 0 });

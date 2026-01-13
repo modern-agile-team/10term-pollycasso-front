@@ -18,6 +18,49 @@ const RELATION_PRIORITY: Record<FriendRelation, number> = {
   BLOCKED: 5,
 };
 
+const DUMMY_DATA: Friend[] = [
+  {
+    userId: 1,
+    nickname: '차단한사람#1111',
+    level: 10,
+    relation: 'BLOCKED',
+    isOnline: false,
+    outfit: undefined,
+  },
+  {
+    userId: 2,
+    nickname: '짱친#1234',
+    level: 60,
+    relation: 'FRIEND',
+    isOnline: true,
+    outfit: undefined,
+  },
+  {
+    userId: 3,
+    nickname: '친구신청받아#5555',
+    level: 1,
+    relation: 'REQUEST_RECEIVED',
+    isOnline: true,
+    outfit: undefined,
+  },
+  {
+    userId: 4,
+    nickname: '내가신청보냄#7777',
+    level: 25,
+    relation: 'REQUEST_SENT',
+    isOnline: false,
+    outfit: undefined,
+  },
+  {
+    userId: 5,
+    nickname: '자러감#9999',
+    level: 40,
+    relation: 'FRIEND',
+    isOnline: false,
+    outfit: undefined,
+  },
+];
+
 export const useFriendList = (searchKeyword: string) => {
   const [isLoading, setIsLoading] = useState(true);
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -131,20 +174,18 @@ export const useFriendList = (searchKeyword: string) => {
   );
 
   const processedFriends = useMemo(() => {
-    const filtered = friends.filter((friend) => {
-      if (!searchKeyword) return true;
-      return friend.nickname
-        .toLowerCase()
-        .includes(searchKeyword.toLowerCase());
-    });
+    const filtered = friends.filter((friend) =>
+      friend.nickname.toLowerCase().includes(searchKeyword.toLowerCase()),
+    );
 
     return [...filtered].sort((a, b) => {
-      const getPriority = (f: Friend) => {
-        if (f.relation === 'FRIEND') return f.isOnline ? 3 : 4;
-        return RELATION_PRIORITY[f.relation] ?? 99;
+      const getPriority = (friend: Friend) => {
+        if (friend.relation === 'FRIEND') return friend.isOnline ? 3 : 4;
+        return RELATION_PRIORITY[friend.relation] ?? 99;
       };
 
       const priorityDiff = getPriority(a) - getPriority(b);
+
       return priorityDiff !== 0
         ? priorityDiff
         : a.nickname.localeCompare(b.nickname);

@@ -1,3 +1,5 @@
+import type { DragEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 
 import { ItemIcon } from '@/entities/game';
@@ -8,14 +10,51 @@ import { useInventory } from './useInventory';
 
 interface InventoryPanelProps {
   inventory: GameItem[] | null;
-  onComplete?: () => void;
-  completedCount?: number;
-  totalCount?: number;
+  isDraggable?: boolean;
 }
 
-export const InventoryPanel = ({ inventory }: InventoryPanelProps) => {
+export const InventoryPanel = ({
+  inventory,
+  isDraggable = false,
+}: InventoryPanelProps) => {
   const { visibleItems, handlePrev, handleNext, canPrev, canNext } =
     useInventory(inventory ?? []);
+
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTick((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleDragStart = (
+    e: DragEvent<HTMLDivElement>,
+    item: InventoryUIItem,
+  ) => {
+    const now = Date.now();
+
+    if (item.cooldownEndsAt && item.cooldownEndsAt > now) {
+      e.preventDefault();
+      const leftSec = Math.ceil((item.cooldownEndsAt - now) / 1000);
+      alert(`(${leftSec}초 남음)`);
+      return;
+    }
+
+    if (!isDraggable) {
+      e.preventDefault();
+      return;
+    }
+
+    if (!item.isOwned || item.count <= 0) {
+      e.preventDefault();
+      return;
+    }
+
+    e.dataTransfer.setData('item-id', item.id);
+    e.dataTransfer.effectAllowed = 'copy';
+  };
 
   return (
     <aside className="h-auto flex flex-col gap-4">
@@ -37,17 +76,44 @@ export const InventoryPanel = ({ inventory }: InventoryPanelProps) => {
         </button>
 
         <div className="flex flex-col gap-6 my-2 h-[450px]">
-          {visibleItems.map((item: InventoryUIItem) => (
-            <ItemIcon
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              imagePath={item.imagePath}
-              effect={item.effect}
-              count={item.count}
-              isOwned={item.isOwned}
-            />
-          ))}
+          {visibleItems.map((item: InventoryUIItem) => {
+            const now = Date.now();
+            const isCoolingDown = item.cooldownEndsAt
+              ? item.cooldownEndsAt > now
+              : false;
+
+            const canDrag =
+              !isCoolingDown && isDraggable && item.isOwned && item.count > 0;
+
+            return (
+              <div
+                key={item.id}
+                draggable={canDrag}
+                onDragStart={(e) => handleDragStart(e, item)}
+                className={cn(
+                  'transition-all duration-200 relative',
+                  canDrag
+                    ? 'cursor-grab active:cursor-grabbing hover:scale-105 active:scale-95'
+                    : 'cursor-not-allowed opacity-50 grayscale',
+                )}
+              >
+                {isCoolingDown && (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center text-xs font-bold text-white bg-black/40 rounded-full">
+                    {Math.ceil((item.cooldownEndsAt! - now) / 1000)}s
+                  </div>
+                )}
+
+                <ItemIcon
+                  id={item.id}
+                  name={item.name}
+                  imagePath={item.imagePath}
+                  effect={item.effect}
+                  count={item.count}
+                  isOwned={item.isOwned}
+                />
+              </div>
+            );
+          })}
         </div>
 
         <button

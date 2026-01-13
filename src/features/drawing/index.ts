@@ -6,4 +6,5 @@ export {
 export * from './model/types';
 export { useCanvasSize } from './model/useCanvasSize';
 export { useDrawing } from './model/useDrawing';
+export { DrawingToolbox } from './ui/DrawingToolbox';
 export { GameCanvas } from './ui/GameCanvas';

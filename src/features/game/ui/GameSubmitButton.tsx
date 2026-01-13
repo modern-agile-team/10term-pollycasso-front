@@ -20,7 +20,7 @@ export const GameSubmitButton = ({
     <div className="relative w-full mt-4">
       {showBadge && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 -top-7 px-6 py-2 rounded-t-xl text-white font-bold text-sm shadow-md flex items-center justify-center z-0 whitespace-nowrap"
+          className="absolute left-1/2 -translate-x-1/2 -top-8 px-6 py-2 rounded-t-xl text-white font-bold text-sm shadow-md flex items-center justify-center z-0 whitespace-nowrap"
           style={{ backgroundColor: COLORS.BADGE_PINK }}
         >
           {completedCount}/{totalCount} 완료
