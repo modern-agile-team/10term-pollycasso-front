@@ -2,7 +2,16 @@ import { useEffect, useMemo, useState } from 'react';
 
 import type { FriendProfile, FriendRelation } from '@/entities/friend';
 
-type Friend = FriendProfile & { relation: FriendRelation };
+interface Friend extends FriendProfile {
+  relation: FriendRelation;
+}
+
+const RELATION_PRIORITY: Record<FriendRelation, number> = {
+  REQUEST_RECEIVED: 1,
+  REQUEST_SENT: 2,
+  FRIEND: 3,
+  BLOCKED: 5,
+};
 
 const DUMMY_DATA: Friend[] = [
   {
@@ -49,7 +58,6 @@ const DUMMY_DATA: Friend[] = [
 
 export const useFriendList = (searchKeyword: string) => {
   const [isLoading, setIsLoading] = useState(true);
-
   const [friends, setFriends] = useState<Friend[]>([]);
 
   const acceptFriend = (targetId: number | string) => {
@@ -73,34 +81,21 @@ export const useFriendList = (searchKeyword: string) => {
   };
 
   const processedFriends = useMemo(() => {
-    const filtered = friends.filter((friend) => {
-      if (!searchKeyword) return true;
-      return friend.nickname
-        .toLowerCase()
-        .includes(searchKeyword.toLowerCase());
-    });
+    const filtered = friends.filter((friend) =>
+      friend.nickname.toLowerCase().includes(searchKeyword.toLowerCase()),
+    );
 
-    return filtered.sort((a, b) => {
-      const getPriority = (relation: FriendRelation, isOnline: boolean) => {
-        switch (relation) {
-          case 'REQUEST_RECEIVED':
-            return 1;
-          case 'REQUEST_SENT':
-            return 2;
-          case 'FRIEND':
-            return isOnline ? 3 : 4;
-          case 'BLOCKED':
-            return 5;
-          default:
-            return 99;
-        }
+    return [...filtered].sort((a, b) => {
+      const getPriority = (friend: Friend) => {
+        if (friend.relation === 'FRIEND') return friend.isOnline ? 3 : 4;
+        return RELATION_PRIORITY[friend.relation] ?? 99;
       };
 
-      const priorityA = getPriority(a.relation, a.isOnline);
-      const priorityB = getPriority(b.relation, b.isOnline);
+      const priorityDiff = getPriority(a) - getPriority(b);
 
-      if (priorityA !== priorityB) return priorityA - priorityB;
-      return a.nickname.localeCompare(b.nickname);
+      return priorityDiff !== 0
+        ? priorityDiff
+        : a.nickname.localeCompare(b.nickname);
     });
   }, [searchKeyword, friends]);
 
