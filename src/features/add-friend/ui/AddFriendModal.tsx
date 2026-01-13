@@ -14,7 +14,12 @@ interface AddFriendModalProps {
 
 const MOCK_FRIENDS = [
   { id: 1, nickname: '하하하#2103', level: 20, isOnline: true },
-  { id: 2, nickname: '닉네임이엄청나게길어요#0001', level: 5, isOnline: true },
+  {
+    id: 2,
+    nickname: '닉네임이엄청나게길어요#0001',
+    level: 5,
+    isOnline: true,
+  },
   { id: 3, nickname: '밥#8282', level: 50, isOnline: false },
   { id: 4, nickname: '테스트유저#7777', level: 12, isOnline: true },
   { id: 5, nickname: '탈주닌자#7777', level: 12, isOnline: true },
@@ -33,7 +38,7 @@ export const AddFriendModal = ({ onClose }: AddFriendModalProps) => {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black/60 z-50">
-      <div className="relative bg-[#F2F2F2] w-[700px] p-6 rounded-2xl shadow-lg flex flex-col items-center">
+      <div className="relative bg-[#F2F2F2] w-[700px] p-6 rounded-2xl flex flex-col items-center">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 bg-gray-300 rounded-md p-1 hover:bg-gray-400 transition-colors"
@@ -43,7 +48,7 @@ export const AddFriendModal = ({ onClose }: AddFriendModalProps) => {
 
         <img src={Title} alt="Title" className="w-[450px] my-10" />
 
-        <div className="flex items-center my-3 w-[510px] h-12 bg-white rounded-2xl overflow-hidden shadow-sm">
+        <div className="flex items-center my-3 w-[510px] h-12 bg-white rounded-2xl overflow-hidden ">
           <input
             type="text"
             placeholder="친구의 태그나 이름을 입력해주세요."
@@ -55,7 +60,7 @@ export const AddFriendModal = ({ onClose }: AddFriendModalProps) => {
           </div>
         </div>
 
-        <div className="mt-3 w-[510px] flex flex-col font-bold drop-shadow-xl">
+        <div className="mt-3 w-[510px] flex flex-col font-bold">
           <div className="w-full rounded-t-2xl bg-[#153712] text-white text-xl px-4 py-1.5 font-light">
             추천친구
           </div>

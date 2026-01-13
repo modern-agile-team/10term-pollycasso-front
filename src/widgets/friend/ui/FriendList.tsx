@@ -1,89 +1,60 @@
-import { useMemo } from 'react';
+import { FaceFrownIcon } from '@heroicons/react/24/outline';
 
 import type { FriendRelation } from '@/entities/friend';
 import { FriendCard } from '@/entities/friend';
+import { useFriendList } from '../model/useFriendList';
+import { FriendListSkeleton } from './FriendListSkeleton';
 
-const DUMMY_DATA = [
-  {
-    id: 1,
-    nickname: '차단한사람#1111',
-    level: 10,
-    relation: 'BLOCKED',
-    isOnline: false,
-  },
-  {
-    id: 2,
-    nickname: '짱친#1234',
-    level: 60,
-    relation: 'FRIEND',
-    isOnline: true,
-  },
-  {
-    id: 3,
-    nickname: '친구신청받아#5555',
-    level: 1,
-    relation: 'REQUEST_RECEIVED',
-    isOnline: true,
-  },
-  {
-    id: 4,
-    nickname: '내가신청보냄#7777',
-    level: 25,
-    relation: 'REQUEST_SENT',
-    isOnline: false,
-  },
-  {
-    id: 5,
-    nickname: '자러감#9999',
-    level: 40,
-    relation: 'FRIEND',
-    isOnline: false,
-  },
-] as const;
+interface FriendListProps {
+  searchKeyword: string;
+}
 
-export const FriendList = () => {
-  const sortedFriends = useMemo(() => {
-    return [...DUMMY_DATA].sort((a, b) => {
-      const getPriority = (relation: FriendRelation, isOnline: boolean) => {
-        switch (relation) {
-          case 'REQUEST_RECEIVED':
-            return 1;
-          case 'REQUEST_SENT':
-            return 2;
-          case 'FRIEND':
-            return isOnline ? 3 : 4;
-          case 'BLOCKED':
-            return 5;
-          default:
-            return 99;
-        }
-      };
-
-      const priorityA = getPriority(a.relation as FriendRelation, a.isOnline);
-      const priorityB = getPriority(b.relation as FriendRelation, b.isOnline);
-
-      if (priorityA !== priorityB) {
-        return priorityA - priorityB;
-      }
-
-      return a.nickname.localeCompare(b.nickname);
-    });
-  }, []);
+export const FriendList = ({ searchKeyword }: FriendListProps) => {
+  const {
+    processedFriends,
+    acceptFriend,
+    removeFriend,
+    blockFriend,
+    isLoading,
+  } = useFriendList(searchKeyword);
 
   return (
     <div className="flex-1 px-5 pb-10 overflow-y-auto custom-scrollbar">
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedFriends.map((friend) => (
-          <FriendCard
-            key={friend.id}
-            userId={friend.id}
-            nickname={friend.nickname}
-            level={friend.level}
-            relation={friend.relation as FriendRelation}
-            isOnline={friend.isOnline}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <FriendListSkeleton />
+      ) : processedFriends.length > 0 ? (
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+          {processedFriends.map((friend) => (
+            <FriendCard
+              key={friend.userId}
+              userId={friend.userId}
+              nickname={friend.nickname}
+              outfit={friend.outfit}
+              level={friend.level}
+              relation={friend.relation as FriendRelation}
+              isOnline={friend.isOnline}
+              onAccept={() => acceptFriend(friend.userId)}
+              onReject={() => removeFriend(friend.userId)}
+              onCancel={() => removeFriend(friend.userId)}
+              onDelete={() => removeFriend(friend.userId)}
+              onBlock={() => blockFriend(friend.userId)}
+              onUnblock={() => removeFriend(friend.userId)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full text-white/50 gap-y-4">
+          <FaceFrownIcon className="w-24 h-24 opacity-60" />
+          <div className="text-center">
+            <p className="text-2xl font-bold text-white/80">
+              검색된 친구가 없어요.
+            </p>
+            <p className="text-lg mt-1 font-light">
+              닉네임이나 태그를 다시 확인해주세요!
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

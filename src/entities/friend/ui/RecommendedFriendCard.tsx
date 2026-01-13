@@ -1,12 +1,9 @@
 import { PlusIcon } from '@heroicons/react/24/solid';
 
 import { getLevelBadgeColor } from '../lib/badgeColor';
+import type { FriendProfile } from '../model/types';
 
-interface RecommendedFriendCardProps {
-  nickname: string;
-  level: number;
-  isOnline: boolean;
-  outfit?: string;
+interface RecommendedFriendCardProps extends FriendProfile {
   className?: string;
   onAdd?: () => void;
   isRequested?: boolean;

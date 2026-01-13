@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import { CircleStackIcon, Cog8ToothIcon } from '@heroicons/react/24/solid';
 
 interface SideBarProps {
@@ -16,6 +17,7 @@ export const SideBar = ({
   onLogout,
 }: SideBarProps) => {
   const progress = (currentXp / maxXp) * 100;
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col px-8 py-10 items-center w-[380px] h-[760px] rounded-3xl bg-[#1E3411]/40 text-white">
@@ -61,7 +63,10 @@ export const SideBar = ({
           <button className="flex-1 h-[72px] rounded-full bg-[#FF5353]">
             랭킹
           </button>
-          <button className="flex-1 h-[72px] rounded-full bg-[#FFBD2F]">
+          <button
+            className="flex-1 h-[72px] rounded-full bg-[#FFBD2F]"
+            onClick={() => navigate('/friend')}
+          >
             친구
           </button>
         </div>
