@@ -1,14 +1,26 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { FriendProfile, FriendRelation } from '@/entities/friend';
+import type {
+  FriendAction,
+  FriendProfile,
+  FriendRelation,
+} from '@/entities/friend';
 import { io, SOCKET_EVENTS } from '@/shared/api/socket';
 
-type Friend = FriendProfile & { relation: FriendRelation };
+interface Friend extends FriendProfile {
+  relation: FriendRelation;
+}
+
+const RELATION_PRIORITY: Record<FriendRelation, number> = {
+  REQUEST_RECEIVED: 1,
+  REQUEST_SENT: 2,
+  FRIEND: 3,
+  BLOCKED: 5,
+};
 
 export const useFriendList = (searchKeyword: string) => {
   const [isLoading, setIsLoading] = useState(true);
   const [friends, setFriends] = useState<Friend[]>([]);
-
   const [recommendedFriends, setRecommendedFriends] = useState<FriendProfile[]>(
     [],
   );
@@ -71,6 +83,31 @@ export const useFriendList = (searchKeyword: string) => {
     };
   }, [socket]);
 
+  const handleFriendAction = useCallback(
+    (targetId: number | string, action: FriendAction) => {
+      switch (action) {
+        case 'ACCEPT':
+          socket.emit(SOCKET_EVENTS.FRIEND_ACCEPT, { requesterId: targetId });
+          break;
+
+        case 'BLOCK':
+          socket.emit(SOCKET_EVENTS.FRIEND_BLOCK, { targetId });
+          break;
+
+        case 'CANCEL':
+        case 'REJECT':
+        case 'DELETE':
+        case 'UNBLOCK':
+          socket.emit(SOCKET_EVENTS.FRIEND_DELETE, { targetId });
+          break;
+
+        default:
+          console.warn('Unknown Friend Action:', action);
+      }
+    },
+    [socket],
+  );
+
   const requestFriend = useCallback(
     (targetNickname: string) => {
       socket.emit(SOCKET_EVENTS.FRIEND_REQUEST_SEND, { targetNickname });
@@ -81,27 +118,6 @@ export const useFriendList = (searchKeyword: string) => {
   const refreshRecommended = useCallback(() => {
     socket.emit(SOCKET_EVENTS.FRIEND_GET_RECOMMENDED);
   }, [socket]);
-
-  const acceptFriend = useCallback(
-    (requesterId: number | string) => {
-      socket.emit(SOCKET_EVENTS.FRIEND_ACCEPT, { requesterId });
-    },
-    [socket],
-  );
-
-  const removeFriend = useCallback(
-    (targetId: number | string) => {
-      socket.emit(SOCKET_EVENTS.FRIEND_DELETE, { targetId });
-    },
-    [socket],
-  );
-
-  const blockFriend = useCallback(
-    (targetId: number | string) => {
-      socket.emit(SOCKET_EVENTS.FRIEND_BLOCK, { targetId });
-    },
-    [socket],
-  );
 
   const searchUsers = useCallback(
     (keyword: string) => {
@@ -122,38 +138,27 @@ export const useFriendList = (searchKeyword: string) => {
         .includes(searchKeyword.toLowerCase());
     });
 
-    return filtered.sort((a, b) => {
-      const getPriority = (relation: FriendRelation, isOnline: boolean) => {
-        switch (relation) {
-          case 'REQUEST_RECEIVED':
-            return 1;
-          case 'REQUEST_SENT':
-            return 2;
-          case 'FRIEND':
-            return isOnline ? 3 : 4;
-          case 'BLOCKED':
-            return 5;
-          default:
-            return 99;
-        }
+    return [...filtered].sort((a, b) => {
+      const getPriority = (f: Friend) => {
+        if (f.relation === 'FRIEND') return f.isOnline ? 3 : 4;
+        return RELATION_PRIORITY[f.relation] ?? 99;
       };
-      const priorityA = getPriority(a.relation, a.isOnline);
-      const priorityB = getPriority(b.relation, b.isOnline);
-      if (priorityA !== priorityB) return priorityA - priorityB;
-      return a.nickname.localeCompare(b.nickname);
+
+      const priorityDiff = getPriority(a) - getPriority(b);
+      return priorityDiff !== 0
+        ? priorityDiff
+        : a.nickname.localeCompare(b.nickname);
     });
   }, [searchKeyword, friends]);
 
   return {
     processedFriends,
     searchResults,
-    searchUsers,
     recommendedFriends,
+    handleFriendAction,
     requestFriend,
+    searchUsers,
     refreshRecommended,
-    acceptFriend,
-    removeFriend,
-    blockFriend,
     isLoading,
   };
 };

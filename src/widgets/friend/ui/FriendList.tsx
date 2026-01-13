@@ -1,6 +1,5 @@
 import { FaceFrownIcon } from '@heroicons/react/24/outline';
 
-import type { FriendRelation } from '@/entities/friend';
 import { FriendCard } from '@/entities/friend';
 import { useFriendList } from '../model/useFriendList';
 import { FriendListSkeleton } from './FriendListSkeleton';
@@ -10,13 +9,8 @@ interface FriendListProps {
 }
 
 export const FriendList = ({ searchKeyword }: FriendListProps) => {
-  const {
-    processedFriends,
-    acceptFriend,
-    removeFriend,
-    blockFriend,
-    isLoading,
-  } = useFriendList(searchKeyword);
+  const { processedFriends, handleFriendAction, isLoading } =
+    useFriendList(searchKeyword);
 
   return (
     <div className="flex-1 px-5 pb-10 overflow-y-auto custom-scrollbar">
@@ -27,18 +21,8 @@ export const FriendList = ({ searchKeyword }: FriendListProps) => {
           {processedFriends.map((friend) => (
             <FriendCard
               key={friend.userId}
-              userId={friend.userId}
-              nickname={friend.nickname}
-              outfit={friend.outfit}
-              level={friend.level}
-              relation={friend.relation as FriendRelation}
-              isOnline={friend.isOnline}
-              onAccept={() => acceptFriend(friend.userId)}
-              onReject={() => removeFriend(friend.userId)}
-              onCancel={() => removeFriend(friend.userId)}
-              onDelete={() => removeFriend(friend.userId)}
-              onBlock={() => blockFriend(friend.userId)}
-              onUnblock={() => removeFriend(friend.userId)}
+              {...friend}
+              onAction={(action) => handleFriendAction(friend.userId, action)}
             />
           ))}
         </div>
