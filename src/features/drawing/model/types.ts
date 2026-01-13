@@ -1,10 +1,4 @@
-export type DrawingTool =
-  | 'pencil'
-  | 'brush'
-  | 'pen'
-  | 'neon'
-  | 'bucket'
-  | 'eraser';
+export type DrawingTool = 'pencil' | 'brush' | 'neon' | 'bucket' | 'eraser';
 
 export interface Point {
   x: number;
@@ -21,4 +15,11 @@ export interface DrawLine {
 
 export interface DrawData {
   lines: DrawLine[];
+}
+
+export interface RGBA {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
 }

@@ -9,7 +9,7 @@ import { useDrawing } from '../model/useDrawing';
 import { useTextureLoader } from '../model/useTextureLoader';
 import { BucketResult } from './BucketResult';
 import { CanvasBackground } from './CanvasBackground';
-import { TexturedLine } from './TexturedLine';
+import { TextureBrushLine } from './TextureBrushLine';
 
 interface GameCanvasProps {
   activeTool: DrawingTool;
@@ -73,7 +73,7 @@ export const GameCanvas = ({
 
                 if (texture && line.tool !== 'eraser') {
                   return (
-                    <TexturedLine
+                    <TextureBrushLine
                       key={i}
                       points={line.points}
                       color={line.color}

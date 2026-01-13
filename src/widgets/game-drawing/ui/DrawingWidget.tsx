@@ -11,6 +11,7 @@ import {
 } from '@/features/game';
 import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
 import { PHASE_TIME } from '@/shared/model';
+import { useDrawingShortcuts } from '../model/useDrawingShortcuts';
 import { useDrawingTools } from '../model/useDrawingTools';
 import { useGameState } from '../model/useGameState';
 import { useGameSubmission } from '../model/useGameSubmission';
@@ -37,6 +38,8 @@ const DrawingWidget = () => {
 
   const { localInput, handleInputChange, handleRandomTheme } =
     useThemeInput(isMyTurn);
+
+  useDrawingShortcuts({ setActiveTool, setStrokeWidth });
 
   const handleComplete = useCallback(() => {
     if (status === 'THEME_SELECTING') {

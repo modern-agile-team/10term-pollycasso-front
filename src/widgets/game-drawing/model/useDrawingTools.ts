@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { DrawingTool } from '@/features/drawing';
 
 const INITIAL_TOOL_STATE = {
-  TOOL: 'pen' as DrawingTool,
+  TOOL: 'pencil' as DrawingTool,
   WIDTH: 5,
   COLOR: '#000000',
 };
