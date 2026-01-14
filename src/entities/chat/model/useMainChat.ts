@@ -8,6 +8,9 @@ import type { Friend } from '@/shared/model';
 export const useMainChat = () => {
   const { messages, sendMessage: emitMessage } = useSocket();
 
+  const user = useAuthStore((state) => state.user);
+  const currentUserId = user?.id;
+
   const [input, setInput] = useState('');
   const [selected, setSelected] = useState(mockChannels[0]);
 
@@ -17,8 +20,6 @@ export const useMainChat = () => {
   const [isComposing, setIsComposing] = useState(false);
 
   const [isChannelDropdownOpen, setIsChannelDropdownOpen] = useState(false);
-
-  const userId = useAuthStore((state) => state.user?.id);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -67,7 +68,7 @@ export const useMainChat = () => {
 
   const handleMentionSelect = (friend: Friend) => {
     setIsMentionOpen(false);
-    setInput(`@${friend.name} `);
+    setInput(`@[${friend.name}](${friend.id}) `);
     setSelected(mockChannels[1]);
     setHighlightIndex(0);
   };
@@ -96,10 +97,38 @@ export const useMainChat = () => {
   };
 
   const sendMessage = () => {
+    if (!user) return;
+
     const trimmed = input.trim();
     if (trimmed === '' || /^@\S+$/.test(trimmed)) return;
 
-    emitMessage(trimmed);
+    if (selected.value === '친구' && trimmed.startsWith('@')) {
+      const firstSpaceIndex = trimmed.indexOf(' ');
+      if (firstSpaceIndex === -1) return;
+
+      const rawTarget = trimmed.slice(1, firstSpaceIndex);
+      const realMessage = trimmed.slice(firstSpaceIndex + 1);
+
+      const nicknameMatch = rawTarget.match(/\[(.*?)\]/);
+      const targetNickname = nicknameMatch ? nicknameMatch[1] : rawTarget;
+
+      const idMatch = rawTarget.match(/\((.*?)\)/);
+      const targetId = idMatch ? idMatch[1] : null;
+
+      emitMessage({
+        message: realMessage,
+
+        // TODO: 백엔드 멘션 기능 구현 이후 해제
+        // channel: '친구',
+        // targetId: targetId,
+        // targetNickname: targetNickname,
+      });
+    } else {
+      emitMessage({
+        message: trimmed,
+        // channel: '전체',
+      });
+    }
 
     setInput('');
     setIsMentionOpen(false);
@@ -107,7 +136,7 @@ export const useMainChat = () => {
   };
 
   const handleKeyDown = (e: any) => {
-    if (isComposing) return;
+    if (e.nativeEvent.isComposing) return;
 
     if (isMentionOpen) {
       if (e.key === 'ArrowDown') {
@@ -133,8 +162,10 @@ export const useMainChat = () => {
     }
 
     if (!isMentionOpen && e.key === 'Enter') {
-      e.preventDefault();
-      sendMessage();
+      if (!e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
     }
   };
 
@@ -147,6 +178,7 @@ export const useMainChat = () => {
     isMentionOpen,
     isChannelDropdownOpen,
     messagesEndRef,
+    currentUserId,
     setInput,
     setSelected,
     setIsComposing,
@@ -160,6 +192,5 @@ export const useMainChat = () => {
     selectChannel,
     onChannelToggle,
     handleSelectChannel,
-    userId,
   };
 };

@@ -1,20 +1,29 @@
 import { SOCKET_EVENTS } from '@/shared/api/socket';
 import { ITEM_METADATA } from '@/shared/constants/item';
-import type { GameItem, Player, ThemeSelectingContext } from '@/shared/model';
+import type {
+  GameItem,
+  Player,
+  SendMessageRequest,
+  ThemeSelectingContext,
+} from '@/shared/model';
 import { PHASE_TIME, RANDOM_THEMES } from '@/shared/model';
 import type { MockSocket } from './mockSocket';
 
-export const handleLobbySend = (socket: MockSocket, payload: any) => {
-  const { message } = payload;
+export const handleLobbySend = (
+  socket: MockSocket,
+  payload: SendMessageRequest,
+) => {
+  const responseMsg = {
+    ...payload,
 
-  const mainChatMsg = {
     id: Date.now().toString(),
+    createdAt: new Date().toISOString(),
+
     senderId: 'test-user',
-    nickname: '테스트유저(Mock1)',
-    message,
+    nickname: '테스트유저',
   };
 
-  socket['trigger'](SOCKET_EVENTS.LOBBY_MESSAGE, mainChatMsg);
+  socket['trigger'](SOCKET_EVENTS.LOBBY_MESSAGE, responseMsg);
 };
 
 export const handleRoomJoin = (socket: MockSocket) => {

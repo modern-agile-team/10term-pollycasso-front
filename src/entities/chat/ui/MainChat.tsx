@@ -2,7 +2,6 @@ import { useMainChat } from '../model/useMainChat';
 import { ChannelSelect } from './ChannelSelect';
 import { ChatInput } from './ChatInput';
 import { ChatSendButton } from './ChatSendButton';
-import { MentionDropdown } from './MentionDropdown';
 import { MessageList } from './MessageList';
 
 export const MainChat = () => {
@@ -10,19 +9,15 @@ export const MainChat = () => {
     messages,
     input,
     selected,
-    isMentionOpen,
     filteredFriends,
-    highlightIndex,
     messagesEndRef,
     handleMentionOpen,
-    handleMentionSelect,
     handleKeyDown,
     sendMessage,
-    setIsComposing,
     isChannelDropdownOpen,
     onChannelToggle,
     handleSelectChannel,
-    userId,
+    currentUserId,
   } = useMainChat();
 
   const disableSend =
@@ -33,7 +28,7 @@ export const MainChat = () => {
       <MessageList
         messages={messages}
         messagesEndRef={messagesEndRef}
-        currentUserId={userId}
+        currentUserId={currentUserId}
         showChannelTag={true}
       />
 
@@ -49,17 +44,9 @@ export const MainChat = () => {
           value={input}
           onChange={handleMentionOpen}
           onKeyDown={handleKeyDown}
-          setIsComposing={setIsComposing}
+          friends={filteredFriends}
           className="w-4/5 mr-2 text-base text-black placeholder-gray-500"
         />
-
-        {isMentionOpen && (
-          <MentionDropdown
-            friends={filteredFriends}
-            highlightIndex={highlightIndex}
-            onSelect={handleMentionSelect}
-          />
-        )}
 
         <ChatSendButton disabled={disableSend} onSend={sendMessage} />
       </div>
