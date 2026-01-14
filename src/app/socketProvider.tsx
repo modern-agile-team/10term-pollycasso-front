@@ -5,7 +5,7 @@ import { useAuthStore } from '@/entities/user';
 import type { Socket } from '@/shared/api/socket';
 import { io } from '@/shared/api/socket';
 import { SocketContext } from '@/shared/api/socket';
-import type { ChatMessage } from '@/shared/model';
+import type { ChatMessage, SendMessageRequest } from '@/shared/model';
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const socketRef = useRef<Socket | null>(null);
@@ -65,10 +65,10 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [token]);
 
-  const sendMessage = useCallback((messageContent: string) => {
+  const sendMessage = useCallback((payload: SendMessageRequest) => {
     const socket = socketRef.current;
     if (socket && socket.connected) {
-      socket.emit('lobby:send', { message: messageContent });
+      socket.emit('lobby:send', payload);
     }
   }, []);
 
