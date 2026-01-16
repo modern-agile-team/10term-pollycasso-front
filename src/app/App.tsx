@@ -5,7 +5,6 @@ import { SocketGlobalAlert } from '@/shared/ui/SocketGlobalAlert';
 import QueryProvider from './queryProvider';
 import Router from './Router';
 import { SocketProvider } from './socketProvider';
-import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (

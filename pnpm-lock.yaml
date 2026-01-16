@@ -68,6 +68,9 @@ importers:
       react-konva:
         specifier: ^19.0.7
         version: 19.0.7(@types/react@19.1.12)(konva@9.0.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react-mentions:
+        specifier: ^4.4.10
+        version: 4.4.10(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-router:
         specifier: ^7.12.0
         version: 7.12.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -120,6 +123,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.7
         version: 19.1.9(@types/react@19.1.12)
+      '@types/react-mentions':
+        specifier: ^4.4.1
+        version: 4.4.1
       '@vheemstra/vite-plugin-imagemin':
         specifier: ^2.2.1
         version: 2.2.1(vite@7.1.11(@types/node@24.3.1)(jiti@1.21.7)(yaml@2.8.1))
@@ -286,6 +292,9 @@ packages:
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
     engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.4.5':
+    resolution: {integrity: sha512-TuI4qpWZP6lGOGIuGWtp9sPluqYICmbk8T/1vpSysqJxRPkudh/ofFWyqdcMsDf2s7KvDL4/YHgKyvcS3g9CJQ==}
 
   '@babel/template@7.27.2':
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
@@ -1118,6 +1127,9 @@ packages:
     resolution: {integrity: sha512-qXRuZaOsAdXKFyOhRBg6Lqqc0yay13vN7KrIg4L7N4aaHN68ma9OK3NE1BoDFgFOTfM7zg+3/8+2n8rLUH3OKQ==}
     peerDependencies:
       '@types/react': ^19.0.0
+
+  '@types/react-mentions@4.4.1':
+    resolution: {integrity: sha512-65QdcZYkGe2I4GnOLY2OhlXCGz/Csd8NhytwE5r59CoFeYafMltAE/WqFB/Y6SoPU8LvF7EyUrq6Rxrf0Kzxkg==}
 
   '@types/react-reconciler@0.28.9':
     resolution: {integrity: sha512-HHM3nxyUZ3zAylX8ZEyrDNd2XZOnQ0D5XfunJF5FLQnZbHHYq4UWvW1QfelQNXv1ICNkwYhfxjwfnqivYB6bFg==}
@@ -2149,6 +2161,9 @@ packages:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
 
+  invariant@2.2.4:
+    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
+
   is-apng@1.2.0:
     resolution: {integrity: sha512-xgnGhMmFhHUYnVbNJsWRy0JaYSbHpESWqQAwKXlac9jIl4xRFTvqwNdurltD7AlX+NeXpRVs379UeqjM9C36ow==}
     engines: {node: '>=18'}
@@ -2793,6 +2808,12 @@ packages:
       react: ^18.3.1 || ^19.0.0
       react-dom: ^18.3.1 || ^19.0.0
 
+  react-mentions@4.4.10:
+    resolution: {integrity: sha512-JHiQlgF1oSZR7VYPjq32wy97z1w1oE4x10EuhKjPr4WUKhVzG1uFQhQjKqjQkbVqJrmahf+ldgBTv36NrkpKpA==}
+    peerDependencies:
+      react: '>=16.8.3'
+      react-dom: '>=16.8.3'
+
   react-reconciler@0.32.0:
     resolution: {integrity: sha512-2NPMOzgTlG0ZWdIf3qG+dcbLSoAc/uLfOwckc3ofy5sSK0pLJqnQLpUFxvGcN2rlXSjnVtGeeFLNimCQEj5gOQ==}
     engines: {node: '>=0.10.0'}
@@ -2841,6 +2862,9 @@ packages:
   reflect.getprototypeof@1.0.10:
     resolution: {integrity: sha512-00o4I+DVrefhv+nX0ulyi3biSHCPDe+yLv5o/p6d/UVlirijB8E16FtfwSAi4g3tcqrQ4lRAqQSoFEZJehYEcw==}
     engines: {node: '>= 0.4'}
+
+  regenerator-runtime@0.13.11:
+    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
 
   regexp.prototype.flags@1.5.4:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==}
@@ -3066,6 +3090,11 @@ packages:
   strtok3@9.1.1:
     resolution: {integrity: sha512-FhwotcEqjr241ZbjFzjlIYg6c5/L/s4yBGWSMvJ9UoExiSqL+FnFA/CaeZx17WGaZMS/4SOZp8wH18jSS4R4lw==}
     engines: {node: '>=16'}
+
+  substyle@9.4.1:
+    resolution: {integrity: sha512-VOngeq/W1/UkxiGzeqVvDbGDPM8XgUyJVWjrqeh+GgKqspEPiLYndK+XRcsKUHM5Muz/++1ctJ1QCF/OqRiKWA==}
+    peerDependencies:
+      react: '>=16.8.3'
 
   sucrase@3.35.0:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
@@ -3569,6 +3598,10 @@ snapshots:
       '@babel/helper-plugin-utils': 7.27.1
 
   '@babel/runtime@7.28.4': {}
+
+  '@babel/runtime@7.4.5':
+    dependencies:
+      regenerator-runtime: 0.13.11
 
   '@babel/template@7.27.2':
     dependencies:
@@ -4234,6 +4267,10 @@ snapshots:
       undici-types: 7.10.0
 
   '@types/react-dom@19.1.9(@types/react@19.1.12)':
+    dependencies:
+      '@types/react': 19.1.12
+
+  '@types/react-mentions@4.4.1':
     dependencies:
       '@types/react': 19.1.12
 
@@ -5452,6 +5489,10 @@ snapshots:
       hasown: 2.0.2
       side-channel: 1.1.0
 
+  invariant@2.2.4:
+    dependencies:
+      loose-envify: 1.4.0
+
   is-apng@1.2.0: {}
 
   is-array-buffer@3.0.5:
@@ -6080,6 +6121,15 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
+  react-mentions@4.4.10(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+    dependencies:
+      '@babel/runtime': 7.4.5
+      invariant: 2.2.4
+      prop-types: 15.8.1
+      react: 19.1.1
+      react-dom: 19.1.1(react@19.1.1)
+      substyle: 9.4.1(react@19.1.1)
+
   react-reconciler@0.32.0(react@19.1.1):
     dependencies:
       react: 19.1.1
@@ -6134,6 +6184,8 @@ snapshots:
       get-intrinsic: 1.3.0
       get-proto: 1.0.1
       which-builtin-type: 1.2.1
+
+  regenerator-runtime@0.13.11: {}
 
   regexp.prototype.flags@1.5.4:
     dependencies:
@@ -6438,6 +6490,12 @@ snapshots:
     dependencies:
       '@tokenizer/token': 0.3.0
       peek-readable: 5.4.2
+
+  substyle@9.4.1(react@19.1.1):
+    dependencies:
+      '@babel/runtime': 7.28.4
+      invariant: 2.2.4
+      react: 19.1.1
 
   sucrase@3.35.0:
     dependencies:

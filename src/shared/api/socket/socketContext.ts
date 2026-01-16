@@ -1,13 +1,13 @@
 import { createContext, useContext } from 'react';
 import type { Socket } from 'socket.io-client';
 
-import type { ChatMessage } from '@/shared/model';
+import type { ChatMessage, SendMessageRequest } from '@/shared/model';
 
 export interface SocketContextProps {
   socket: Socket | null;
   isConnected: boolean;
   messages: ChatMessage[];
-  sendMessage: (message: string) => void;
+  sendMessage: (message: SendMessageRequest) => void;
 }
 
 export const SocketContext = createContext<SocketContextProps | null>(null);
