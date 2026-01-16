@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 
+import {
+  isAtOnly,
+  isEmptyOrAt,
+  parseWhisper,
+} from '@/entities/chat/lib/mention.lib';
 import { useAuthStore } from '@/entities/user';
 import { mockChannels, mockFriends } from '@/mocks/chat.mock';
 import { useSocket } from '@/shared/api/socket';
@@ -109,40 +114,33 @@ export const useMainChat = () => {
 
     const trimmed = input.trim();
 
-    const isOnlyMention = /^@\[[^\]]+\]\([^)]+\)$/.test(trimmed);
-    if (trimmed === '' || trimmed === '@' || isOnlyMention) return;
+    // Empty or "@"
+    if (isEmptyOrAt(trimmed)) return;
 
-    if (selected.value === 'direct' && trimmed.startsWith('@')) {
-      const mentionEndIndex = trimmed.indexOf(') ');
+    const whisperData = parseWhisper(trimmed);
 
-      if (mentionEndIndex === -1) return;
+    const isDirectChannel = selected.value === 'direct';
 
-      const rawTarget = trimmed.slice(1, mentionEndIndex + 1); // [이름](id)
-      const realMessage = trimmed.slice(mentionEndIndex + 2); // @))))))) (진짜 메세지)
-
-      const idMatch = rawTarget.match(/\((.*?)\)/);
-      const nicknameMatch = rawTarget.match(/\[(.*?)\]/);
-
-      const targetId = idMatch ? idMatch[1] : null;
-      const targetNickname = nicknameMatch ? nicknameMatch[1] : rawTarget;
-
-      if (targetId) {
-        emitMessage({
-          message: realMessage,
-
-          // TODO: 백엔드 멘션기능 구현 이후 해제
-          // channel: 'direct',
-          // targetId,
-          // targetNickname,
-        });
-      }
-    } else {
+    if (isDirectChannel && whisperData) {
       emitMessage({
+        channel: 'direct',
+        message: whisperData.message,
+        targetId: whisperData.targetId,
+        targetNickname: whisperData.targetNickname,
+      });
+    } else {
+      if (isAtOnly(trimmed)) return;
+
+      emitMessage({
+        channel: 'global',
         message: trimmed,
-        // channel: 'global',
       });
     }
 
+    resetInputStatus();
+  };
+
+  const resetInputStatus = () => {
     setInput('');
     setIsMentionOpen(false);
     setHighlightIndex(0);
