@@ -39,6 +39,11 @@ export const GameCanvas = ({
 
   const isCanvasReady = size.width > 0 && size.height > 0;
 
+  /**
+   * 마우스 이동 핸들러
+   * 1. 고스트 커서(미리보기)를 위한 좌표를 업데이트하고 (UI)
+   * 2. 부모로부터 받은 실제 그리기 로직을 실행합니다 (Logic)
+   */
   const handleMouseMoveInternal: KonvaHandler = (event) => {
     const stage = event.target.getStage();
     const position = stage?.getPointerPosition();
