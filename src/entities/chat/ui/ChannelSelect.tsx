@@ -16,7 +16,7 @@ export const ChannelSelect = ({
   onSelect,
 }: ChannelSelectProps) => {
   const isFriendClassName =
-    selected.value === '친구' ? 'text-[#305946]' : 'text-gray-800';
+    selected.value === 'direct' ? 'text-[#305946]' : 'text-gray-800';
   const isOpenClassName = isOpen
     ? 'bg-white text-[#305946]'
     : 'bg-[#305946] text-white';
@@ -44,7 +44,7 @@ export const ChannelSelect = ({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onSelect('전체');
+              onSelect('global');
             }}
             className="px-3 py-2 text-[24px] cursor-pointer hover:bg-gray-200 text-black"
           >
@@ -54,7 +54,7 @@ export const ChannelSelect = ({
           <div
             onClick={(e) => {
               e.stopPropagation();
-              onSelect('친구');
+              onSelect('direct');
             }}
             className="px-3 py-2 text-[24px] cursor-pointer hover:bg-gray-200 text-[#305946] font-bold"
           >

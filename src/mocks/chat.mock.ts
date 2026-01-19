@@ -8,8 +8,8 @@ interface ChannelOption {
 }
 
 export const mockChannels: ChannelOption[] = [
-  { label: '[전체]', value: '전체' },
-  { label: '[친구]', value: '친구' },
+  { label: '[전체]', value: 'global' },
+  { label: '[친구]', value: 'direct' },
 ] as const;
 
 export const mockFriends: Friend[] = [

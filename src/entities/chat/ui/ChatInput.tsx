@@ -24,7 +24,10 @@ export const ChatInput = ({
   placeholder = '메세지를 보내주세요!',
   ...props
 }: ChatInputProps) => {
-  const suggestionData = mapFriendsToSuggestions(friends);
+  const shouldShowSuggestions = value.startsWith('@') && !value.includes(' ');
+  const suggestionData = shouldShowSuggestions
+    ? mapFriendsToSuggestions(friends)
+    : [];
 
   const renderSuggestion = (suggestion: SuggestionDataItem) => (
     <div className="flex items-center gap-2">

@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 
+import {
+  isAtOnly,
+  isEmptyOrAt,
+  parseWhisper,
+} from '@/entities/chat/lib/mention.lib';
 import { useAuthStore } from '@/entities/user';
 import { mockChannels, mockFriends } from '@/mocks/chat.mock';
 import { useSocket } from '@/shared/api/socket';
@@ -33,20 +38,30 @@ export const useMainChat = () => {
   const handleMentionOpen = (value: string) => {
     setInput(value);
 
-    const lastAtIndex = value.lastIndexOf('@');
-    if (lastAtIndex === -1) {
+    if (!value.startsWith('@')) {
       setIsMentionOpen(false);
-      setSelected(mockChannels[0]);
+
+      if (selected.value === 'direct') {
+        const globalChannel = mockChannels.find((c) => c.value === 'global');
+        if (globalChannel) setSelected(globalChannel);
+      }
       return;
     }
 
-    const mentionCandidate = value.slice(lastAtIndex + 1);
+    if (value.includes(' ')) {
+      setIsMentionOpen(false);
+      return;
+    }
+
+    const mentionCandidate = value.slice(1);
 
     if (mentionCandidate === '') {
       setFilteredFriends(mockFriends);
       setIsMentionOpen(true);
       setHighlightIndex(0);
-      setSelected(mockChannels[1]);
+
+      const directChannel = mockChannels.find((c) => c.value === 'direct');
+      if (directChannel) setSelected(directChannel);
       return;
     }
 
@@ -62,8 +77,6 @@ export const useMainChat = () => {
 
     setFilteredFriends(filtered);
     setIsMentionOpen(filtered.length > 0);
-
-    if (filtered.length > 0) setSelected(mockChannels[1]);
   };
 
   const handleMentionSelect = (friend: Friend) => {
@@ -79,7 +92,7 @@ export const useMainChat = () => {
 
     setSelected(ch);
 
-    if (ch.value === '친구' && !input.startsWith('@')) {
+    if (ch.value === 'direct' && !input.startsWith('@')) {
       setInput('@');
       setIsMentionOpen(true);
       setFilteredFriends(mockFriends);
@@ -100,36 +113,34 @@ export const useMainChat = () => {
     if (!user) return;
 
     const trimmed = input.trim();
-    if (trimmed === '' || /^@\S+$/.test(trimmed)) return;
 
-    if (selected.value === '친구' && trimmed.startsWith('@')) {
-      const firstSpaceIndex = trimmed.indexOf(' ');
-      if (firstSpaceIndex === -1) return;
+    // Empty or "@"
+    if (isEmptyOrAt(trimmed)) return;
 
-      const rawTarget = trimmed.slice(1, firstSpaceIndex);
-      const realMessage = trimmed.slice(firstSpaceIndex + 1);
+    const whisperData = parseWhisper(trimmed);
 
-      const nicknameMatch = rawTarget.match(/\[(.*?)\]/);
-      const targetNickname = nicknameMatch ? nicknameMatch[1] : rawTarget;
+    const isDirectChannel = selected.value === 'direct';
 
-      const idMatch = rawTarget.match(/\((.*?)\)/);
-      const targetId = idMatch ? idMatch[1] : null;
-
+    if (isDirectChannel && whisperData) {
       emitMessage({
-        message: realMessage,
-
-        // TODO: 백엔드 멘션 기능 구현 이후 해제
-        // channel: '친구',
-        // targetId: targetId,
-        // targetNickname: targetNickname,
+        channel: 'direct',
+        message: whisperData.message,
+        targetId: whisperData.targetId,
+        targetNickname: whisperData.targetNickname,
       });
     } else {
+      if (isAtOnly(trimmed)) return;
+
       emitMessage({
+        channel: 'global',
         message: trimmed,
-        // channel: '전체',
       });
     }
 
+    resetInputStatus();
+  };
+
+  const resetInputStatus = () => {
     setInput('');
     setIsMentionOpen(false);
     setHighlightIndex(0);

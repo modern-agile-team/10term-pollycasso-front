@@ -13,7 +13,7 @@ export const getMessageDisplayData = (
   currentUserId?: string,
   showChannelTag?: boolean,
 ): MessageDisplayData => {
-  const isFriend = msg.channel === '친구';
+  const isFriend = msg.channel === 'direct';
   const isMe = String(msg.senderId) === String(currentUserId);
 
   let styleClass = '';

@@ -3,7 +3,7 @@ export interface Friend {
   name: string;
 }
 
-export type ChannelType = '전체' | '친구' | '안내';
+export type ChatChannel = 'global' | 'direct' | 'system';
 
 export interface ChatMessage {
   id: string;
@@ -11,14 +11,14 @@ export interface ChatMessage {
   senderId: string;
   nickname: string;
   message: string;
-  channel: '전체' | '친구' | '안내';
+  channel: ChatChannel;
   targetId?: string;
   targetNickname?: string;
 }
 
 export interface SendMessageRequest {
   message: string;
-  channel?: '전체' | '친구' | '안내';
+  channel?: Exclude<ChatChannel, 'system'>;
   targetNickname?: string;
   targetId?: string;
 }
