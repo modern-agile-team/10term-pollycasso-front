@@ -1,12 +1,15 @@
 import { useCallback, useMemo } from 'react';
 
-import { DrawingToolbox, GameCanvas } from '@/features/drawing';
+import { useAuthStore } from '@/entities/user';
+import { DrawingToolbox, GameCanvas, useDrawing } from '@/features/drawing';
 import {
+  DrawingHistoryButtons,
   GameHeader,
   GameSubmitButton,
   GameTimer,
   InventoryPanel,
   PlayerSidebar,
+  ShortcutGuide,
   ThemeSelector,
 } from '@/features/game';
 import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
@@ -20,6 +23,7 @@ import { useThemeSelecting } from '../model/useThemeSelecting';
 
 const DrawingWidget = () => {
   const { status, players, endsAt, inventory, currentTheme } = useGameState();
+
   const { socket } = useSocket();
 
   const { isMyTurn } = useThemeSelecting();
@@ -36,10 +40,18 @@ const DrawingWidget = () => {
     setSelectedColor,
   } = useDrawingTools();
 
+  const { lines, undo, redo, handleDown, handleMove, handleUp } = useDrawing({
+    tool: activeTool,
+    color: selectedColor,
+    size: strokeWidth,
+  });
+
   const { localInput, handleInputChange, handleRandomTheme } =
     useThemeInput(isMyTurn);
 
   useDrawingShortcuts({ setActiveTool, setStrokeWidth });
+
+  const { user } = useAuthStore();
 
   const handleComplete = useCallback(() => {
     if (status === 'THEME_SELECTING') {
@@ -75,7 +87,7 @@ const DrawingWidget = () => {
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
-      <PlayerSidebar players={players} />
+      <PlayerSidebar players={players} currentUserId={user!.id} />
 
       <main className="w-full h-full rounded-3xl bg-white shadow-xl flex flex-col relative overflow-hidden">
         <GameTimer
@@ -96,13 +108,20 @@ const DrawingWidget = () => {
             />
           ) : (
             <>
+              <div className="absolute -top-12 left-6 z-30">
+                <ShortcutGuide />
+              </div>
               <GameCanvas
                 activeTool={activeTool}
                 strokeWidth={strokeWidth}
                 selectedColor={selectedColor}
+                lines={lines}
+                onMouseDown={handleDown}
+                onMouseMove={handleMove}
+                onMouseUp={handleUp}
               />
 
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
                 <DrawingToolbox
                   activeTool={activeTool}
                   onToolChange={setActiveTool}
@@ -111,6 +130,7 @@ const DrawingWidget = () => {
                   selectedColor={selectedColor}
                   onColorChange={setSelectedColor}
                 />
+                <DrawingHistoryButtons undo={undo} redo={redo} />
               </div>
             </>
           )}
