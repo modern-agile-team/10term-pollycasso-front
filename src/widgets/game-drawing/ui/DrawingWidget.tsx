@@ -83,7 +83,73 @@ const DrawingWidget = () => {
     }
   }, [status]);
 
-  const isThemeSelecting = false;
+  const renderGameContent = () => {
+    switch (status) {
+      case 'THEME_SELECTING':
+        return (
+          <ThemeSelector
+            isSelector={isMyTurn}
+            inputValue={localInput}
+            onChange={handleInputChange}
+            onRandom={handleRandomTheme}
+          />
+        );
+
+      case 'DRAWING':
+        return (
+          <>
+            <div className="absolute -top-12 left-6 z-30">
+              <ShortcutGuide />
+            </div>
+            <GameCanvas
+              activeTool={activeTool}
+              strokeWidth={strokeWidth}
+              lines={lines}
+              onMouseDown={handleDown}
+              onMouseMove={handleMove}
+              onMouseUp={handleUp}
+              readOnly={false}
+            />
+
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
+              <DrawingToolbox
+                activeTool={activeTool}
+                onToolChange={setActiveTool}
+                strokeWidth={strokeWidth}
+                onWidthChange={setStrokeWidth}
+                selectedColor={selectedColor}
+                onColorChange={setSelectedColor}
+              />
+              <DrawingHistoryButtons undo={undo} redo={redo} />
+            </div>
+          </>
+        );
+
+      case 'EVALUATING':
+        return (
+          <>
+            {/* TODO: 추후 서버에서 받아온 평가 대상 그림(targetLines)을 lines props에 연결해야 함 */}
+            <GameCanvas
+              lines={[]} // 현재는 빈 배열 (데이터 연동 시 수정 필요)
+              readOnly={true}
+            />
+            {/* TODO: 평가 UI 컴포넌트 추가 위치 */}
+            <div className="absolute bottom-12 z-20 bg-white/90 p-4 rounded-xl shadow-lg">
+              평가 UI 준비 중...
+            </div>
+          </>
+        );
+
+      case 'ROUND_SUMMARY':
+        return <div className="text-2xl font-bold">라운드 결과 집계 중...</div>;
+
+      case 'FINISHED':
+        return <div className="text-2xl font-bold">게임 종료! 결과 발표</div>;
+
+      default:
+        return <div className="text-gray-400">로딩 중...</div>;
+    }
+  };
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
@@ -99,40 +165,7 @@ const DrawingWidget = () => {
         <GameHeader currentTheme={currentTheme} />
 
         <div className="flex-1 flex justify-center bg-white pt-0 items-start relative">
-          {isThemeSelecting ? (
-            <ThemeSelector
-              isSelector={isMyTurn}
-              inputValue={localInput}
-              onChange={handleInputChange}
-              onRandom={handleRandomTheme}
-            />
-          ) : (
-            <>
-              <div className="absolute -top-12 left-6 z-30">
-                <ShortcutGuide />
-              </div>
-              <GameCanvas
-                activeTool={activeTool}
-                strokeWidth={strokeWidth}
-                lines={lines}
-                onMouseDown={handleDown}
-                onMouseMove={handleMove}
-                onMouseUp={handleUp}
-              />
-
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
-                <DrawingToolbox
-                  activeTool={activeTool}
-                  onToolChange={setActiveTool}
-                  strokeWidth={strokeWidth}
-                  onWidthChange={setStrokeWidth}
-                  selectedColor={selectedColor}
-                  onColorChange={setSelectedColor}
-                />
-                <DrawingHistoryButtons undo={undo} redo={redo} />
-              </div>
-            </>
-          )}
+          {renderGameContent()}
         </div>
       </main>
 
@@ -143,7 +176,7 @@ const DrawingWidget = () => {
           completedCount={completedCount}
           totalCount={totalCount}
           isReady={isMeReady}
-          showBadge={!isThemeSelecting}
+          showBadge={status !== 'THEME_SELECTING'}
         />
       </aside>
     </div>
