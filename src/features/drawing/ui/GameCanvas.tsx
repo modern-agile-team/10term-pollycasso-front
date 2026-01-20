@@ -1,39 +1,59 @@
 import type { ComponentRef } from 'react';
-import { useRef } from 'react';
-import { Layer, Line, Stage } from 'react-konva';
+import { useRef, useState } from 'react';
+import { Circle, Layer, Line, Stage } from 'react-konva';
+import type { KonvaEventObject } from 'konva/lib/Node';
 
 import { Mannequin } from '@/assets';
-import type { DrawingTool } from '../model/types';
+import type { DrawingTool, DrawLine } from '../model/types';
 import { useCanvasSize } from '../model/useCanvasSize';
-import { useDrawing } from '../model/useDrawing';
 import { useTextureLoader } from '../model/useTextureLoader';
 import { BucketResult } from './BucketResult';
 import { CanvasBackground } from './CanvasBackground';
 import { TextureBrushLine } from './TextureBrushLine';
 
+type KonvaHandler = (event: KonvaEventObject<MouseEvent | TouchEvent>) => void;
+
 interface GameCanvasProps {
   activeTool: DrawingTool;
   strokeWidth: number;
-  selectedColor: string;
+  lines: DrawLine[];
+  onMouseDown: KonvaHandler;
+  onMouseMove: KonvaHandler;
+  onMouseUp: () => void;
 }
 
 export const GameCanvas = ({
   activeTool,
   strokeWidth,
-  selectedColor,
+  lines,
+  onMouseDown,
+  onMouseMove,
+  onMouseUp,
 }: GameCanvasProps) => {
   const containerRef = useRef<ComponentRef<'div'>>(null);
   const size = useCanvasSize(containerRef);
-
   const { textures } = useTextureLoader();
 
-  const { lines, handleDown, handleMove, handleUp } = useDrawing({
-    tool: activeTool,
-    color: selectedColor,
-    size: strokeWidth,
-  });
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
 
   const isCanvasReady = size.width > 0 && size.height > 0;
+
+  /**
+   * 마우스 이동 핸들러
+   * 1. 고스트 커서(미리보기)를 위한 좌표를 업데이트하고 (UI)
+   * 2. 부모로부터 받은 실제 그리기 로직을 실행합니다 (Logic)
+   */
+  const handleMouseMoveInternal: KonvaHandler = (event) => {
+    const stage = event.target.getStage();
+    const position = stage?.getPointerPosition();
+
+    if (position) {
+      setCursorPos({ x: position.x, y: position.y });
+    }
+
+    onMouseMove(event);
+  };
 
   return (
     <div
@@ -46,14 +66,17 @@ export const GameCanvas = ({
           <Stage
             width={size.width}
             height={size.height}
-            onMouseDown={handleDown}
-            onMouseMove={handleMove}
-            onMouseUp={handleUp}
-            onMouseLeave={handleUp}
-            onTouchStart={handleDown}
-            onTouchMove={handleMove}
-            onTouchEnd={handleUp}
-            onTouchCancel={handleUp}
+            onMouseDown={onMouseDown}
+            onMouseMove={handleMouseMoveInternal}
+            onMouseUp={onMouseUp}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => {
+              setIsHovering(false);
+              onMouseUp();
+            }}
+            onTouchStart={onMouseDown}
+            onTouchMove={handleMouseMoveInternal}
+            onTouchEnd={onMouseUp}
           >
             <Layer>
               <CanvasBackground
@@ -118,6 +141,22 @@ export const GameCanvas = ({
                   />
                 );
               })}
+            </Layer>
+
+            {/* 브러시 크기에 따른 마우스 포인터 */}
+            <Layer>
+              {isHovering && activeTool !== 'bucket' && (
+                <Circle
+                  x={cursorPos.x}
+                  y={cursorPos.y}
+                  radius={strokeWidth / 16}
+                  fill={activeTool === 'eraser' ? 'white' : undefined}
+                  stroke="gray"
+                  strokeWidth={1}
+                  opacity={0.5}
+                  listening={false}
+                />
+              )}
             </Layer>
           </Stage>
         )}

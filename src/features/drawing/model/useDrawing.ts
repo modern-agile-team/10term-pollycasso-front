@@ -22,21 +22,23 @@ export const useDrawing = ({ tool, color, size }: UseDrawingProps) => {
   const undo = useCallback(() => {
     if (lines.length === 0 || isDrawingRef.current) return;
 
-    setLines((prev) => {
-      const lastLine = prev[prev.length - 1];
-      setRedoStack((prevStack) => [...prevStack, lastLine]);
-      return prev.slice(0, -1);
-    });
+    // 마지막 선을 가져와서 Redo 스택에 추가
+    const lastLine = lines[lines.length - 1];
+    setRedoStack((prev) => [...prev, lastLine]);
+
+    // Lines 스택에서 마지막 선 제거
+    setLines((prev) => prev.slice(0, -1));
   }, [lines]);
 
   const redo = useCallback(() => {
     if (redoStack.length === 0 || isDrawingRef.current) return;
 
-    setRedoStack((prev) => {
-      const lineToRestore = prev[prev.length - 1];
-      setLines((prevLines) => [...prevLines, lineToRestore]);
-      return prev.slice(0, -1);
-    });
+    // Redo 스택의 마지막 요소를 다시 복구
+    const lineToRestore = redoStack[redoStack.length - 1];
+    setLines((prev) => [...prev, lineToRestore]);
+
+    // Redo 스택에서 제거
+    setRedoStack((prev) => prev.slice(0, -1));
   }, [redoStack]);
 
   useEffect(() => {

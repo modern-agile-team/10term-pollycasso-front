@@ -39,6 +39,9 @@ export default tseslint.config(
       ...tseslint.configs.recommended[0].rules,
       ...react.configs.recommended.rules,
 
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
+
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
