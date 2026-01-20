@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import type { DrawingTool } from '@/features/drawing';
+import type { DrawingTool } from '@/entities/drawing';
 
 const INITIAL_TOOL_STATE = {
   TOOL: 'pencil' as DrawingTool,

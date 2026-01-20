@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import type { DrawingTool } from '@/features/drawing/model/types';
+import type { DrawingTool } from '@/entities/drawing';
 
 interface UseDrawingShortcutsProps {
   setActiveTool: (tool: DrawingTool) => void;
