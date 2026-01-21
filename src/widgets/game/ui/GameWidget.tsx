@@ -17,9 +17,21 @@ import { useGameState } from '../model/useGameState';
 import { useGameSubmission } from '../model/useGameSubmission';
 import { useThemeInput } from '../model/useThemeInput';
 import { useThemeSelecting } from '../model/useThemeSelecting';
+import { EvaluatingPhase } from '@/features/game-evaluating/ui/EvaluatingPhase';
 
-const GameWidget = () => {
-  const { status, players, endsAt, inventory, currentTheme } = useGameState();
+const TestWidget = () => {
+  // 변경 코드 (status를 realStatus로 이름 바꿔서 받아오고, status 변수를 새로 정의)
+  const {
+    status: realStatus,
+    players,
+    endsAt,
+    inventory,
+    currentTheme,
+  } = useGameState();
+
+  // 🚧 [DEV] UI 개발용 강제 상태 고정 (커밋 절대 금지 ❌)
+  const status = 'EVALUATING';
+
   const { socket } = useSocket();
   const { user } = useAuthStore();
 
@@ -76,7 +88,7 @@ const GameWidget = () => {
         return <DrawingPhase />;
 
       case 'EVALUATING':
-        return <div className="text-2xl font-bold">라운드 결과 평가...</div>;
+        return <EvaluatingPhase />;
 
       case 'ROUND_SUMMARY':
         return <div className="text-2xl font-bold">라운드 결과 집계 중...</div>;
@@ -91,7 +103,7 @@ const GameWidget = () => {
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
-      <PlayerSidebar players={players} currentUserId={user!.id} />
+      <PlayerSidebar players={players} currentUserId={user?.id} />
 
       <main className="w-full h-full rounded-3xl bg-white shadow-xl flex flex-col relative overflow-hidden">
         <GameTimer
@@ -121,4 +133,4 @@ const GameWidget = () => {
   );
 };
 
-export default GameWidget;
+export default TestWidget;
