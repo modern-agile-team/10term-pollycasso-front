@@ -27,7 +27,8 @@ const App = () => {
           draggable
           pauseOnHover={false}
           theme="light"
-          limit={3}
+          limit={4}
+          icon={false}
         />
       </SocketProvider>
     </QueryProvider>
