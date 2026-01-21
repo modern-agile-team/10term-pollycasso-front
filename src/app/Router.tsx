@@ -11,12 +11,9 @@ const SignupPage = lazy(() => import('@/pages/SignupPage'));
 const WelcomePage = lazy(() => import('@/pages/WelcomePage'));
 const MainPage = lazy(() => import('@/pages/MainPage'));
 const RoomPage = lazy(() => import('@/pages/RoomPage'));
-const GameWidget = lazy(() => import('@/widgets/game-drawing/ui/GameWidget'));
-const LoadingPage = lazy(() => import('@/widgets/game-loading'));
+// TODO: 페이지에서 대기실, 로딩, 게임 위젯을 교체하는 방식으로 추후 작성 예정
+const GameWidget = lazy(() => import('@/widgets/game/ui/GameWidget'));
 const FriendPage = lazy(() => import('@/pages/FriendPage'));
-const DrawingWidget = lazy(
-  () => import('@/widgets/game-drawing/ui/DrawingWidget'),
-);
 
 const router = createBrowserRouter([
   {
@@ -47,8 +44,8 @@ const router = createBrowserRouter([
         element: <FriendPage />,
       },
       {
-        path: '/dev/drawingWidget',
-        element: <DrawingWidget />,
+        path: '/dev/gameWidget',
+        element: <GameWidget />,
       },
       {
         element: <PrivateRoute />,
@@ -65,10 +62,10 @@ const router = createBrowserRouter([
             path: '/dev/gameWidget',
             element: <GameWidget />,
           },
-          {
-            path: '/dev/loading',
-            element: <LoadingPage />,
-          },
+          // {
+          //   path: '/dev/loading',
+          //   element: <LoadingPage />,
+          // },
         ],
       },
     ],

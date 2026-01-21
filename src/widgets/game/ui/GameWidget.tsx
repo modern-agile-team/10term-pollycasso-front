@@ -1,34 +1,34 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { GameCanvas } from '@/features/drawing';
+import { useAuthStore } from '@/entities/user';
 import {
   GameHeader,
   GameSubmitButton,
+  GameTimer,
   InventoryPanel,
   PlayerSidebar,
   ThemeSelector,
 } from '@/features/game';
+import { DrawingPhase } from '@/features/game-drawing';
+
 import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
-import { PHASE_TIME, RANDOM_THEMES } from '@/shared/model';
+import { PHASE_TIME } from '@/shared/model';
 import { useGameState } from '../model/useGameState';
 import { useGameSubmission } from '../model/useGameSubmission';
+import { useThemeInput } from '../model/useThemeInput';
 import { useThemeSelecting } from '../model/useThemeSelecting';
 
 const GameWidget = () => {
   const { status, players, endsAt, inventory, currentTheme } = useGameState();
-  const { isMyTurn } = useThemeSelecting();
+  const { socket } = useSocket();
+  const { user } = useAuthStore();
+
   const { completedCount, totalCount, isMeReady, toggleReady } =
     useGameSubmission();
-  const { socket } = useSocket();
-  const [localInput, setLocalInput] = useState('');
-  const isDrawingPhase = status === 'DRAWING';
 
-  const handleInputChange = (value: string) => {
-    setLocalInput(value);
-    if (isMyTurn) {
-      socket?.emit(SOCKET_EVENTS.GAME_TYPING, { value });
-    }
-  };
+  const { isMyTurn } = useThemeSelecting();
+  const { localInput, handleInputChange, handleRandomTheme } =
+    useThemeInput(isMyTurn);
 
   const handleComplete = useCallback(() => {
     if (status === 'THEME_SELECTING') {
@@ -40,36 +40,8 @@ const GameWidget = () => {
       socket?.emit(SOCKET_EVENTS.GAME_THEME_SUBMIT, { theme: localInput });
       return;
     }
-
     toggleReady();
   }, [status, isMyTurn, localInput, socket, toggleReady]);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleTypingShare = (data: { value: string }) => {
-      if (!isMyTurn) {
-        setLocalInput(data.value);
-      }
-    };
-
-    socket.on(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
-
-    return () => {
-      socket.off(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
-    };
-  }, [socket, isMyTurn]);
-
-  const handleRandomTheme = useCallback(() => {
-    const randomIndex = Math.floor(Math.random() * RANDOM_THEMES.length);
-    const randomTheme = RANDOM_THEMES[randomIndex];
-
-    setLocalInput(randomTheme);
-
-    if (socket) {
-      socket.emit(SOCKET_EVENTS.GAME_TYPING, { value: randomTheme });
-    }
-  }, [socket]);
 
   const totalTime = useMemo(() => {
     switch (status) {
@@ -88,46 +60,61 @@ const GameWidget = () => {
     }
   }, [status]);
 
-  const isThemeSelecting = status === 'THEME_SELECTING';
+  const renderGameContent = () => {
+    switch (status) {
+      case 'THEME_SELECTING':
+        return (
+          <ThemeSelector
+            isSelector={isMyTurn}
+            inputValue={localInput}
+            onChange={handleInputChange}
+            onRandom={handleRandomTheme}
+          />
+        );
+
+      case 'DRAWING':
+        return <DrawingPhase />;
+
+      case 'EVALUATING':
+        return <div className="text-2xl font-bold">라운드 결과 평가...</div>;
+
+      case 'ROUND_SUMMARY':
+        return <div className="text-2xl font-bold">라운드 결과 집계 중...</div>;
+
+      case 'FINISHED':
+        return <div className="text-2xl font-bold">게임 종료! 결과 발표</div>;
+
+      default:
+        return <div className="text-gray-400">로딩 중...</div>;
+    }
+  };
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
-      <PlayerSidebar players={players} currentUserId={socket?.id || ''} />
+      <PlayerSidebar players={players} currentUserId={user!.id} />
 
       <main className="w-full h-full rounded-3xl bg-white shadow-xl flex flex-col relative overflow-hidden">
-        <GameHeader
-          currentTheme={currentTheme}
+        <GameTimer
           endsAt={endsAt}
           totalTime={totalTime}
+          className="absolute top-24 right-16 z-10"
         />
 
-        <div
-          className={`flex-1 flex justify-center bg-white ${
-            isThemeSelecting ? 'pt-44' : 'py-5 items-center'
-          }`}
-        >
-          {isThemeSelecting ? (
-            <ThemeSelector
-              isSelector={isMyTurn}
-              inputValue={localInput}
-              onChange={handleInputChange}
-              onRandom={handleRandomTheme}
-            />
-          ) : (
-            <GameCanvas />
-          )}
+        <GameHeader currentTheme={currentTheme} />
+
+        <div className="flex-1 flex justify-center bg-white pt-0 items-start relative">
+          {renderGameContent()}
         </div>
       </main>
 
       <aside className="h-full flex flex-col justify-center gap-y-20">
-        <InventoryPanel inventory={inventory} isDraggable={isDrawingPhase} />
-
+        <InventoryPanel inventory={inventory} />
         <GameSubmitButton
           onComplete={handleComplete}
           completedCount={completedCount}
           totalCount={totalCount}
           isReady={isMeReady}
-          showBadge={!isThemeSelecting}
+          showBadge={status !== 'THEME_SELECTING'}
         />
       </aside>
     </div>

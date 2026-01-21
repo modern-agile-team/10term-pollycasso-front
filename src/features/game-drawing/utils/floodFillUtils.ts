@@ -1,4 +1,4 @@
-import type { RGBA } from '../model/types';
+import type { RGBA } from '@/entities/drawing';
 import {
   getPixelColor,
   hexToRgb,

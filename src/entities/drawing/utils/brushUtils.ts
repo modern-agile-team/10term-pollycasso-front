@@ -1,6 +1,5 @@
 /**
  * 이미지에 색상(Tint)을 입힌 오프스크린 캔버스를 생성하여 반환합니다.
- * (매 프레임 생성하지 않도록 주의!)
  */
 export const createTintedBrush = (
   image: HTMLImageElement,

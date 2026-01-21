@@ -14,21 +14,23 @@ import { TextureBrushLine } from './TextureBrushLine';
 type KonvaHandler = (event: KonvaEventObject<MouseEvent | TouchEvent>) => void;
 
 interface GameCanvasProps {
-  activeTool: DrawingTool;
-  strokeWidth: number;
+  activeTool?: DrawingTool;
+  strokeWidth?: number;
+  onMouseDown?: KonvaHandler;
+  onMouseMove?: KonvaHandler;
+  onMouseUp?: () => void;
   lines: DrawLine[];
-  onMouseDown: KonvaHandler;
-  onMouseMove: KonvaHandler;
-  onMouseUp: () => void;
+  readOnly?: boolean;
 }
 
 export const GameCanvas = ({
-  activeTool,
-  strokeWidth,
+  activeTool = 'pencil',
+  strokeWidth = 5,
   lines,
   onMouseDown,
   onMouseMove,
   onMouseUp,
+  readOnly = false,
 }: GameCanvasProps) => {
   const containerRef = useRef<ComponentRef<'div'>>(null);
   const size = useCanvasSize(containerRef);
@@ -45,6 +47,8 @@ export const GameCanvas = ({
    * 2. 부모로부터 받은 실제 그리기 로직을 실행합니다 (Logic)
    */
   const handleMouseMoveInternal: KonvaHandler = (event) => {
+    if (readOnly) return;
+
     const stage = event.target.getStage();
     const position = stage?.getPointerPosition();
 
@@ -52,7 +56,7 @@ export const GameCanvas = ({
       setCursorPos({ x: position.x, y: position.y });
     }
 
-    onMouseMove(event);
+    onMouseMove?.(event);
   };
 
   return (
@@ -66,17 +70,21 @@ export const GameCanvas = ({
           <Stage
             width={size.width}
             height={size.height}
-            onMouseDown={onMouseDown}
-            onMouseMove={handleMouseMoveInternal}
-            onMouseUp={onMouseUp}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => {
-              setIsHovering(false);
-              onMouseUp();
-            }}
-            onTouchStart={onMouseDown}
-            onTouchMove={handleMouseMoveInternal}
-            onTouchEnd={onMouseUp}
+            onMouseDown={readOnly ? undefined : onMouseDown}
+            onMouseMove={readOnly ? undefined : handleMouseMoveInternal}
+            onMouseUp={readOnly ? undefined : onMouseUp}
+            onMouseEnter={readOnly ? undefined : () => setIsHovering(true)}
+            onMouseLeave={
+              readOnly
+                ? undefined
+                : () => {
+                    setIsHovering(false);
+                    onMouseUp?.();
+                  }
+            }
+            onTouchStart={readOnly ? undefined : onMouseDown}
+            onTouchMove={readOnly ? undefined : handleMouseMoveInternal}
+            onTouchEnd={readOnly ? undefined : onMouseUp}
           >
             <Layer>
               <CanvasBackground
@@ -144,20 +152,22 @@ export const GameCanvas = ({
             </Layer>
 
             {/* 브러시 크기에 따른 마우스 포인터 */}
-            <Layer>
-              {isHovering && activeTool !== 'bucket' && (
-                <Circle
-                  x={cursorPos.x}
-                  y={cursorPos.y}
-                  radius={strokeWidth / 16}
-                  fill={activeTool === 'eraser' ? 'white' : undefined}
-                  stroke="gray"
-                  strokeWidth={1}
-                  opacity={0.5}
-                  listening={false}
-                />
-              )}
-            </Layer>
+            {!readOnly && (
+              <Layer>
+                {isHovering && activeTool !== 'bucket' && (
+                  <Circle
+                    x={cursorPos.x}
+                    y={cursorPos.y}
+                    radius={strokeWidth / 16}
+                    fill={activeTool === 'eraser' ? 'white' : undefined}
+                    stroke="gray"
+                    strokeWidth={1}
+                    opacity={0.5}
+                    listening={false}
+                  />
+                )}
+              </Layer>
+            )}
           </Stage>
         )}
       </div>

@@ -20,7 +20,7 @@ export const ThemeSelector = ({
   const inputCursorStyle = !isSelector ? 'cursor-default' : '';
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full max-w-3xl">
+    <div className="mt-52 flex flex-col items-center gap-2 w-full max-w-3xl">
       <div
         className="w-full p-1 rounded-3xl shadow-lg"
         style={{ background: THEME_STYLES.RAINBOW_GRADIENT }}
