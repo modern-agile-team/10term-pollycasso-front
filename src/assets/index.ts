@@ -28,6 +28,6 @@ export { default as BronzeMedal } from './medal_bronze.svg';
 export { default as GoldBelt } from './belt_gold.svg';
 export { default as SilverBelt } from './belt_silver.svg';
 export { default as BronzeBelt } from './belt_bronze.svg';
-export { default as coin } from './coin.svg';
+export { default as Coin } from './coin.svg';
 export { default as LaurelWreath } from './laurel_wreath.svg';
 export { default as Bird } from './bird.svg';
