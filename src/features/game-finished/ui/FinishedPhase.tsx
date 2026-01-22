@@ -1,19 +1,29 @@
-import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { SoloPodium } from '@/assets';
 import { RankRow } from '@/features/game-finished/ui/RankRow';
 import { PodiumSpot } from '@/features/game-finished/ui/PodiumSpot';
 
+import { MOCK_PLAYERS, MOCK_FINISH_CONTEXT } from '@/mocks/finished.mock';
+import { useGameFinished } from '../model/useGameFinished';
+import { useLockBodyScroll } from '@/shared/model/useLockBodyScroll';
+
 export const FinishedPhase = () => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
+  const results = useGameFinished(MOCK_PLAYERS, MOCK_FINISH_CONTEXT);
+
+  const podiumMembers = results.filter((r) => r.rank <= 3);
+  const listMembers = results.filter((r) => r.rank > 3);
+
+  const getPodiumMember = (rank: number) =>
+    podiumMembers.find((r) => r.rank === rank);
+
+  const firstPlace = getPodiumMember(1);
+  const secondPlace = getPodiumMember(2);
+  const thirdPlace = getPodiumMember(3);
+
+  useLockBodyScroll();
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] w-screen h-screen bg-black/80 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-500 pb-24">
+    <div className="fixed inset-0 z-[9999] w-screen h-screen bg-black/80 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-500 pb-24 overflow-y-auto">
       <div className="relative w-[1000px]">
         <img
           src={SoloPodium}
@@ -21,44 +31,51 @@ export const FinishedPhase = () => {
           className="w-full object-contain drop-shadow-2xl"
         />
 
-        <PodiumSpot
-          rank={1}
-          nickname="폴리카소07"
-          coins={20}
-          xp={30}
-          score={9.5}
-        />
+        {firstPlace && (
+          <PodiumSpot
+            rank={1}
+            nickname={firstPlace.nickname}
+            coins={firstPlace.coinsGained}
+            xp={firstPlace.expGained}
+            score={firstPlace.totalScore}
+          />
+        )}
 
-        <PodiumSpot rank={2} nickname="DFPOW" coins={20} xp={30} score={8.5} />
+        {secondPlace && (
+          <PodiumSpot
+            rank={2}
+            nickname={secondPlace.nickname}
+            coins={secondPlace.coinsGained}
+            xp={secondPlace.expGained}
+            score={secondPlace.totalScore}
+          />
+        )}
 
-        <PodiumSpot rank={3} nickname="EGG" coins={20} xp={30} score={7.5} />
+        {thirdPlace && (
+          <PodiumSpot
+            rank={3}
+            nickname={thirdPlace.nickname}
+            coins={thirdPlace.coinsGained}
+            xp={thirdPlace.expGained}
+            score={thirdPlace.totalScore}
+          />
+        )}
 
-        <RankRow
-          rank={4}
-          nickname="DFJAS"
-          coins={20}
-          xp={30}
-          score={6.5}
-          className="absolute top-[120%] left-1/2 -translate-x-1/2"
-        />
+        {listMembers.map((member, index) => {
+          const topPosition = 120 + index * 80;
 
-        <RankRow
-          rank={5}
-          nickname="모던애자일"
-          coins={20}
-          xp={30}
-          score={6.0}
-          className="absolute top-[200%] left-1/2 -translate-x-1/2"
-        />
-
-        <RankRow
-          rank={6}
-          nickname="EGG"
-          coins={20}
-          xp={30}
-          score={3.5}
-          className="absolute top-[280%] left-1/2 -translate-x-1/2"
-        />
+          return (
+            <RankRow
+              key={member.userId}
+              rank={member.rank}
+              nickname={member.nickname}
+              coins={member.coinsGained}
+              xp={member.expGained}
+              score={member.totalScore}
+              className={`absolute left-1/2 -translate-x-1/2 top-[${topPosition}%]`}
+            />
+          );
+        })}
       </div>
     </div>,
     document.body,
