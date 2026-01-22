@@ -1,5 +1,6 @@
 import { Bird, Coin } from '@/assets';
 import { StarIcon } from '@heroicons/react/24/solid';
+import type { CSSProperties } from 'react';
 
 interface RankRowProps {
   rank: number;
@@ -8,6 +9,7 @@ interface RankRowProps {
   xp: number;
   score: number;
   className?: string;
+  style?: CSSProperties;
 }
 
 export const RankRow = ({
@@ -17,9 +19,11 @@ export const RankRow = ({
   xp,
   score,
   className,
+  style,
 }: RankRowProps) => {
   return (
     <div
+      style={style}
       className={`flex items-center justify-between w-[1100px] h-[100px] px-10 bg-[#EFEFEF] rounded-[30px] shadow-sm ${className}`}
     >
       <div className="flex items-center gap-10">

@@ -75,7 +75,8 @@ export const FinishedPhase = () => {
               coins={member.coinsGained}
               xp={member.expGained}
               score={member.totalScore}
-              className={`absolute left-1/2 -translate-x-1/2 top-[${topPosition}%]`}
+              className="absolute left-1/2 -translate-x-1/2"
+              style={{ top: `${topPosition}%` }}
             />
           );
         })}
