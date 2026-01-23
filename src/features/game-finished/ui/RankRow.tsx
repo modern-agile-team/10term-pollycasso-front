@@ -11,6 +11,8 @@ interface RankRowProps {
   score: number;
   className?: string;
   style?: CSSProperties;
+  rankText?: string;
+  teamId?: string | null;
 }
 
 export const RankRow = ({
@@ -21,7 +23,20 @@ export const RankRow = ({
   score,
   className,
   style,
+  rankText,
+  teamId,
 }: RankRowProps) => {
+  let expBgColor = 'bg-[#6B8E8E]';
+  let pointColor = 'text-[#525252]';
+
+  if (teamId === 'RED') {
+    expBgColor = 'bg-[#FB6464]';
+    pointColor = 'text-[#FB6464]';
+  } else if (teamId === 'BLUE') {
+    expBgColor = 'bg-[#64ACFF]';
+    pointColor = 'text-[#64ACFF]';
+  }
+
   return (
     <div
       style={style}
@@ -29,10 +44,10 @@ export const RankRow = ({
     >
       <div className="flex items-center gap-10">
         <span className="font-ssrm font-bold text-[#525252] text-4xl w-16 text-center">
-          {rank}th
+          {rankText ? rankText : `${rank}th`}
         </span>
+
         <div className="w-16 h-16 bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-white shadow-sm">
-          {/* TODO: Bird 이미지도 받아오도록 설정 */}
           <img
             src={Bird}
             alt="avatar"
@@ -52,16 +67,18 @@ export const RankRow = ({
           </span>
         </div>
 
-        <div className="bg-[#6B8E8E] px-4 py-1 rounded-full flex items-center justify-center">
+        <div
+          className={`${expBgColor} px-4 py-1 rounded-full flex items-center justify-center`}
+        >
           <span className="font-ssrm font-bold text-white text-xl pt-0.5">
             +{xp}xp
           </span>
         </div>
 
         <div className="flex items-center ml-16 gap-2 w-16 justify-end">
-          <StarIcon className="w-6 h-6 text-[#525252]" />
-          <span className="font-ssrm font-bold text-[#525252] text-xl pt-1">
-            {score}
+          <StarIcon className={`w-6 h-6 ${pointColor}`} />
+          <span className={`font-ssrm font-bold ${pointColor} text-xl pt-1`}>
+            {(score / 30).toFixed(1)}
           </span>
         </div>
       </div>
