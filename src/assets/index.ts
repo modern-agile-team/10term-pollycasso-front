@@ -31,3 +31,8 @@ export { default as BronzeBelt } from './belt_bronze.svg';
 export { default as Coin } from './coin.svg';
 export { default as LaurelWreath } from './laurel_wreath.svg';
 export { default as Bird } from './bird.svg';
+export { default as BlueFireworks } from './fireworks_blue.webp';
+export { default as RedFireworks } from './fireworks_red.webp';
+export { default as UpFireworks } from './fireworks_up.webp';
+export { default as CircularFireworks } from './fireworks_circular.webp';
+export { default as WideFireworks } from './fireworks_wide.webp';
