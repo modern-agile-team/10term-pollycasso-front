@@ -1,11 +1,13 @@
 import { createPortal } from 'react-dom';
-import { SoloPodium } from '@/assets';
-import { RankRow } from '@/features/game-finished/ui/RankRow';
-import { PodiumSpot } from '@/features/game-finished/ui/PodiumSpot';
 
+import { SoloPodium } from '@/assets';
 import { MOCK_PLAYERS, MOCK_FINISH_CONTEXT } from '@/mocks/finished.mock';
-import { useGameFinished } from '../model/useGameFinished';
 import { useLockBodyScroll } from '@/shared/model/useLockBodyScroll';
+import { FireworksLayer } from './FireworksLayer';
+import { RankRow } from './RankRow';
+import { PodiumSpot } from './PodiumSpot';
+import { BACKGROUND_FIREWORKS, FOREGROUND_FIREWORKS } from '../model/fireworks';
+import { useGameFinished } from '../model/useGameFinished';
 
 export const FinishedPhase = () => {
   const results = useGameFinished(MOCK_PLAYERS, MOCK_FINISH_CONTEXT);
@@ -23,8 +25,9 @@ export const FinishedPhase = () => {
   useLockBodyScroll();
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] w-screen h-screen bg-black/80 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-500 pb-24 overflow-y-auto">
+    <div className="fixed inset-0 z-[9999] w-screen h-screen bg-black/90 flex flex-col items-center justify-center gap-8 animate-in fade-in duration-500 pb-24 overflow-y-auto">
       <div className="relative w-[1000px]">
+        <FireworksLayer items={BACKGROUND_FIREWORKS} />
         <img
           src={SoloPodium}
           alt="Game Finished Podium"
@@ -38,7 +41,6 @@ export const FinishedPhase = () => {
             coins={firstPlace.coinsGained}
             xp={firstPlace.expGained}
             score={firstPlace.totalScore}
-            level={firstPlace.level}
           />
         )}
 
@@ -49,7 +51,6 @@ export const FinishedPhase = () => {
             coins={secondPlace.coinsGained}
             xp={secondPlace.expGained}
             score={secondPlace.totalScore}
-            level={secondPlace.level}
           />
         )}
 
@@ -60,7 +61,6 @@ export const FinishedPhase = () => {
             coins={thirdPlace.coinsGained}
             xp={thirdPlace.expGained}
             score={thirdPlace.totalScore}
-            level={thirdPlace.level}
           />
         )}
 
@@ -80,6 +80,8 @@ export const FinishedPhase = () => {
             />
           );
         })}
+
+        <FireworksLayer items={FOREGROUND_FIREWORKS} />
       </div>
     </div>,
     document.body,

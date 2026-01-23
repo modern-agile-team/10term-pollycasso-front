@@ -1,6 +1,7 @@
-import { Bird, Coin } from '@/assets';
-import { StarIcon } from '@heroicons/react/24/solid';
 import type { CSSProperties } from 'react';
+import { StarIcon } from '@heroicons/react/24/solid';
+
+import { Bird, Coin } from '@/assets';
 
 interface RankRowProps {
   rank: number;
