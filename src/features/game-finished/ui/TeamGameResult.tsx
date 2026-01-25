@@ -1,11 +1,11 @@
 import { StarIcon } from '@heroicons/react/24/solid';
-import { useMemo } from 'react';
 
-import { BluePodium, GoldMedal, RedPodium, SoloPodium } from '@/assets';
+import { GoldMedal } from '@/assets';
 import type { TeamScore } from '@/shared/model';
 
 import { BACKGROUND_FIREWORKS, FOREGROUND_FIREWORKS } from '../model/fireworks';
 import type { FinishedPlayer } from '../model/types';
+import { useTeamGameResult } from '../model/useTeamGameResult';
 import { FireworksLayer } from './FireworksLayer';
 import { RankRow } from './RankRow';
 import { TeamPodiumSpot } from './TeamPodiumSpot';
@@ -16,54 +16,12 @@ interface TeamGameResultProps {
 }
 
 export const TeamGameResult = ({ results, teamScore }: TeamGameResultProps) => {
-  const winningTeamId = useMemo(() => {
-    if (!teamScore) return null;
-    if (teamScore.red > teamScore.blue) return 'RED';
-    if (teamScore.blue > teamScore.red) return 'BLUE';
-    return 'DRAW';
-  }, [teamScore]);
-
-  const { podiumMembers, listMembers } = useMemo(() => {
-    if (!winningTeamId || winningTeamId === 'DRAW') {
-      return {
-        podiumMembers: results.filter((r) => r.rank <= 3),
-        listMembers: results.filter((r) => r.rank > 3),
-      };
-    }
-
-    const winners = results
-      .filter((r) => r.teamId === winningTeamId)
-      .sort((a, b) => b.totalScore - a.totalScore);
-
-    const losers = results.filter((r) => r.teamId !== winningTeamId);
-
-    return { podiumMembers: winners, listMembers: losers };
-  }, [results, winningTeamId]);
+  const { podiumMembers, listMembers, winningScore, PodiumSrc, resultText } =
+    useTeamGameResult(results, teamScore);
 
   const firstPlace = podiumMembers[0];
   const secondPlace = podiumMembers[1];
   const thirdPlace = podiumMembers[2];
-
-  const getTeamTotalScore = (teamId: string) => {
-    return results
-      .filter((member) => member.teamId === teamId)
-      .reduce((sum, member) => sum + member.totalScore, 0);
-  };
-
-  const redTeamScore = getTeamTotalScore('RED');
-  const blueTeamScore = getTeamTotalScore('BLUE');
-
-  const winningScore = useMemo(() => {
-    if (!teamScore) return 0;
-    return teamScore.red >= teamScore.blue ? redTeamScore : blueTeamScore;
-  }, [teamScore, redTeamScore, blueTeamScore]);
-
-  const PodiumSrc = useMemo(() => {
-    if (!teamScore) return SoloPodium;
-    if (teamScore.red > teamScore.blue) return RedPodium;
-    if (teamScore.blue > teamScore.red) return BluePodium;
-    return SoloPodium;
-  }, [teamScore]);
 
   return (
     <div className="relative w-[1000px] mt-20">
@@ -75,11 +33,7 @@ export const TeamGameResult = ({ results, teamScore }: TeamGameResultProps) => {
       />
 
       <span className="absolute top-7 left-1/2 -translate-x-1/2 text-3xl text-white font-ssrm font-bold drop-shadow-lg">
-        {winningTeamId === 'RED'
-          ? 'RED TEAM WIN'
-          : winningTeamId === 'BLUE'
-            ? 'BLUE TEAM WIN'
-            : 'DRAW'}
+        {resultText}
       </span>
 
       <div className="absolute -top-[410px] left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
