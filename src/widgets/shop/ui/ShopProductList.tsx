@@ -5,12 +5,14 @@ interface ShopProductListProps {
   products: Product[];
   cart: Product[];
   onAddToCart: (product: Product) => void;
+  onWearItem: (product: Product) => void;
 }
 
 export const ShopProductList = ({
   products,
   cart,
   onAddToCart,
+  onWearItem,
 }: ShopProductListProps) => {
   return (
     <div className="w-[900px] h-[720px] rounded-[30px] bg-[#1E3411]/40 shadow-inner p-8 pr-4">
@@ -27,6 +29,7 @@ export const ShopProductList = ({
                 product={item}
                 isInCart={cart.some((c) => c.id === item.id)}
                 onAddToCart={onAddToCart}
+                onWearItem={onWearItem}
               />
             ))
           )}

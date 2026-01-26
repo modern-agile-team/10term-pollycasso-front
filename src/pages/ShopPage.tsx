@@ -3,6 +3,7 @@ import { useCart } from '@/features/cart';
 import { useShopFilter, SHOP_CATEGORIES } from '@/features/shop';
 import { MOCK_PRODUCTS } from '@/mocks/shop.mock';
 import { ShopSidebar, ShopProductList, ShopProfilePanel } from '@/widgets/shop';
+import { useShopPreview } from '@/features/shop/model/useShopPreview';
 
 const ShopPage = () => {
   const { cart, addToCart, removeFromCart } = useCart();
@@ -16,6 +17,8 @@ const ShopPage = () => {
     handleSortChange,
     handleCategoryChange,
   } = useShopFilter();
+
+  const { previewItems, wearItem, resetPreview } = useShopPreview();
 
   const processedProducts = useMemo(() => {
     const targetCategoryLabel = SHOP_CATEGORIES[activeCategory];
@@ -53,9 +56,15 @@ const ShopPage = () => {
         products={processedProducts}
         cart={cart}
         onAddToCart={addToCart}
+        onWearItem={wearItem}
       />
 
-      <ShopProfilePanel cart={cart} onRemoveFromCart={removeFromCart} />
+      <ShopProfilePanel
+        cart={cart}
+        previewItems={previewItems}
+        onRemoveFromCart={removeFromCart}
+        onResetPreview={resetPreview}
+      />
     </div>
   );
 };

@@ -6,15 +6,20 @@ interface ProductItemProps {
   product: Product;
   isInCart: boolean;
   onAddToCart: (product: Product) => void;
+  onWearItem: (product: Product) => void;
 }
 
 export const ProductCard = ({
   product,
   isInCart,
   onAddToCart,
+  onWearItem,
 }: ProductItemProps) => {
   return (
-    <div className="flex flex-col items-center justify-between w-[260px] h-[350px] bg-white rounded-[20px] text-2xl font-bold text-gray-400 p-5">
+    <div
+      className="flex flex-col items-center justify-between w-[260px] h-[350px] bg-white rounded-[20px] text-2xl font-bold text-gray-400 p-5"
+      onClick={() => onWearItem(product)}
+    >
       <div className="w-full h-[45px] flex gap-x-2">
         <div className="w-[45px] h-[45px] bg-yellow-300 rounded-full shrink-0"></div>
         <div className="flex flex-col justify-center flex-1 text-base overflow-hidden">
@@ -37,7 +42,10 @@ export const ProductCard = ({
           </span>
         </div>
         <button
-          onClick={() => onAddToCart(product)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToCart(product);
+          }}
           disabled={isInCart}
           className={cn(
             'flex justify-center items-center w-1/3 h-full text-base text-white pt-0.5 transition-colors',

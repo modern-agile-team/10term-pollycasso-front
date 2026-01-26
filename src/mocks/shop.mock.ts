@@ -1,4 +1,4 @@
-import { acc_07 } from '@/assets';
+import { acc_07, acc_10 } from '@/assets';
 
 export const MOCK_PRODUCTS = [
   {
@@ -9,6 +9,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '악세사리',
     description: '금붕어 모양의 귀여운 탈입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '악세사리',
     description: '전통 문양이 새겨진 목걸이입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 3,
@@ -27,6 +29,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '상의',
     description: '달콤한 색감의 상의입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 4,
@@ -36,6 +39,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '악세사리',
     description: '햇빛을 막아주는 선글라스입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 5,
@@ -45,6 +49,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '신발',
     description: '수영 속도가 빨라지는 오리발입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 6,
@@ -54,6 +59,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '새',
     description: '기계로 정교하게 만들어진 새입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 7,
@@ -63,6 +69,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '기술',
     description: '고수압의 물줄기를 발사합니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 8,
@@ -72,6 +79,7 @@ export const MOCK_PRODUCTS = [
     subCategory: '하의',
     description: '활동성이 좋은 잠수복 하의입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
   {
     id: 9,
@@ -81,5 +89,6 @@ export const MOCK_PRODUCTS = [
     subCategory: '악세사리',
     description: '바다의 힘이 깃든 창입니다.',
     image: acc_07,
+    outfitImage: acc_10,
   },
 ];

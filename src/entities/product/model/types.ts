@@ -7,4 +7,5 @@ export interface Product {
   subCategory?: string;
   description?: string;
   image: string;
+  outfitImage?: string;
 }

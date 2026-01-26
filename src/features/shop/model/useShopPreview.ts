@@ -9,6 +9,7 @@ export const useShopPreview = () => {
       const filtered = prev.filter(
         (item) => item.subCategory !== product.subCategory,
       );
+
       return [...filtered, product];
     });
   };
