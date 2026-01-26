@@ -71,3 +71,39 @@ export const SPOTLIGHT_STYLES = {
     clipPath: 'polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%)',
   },
 } as const;
+
+export const TEAM_RANK_STYLES = {
+  1: {
+    wrapper:
+      'absolute bottom-[80%] left-1/2 -translate-x-1/2 w-[275px] h-[275px] bg-transparent',
+    badge:
+      'absolute top-12 left-[510px] font-ssrm font-bold text-white text-2xl px-4 py-1 rounded-[20px] whitespace-nowrap shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]',
+    rewardWrapper:
+      'absolute top-[94px] left-[530px] flex items-center justify-end gap-2',
+  },
+  2: {
+    wrapper:
+      'absolute bottom-[80%] left-[30%] -translate-x-1/2 w-[275px] h-[275px] bg-transparent',
+    badge:
+      'absolute top-32 left-[710px] font-ssrm font-bold text-white text-2xl px-4 py-1 rounded-[20px] whitespace-nowrap shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]',
+    rewardWrapper:
+      'absolute top-[174px] left-[730px] flex items-center justify-end gap-2',
+  },
+  3: {
+    wrapper:
+      'absolute bottom-[80%] right-[30%] translate-x-1/2 w-[275px] h-[275px] bg-transparent',
+    badge:
+      'absolute top-52 left-[310px] font-ssrm font-bold text-white text-2xl px-4 py-1 rounded-[20px] whitespace-nowrap shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]',
+    rewardWrapper:
+      'absolute top-[252px] left-[330px] flex items-center justify-end gap-2',
+  },
+};
+
+export const TEAM_SPOTLIGHT_STYLES = {
+  1: {
+    style: 'w-[300px] h-[660px] -top-[350px] from-white/80 via-white/50 block',
+    clipPath: 'polygon(50% 0%, 50% 0%, 100% 100%, 0% 100%)',
+  },
+  2: { style: 'hidden', clipPath: '' },
+  3: { style: 'hidden', clipPath: '' },
+};

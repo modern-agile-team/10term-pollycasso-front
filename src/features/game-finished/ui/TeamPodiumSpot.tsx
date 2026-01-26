@@ -1,4 +1,5 @@
 import { Bird, Coin, LaurelWreath } from '@/assets';
+import { TEAM_RANK_STYLES, TEAM_SPOTLIGHT_STYLES } from '../constants/styles';
 
 interface PodiumSpotProps {
   rank: 1 | 2 | 3;
@@ -15,93 +16,36 @@ export const TeamPodiumSpot = ({
   xp,
   teamId,
 }: PodiumSpotProps) => {
+  const styles = TEAM_RANK_STYLES[rank];
+  const spotlight = TEAM_SPOTLIGHT_STYLES[rank];
+
   const badgeBgClass = teamId === 'BLUE' ? 'bg-[#64ACFF]' : 'bg-[#FB6464]';
 
-  if (rank === 1) {
-    return (
-      <div className="absolute bottom-[80%] left-1/2 -translate-x-1/2 w-[275px] h-[275px] bg-transparent">
-        <div
-          className="absolute left-1/2 -translate-x-1/2 bg-gradient-to-b to-transparent z-0 pointer-events-none blur-sm w-[300px] h-[660px] -top-[350px] from-white/80 via-white/50"
-          style={{ clipPath: 'polygon(50% 0%, 50% 0%, 100% 100%, 0% 100%)' }}
-        />
+  return (
+    <div className={styles.wrapper}>
+      <div
+        className={`absolute left-1/2 -translate-x-1/2 bg-gradient-to-b to-transparent z-0 pointer-events-none blur-sm ${spotlight.style}`}
+        style={{
+          clipPath: spotlight.clipPath,
+        }}
+      />
 
-        <img src={Bird} className="relative w-full h-full" alt="bird" />
+      <img src={Bird} className="relative w-full h-full" alt="bird" />
 
-        <img
-          src={LaurelWreath}
-          className="absolute -top-5 left-[50%] -translate-x-1/2 w-[120px] h-[120px] object-contain"
-          alt="wreath"
-        />
+      <img
+        src={LaurelWreath}
+        className="absolute -top-5 left-[50%] -translate-x-1/2 w-[120px] h-[120px] object-contain"
+        alt="wreath"
+      />
 
-        <span
-          className={`absolute top-12 left-[510px] font-ssrm font-bold text-white text-2xl ${badgeBgClass} px-4 py-1 rounded-[20px] whitespace-nowrap shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]`}
-        >
-          {nickname}
+      <span className={`${styles.badge} ${badgeBgClass}`}>{nickname}</span>
+
+      <div className={styles.rewardWrapper}>
+        <img src={Coin} className="w-5 h-5 object-contain" alt="coin" />
+        <span className="font-ssrm font-bold text-white text-xl drop-shadow-sm">
+          {coins}Coin+{xp}xp
         </span>
-
-        <div className="absolute top-[94px] left-[530px] flex items-center justify-end gap-2">
-          <img src={Coin} className="w-5 h-5 object-contain" alt="coin" />
-          <span className="font-ssrm font-bold text-white text-xl drop-shadow-sm">
-            {coins}Coin+{xp}xp
-          </span>
-        </div>
       </div>
-    );
-  }
-
-  if (rank === 2) {
-    return (
-      <div className="absolute bottom-[80%] left-[30%] -translate-x-1/2 w-[275px] h-[275px] bg-transparent">
-        <img src={Bird} className="w-full h-full object-contain" alt="bird" />
-
-        <img
-          src={LaurelWreath}
-          className="absolute -top-5 left-[50%] -translate-x-1/2 w-[120px] h-[120px] object-contain"
-          alt="wreath"
-        />
-
-        <span
-          className={`absolute top-32 left-[710px] font-ssrm font-bold text-white text-2xl ${badgeBgClass} px-4 py-1 rounded-[20px] whitespace-nowrap shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]`}
-        >
-          {nickname}
-        </span>
-
-        <div className="absolute top-[174px] left-[730px] flex items-center justify-end gap-2">
-          <img src={Coin} className="w-5 h-5 object-contain" alt="coin" />
-          <span className="font-ssrm font-bold text-white text-xl drop-shadow-sm">
-            {coins}Coin+{xp}xp
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  if (rank === 3) {
-    return (
-      <div className="absolute bottom-[80%] right-[30%] translate-x-1/2 w-[275px] h-[275px] bg-transparent">
-        <img src={Bird} className="w-full h-full object-contain" alt="bird" />
-
-        <img
-          src={LaurelWreath}
-          className="absolute -top-5 left-[50%] -translate-x-1/2 w-[120px] h-[120px] object-contain"
-          alt="wreath"
-        />
-
-        <span
-          className={`absolute top-52 left-[310px] font-ssrm font-bold text-white text-2xl ${badgeBgClass} px-4 py-1 rounded-[20px] whitespace-nowrap shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]`}
-        >
-          {nickname}
-        </span>
-
-        <div className="absolute top-[252px] left-[330px] flex items-center justify-end gap-2">
-          <img src={Coin} className="w-5 h-5 object-contain" alt="coin" />
-          <span className="font-ssrm font-bold text-white text-xl drop-shadow-sm">
-            {coins}Coin+{xp}xp
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 };
