@@ -38,8 +38,8 @@ export const TeamGameResult = ({ results, teamScore }: TeamGameResultProps) => {
 
       <div className="absolute -top-[410px] left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
         <div className="flex items-center gap-2 mb-2">
-          <StarIcon className="w-6 h-6 text-[#E1D1AE] drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]" />
-          <span className="font-ssrm font-black text-xl text-[#E1D1AE] drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] pt-2">
+          <StarIcon className="w-6 h-6 text-[#E1D1AE]" />
+          <span className="font-ssrm font-black text-xl text-[#E1D1AE] pt-1">
             {(winningScore / 100).toFixed(1)}
           </span>
         </div>

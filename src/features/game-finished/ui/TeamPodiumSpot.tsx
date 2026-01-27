@@ -1,5 +1,5 @@
 import { Bird, Coin, LaurelWreath } from '@/assets';
-import { TEAM_RANK_STYLES, TEAM_SPOTLIGHT_STYLES } from '../constants/styles';
+import { TEAM_RANK_STYLES } from '../constants/styles';
 
 interface PodiumSpotProps {
   rank: 1 | 2 | 3;
@@ -17,19 +17,11 @@ export const TeamPodiumSpot = ({
   teamId,
 }: PodiumSpotProps) => {
   const styles = TEAM_RANK_STYLES[rank];
-  const spotlight = TEAM_SPOTLIGHT_STYLES[rank];
 
   const badgeBgClass = teamId === 'BLUE' ? 'bg-[#64ACFF]' : 'bg-[#FB6464]';
 
   return (
     <div className={styles.wrapper}>
-      <div
-        className={`absolute left-1/2 -translate-x-1/2 bg-gradient-to-b to-transparent z-0 pointer-events-none blur-sm ${spotlight.style}`}
-        style={{
-          clipPath: spotlight.clipPath,
-        }}
-      />
-
       <img src={Bird} className="relative w-full h-full" alt="bird" />
 
       <img

@@ -98,12 +98,3 @@ export const TEAM_RANK_STYLES = {
       'absolute top-[252px] left-[330px] flex items-center justify-end gap-2',
   },
 };
-
-export const TEAM_SPOTLIGHT_STYLES = {
-  1: {
-    style: 'w-[300px] h-[660px] -top-[350px] from-white/80 via-white/50 block',
-    clipPath: 'polygon(50% 0%, 50% 0%, 100% 100%, 0% 100%)',
-  },
-  2: { style: 'hidden', clipPath: '' },
-  3: { style: 'hidden', clipPath: '' },
-};
