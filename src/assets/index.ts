@@ -1,5 +1,6 @@
 export { default as Background } from './background.svg';
 export { default as BackgroundMain } from './background_main.svg';
+export { default as BackgroundShop } from './background_shop.svg';
 export { default as Bucket } from './bucket.svg';
 export { default as Crown } from './crown.svg';
 export { default as Favicon } from './favicon.svg';
@@ -36,3 +37,4 @@ export { default as RedFireworks } from './fireworks_red.webp';
 export { default as UpFireworks } from './fireworks_up.webp';
 export { default as CircularFireworks } from './fireworks_circular.webp';
 export { default as WideFireworks } from './fireworks_wide.webp';
+export { default as acc_07 } from './acc_07.svg';

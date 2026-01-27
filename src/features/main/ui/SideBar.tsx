@@ -55,7 +55,10 @@ export const SideBar = ({
         <button className="w-full h-[72px] rounded-full bg-[#6EE035]">
           마이페이지
         </button>
-        <button className="w-full h-[72px] rounded-full bg-[#5697FF]">
+        <button
+          className="w-full h-[72px] rounded-full bg-[#5697FF]"
+          onClick={() => navigate('/shop')}
+        >
           상점
         </button>
 
