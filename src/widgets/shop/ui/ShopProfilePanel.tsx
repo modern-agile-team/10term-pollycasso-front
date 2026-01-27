@@ -3,7 +3,8 @@ import type { Product } from '@/entities/product';
 import { ShopPurchaseButton } from '@/features/shop-purchase';
 import { cn } from '@/shared/lib';
 
-const USER_BALANCE = 240;
+const USER_BALANCE = 120;
+const USER_LEVEL = 3; // 추가됨
 
 interface ShopProfilePanelProps {
   cart: Product[];
@@ -29,7 +30,7 @@ export const ShopProfilePanel = ({
           <div className="flex w-full h-[45px] gap-x-2 z-20">
             <div className="w-[45px] h-[45px] bg-yellow-300 rounded-full"></div>
             <div className="flex flex-col">
-              <span className="text-black text-base">Lv.3</span>
+              <span className="text-black text-base">Lv.{USER_LEVEL}</span>
               <span className="text-[#535353] text-lg">폴리칵소</span>
             </div>
           </div>
@@ -105,9 +106,10 @@ export const ShopProfilePanel = ({
       <ShopPurchaseButton
         cart={cart}
         userBalance={USER_BALANCE}
+        userLevel={USER_LEVEL} // 추가됨
         totalPrice={totalPrice}
-        isOverBudget={isOverBudget}
         disabled={isCartEmpty}
+        // isOverBudget은 이전 단계에서 ShopPurchaseButton Props에서 제거했으므로 뺐습니다.
       />
     </div>
   );
