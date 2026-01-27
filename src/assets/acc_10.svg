@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <style>
+      .cls-1 {
+        opacity: .7;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #89d8e5;
+        stroke: #3f3f3f;
+        stroke-miterlimit: 10;
+        stroke-width: 1.3px;
+      }
+
+      .cls-3 {
+        fill: #9b597a;
+      }
+    </style>
+  </defs>
+  <ellipse class="cls-1" cx="117.57" cy="52.17" rx="9.15" ry="8.96"/>
+  <ellipse class="cls-1" cx="81.77" cy="52.29" rx="9.15" ry="8.96"/>
+  <rect class="cls-2" x="91.41" y="50.21" width="16.3" height=".78"/>
+  <ellipse class="cls-3" cx="90.99" cy="50.46" rx="1.53" ry="1.54"/>
+  <ellipse class="cls-3" cx="107.6" cy="50.56" rx="1.53" ry="1.54"/>
+  <circle class="cls-3" cx="90.76" cy="48.94" r=".07"/>
+</svg>

@@ -1,20 +1,30 @@
 import { Bird, Coin } from '@/assets';
 import type { Product } from '@/entities/product';
+import { cn } from '@/shared/lib';
+
+const USER_BALANCE = 240;
 
 interface ShopProfilePanelProps {
   cart: Product[];
+  previewItems: Product[];
   onRemoveFromCart: (id: number) => void;
+  onResetPreview: () => void;
 }
 
 export const ShopProfilePanel = ({
   cart,
+  previewItems,
   onRemoveFromCart,
+  onResetPreview,
 }: ShopProfilePanelProps) => {
+  const totalPrice = cart.reduce((acc, item) => acc + item.price, 0);
+  const isOverBudget = totalPrice > USER_BALANCE;
+
   return (
     <div className="flex flex-col justify-between w-[360px] h-[720px]">
       <div className="flex flex-col justify-between items-center w-[360px] h-[590px] bg-[#1E3411]/40 rounded-[30px] p-4">
-        <div className="flex flex-col items-center w-[305px] h-[375px] bg-white rounded-3xl p-6">
-          <div className="flex w-full h-[45px] gap-x-2">
+        <div className="flex flex-col items-center w-[305px] h-[375px] bg-white rounded-3xl p-6 relative">
+          <div className="flex w-full h-[45px] gap-x-2 z-20">
             <div className="w-[45px] h-[45px] bg-yellow-300 rounded-full"></div>
             <div className="flex flex-col">
               <span className="text-black text-base">Lv.3</span>
@@ -22,15 +32,29 @@ export const ShopProfilePanel = ({
             </div>
           </div>
 
-          <img
-            src={Bird}
-            className="flex-1 flex items-center justify-center my-2"
-            alt="Character"
-          />
+          <div className="relative flex-1 w-full flex items-center justify-center my-2 z-10">
+            <img
+              src={Bird}
+              className="absolute w-[250px] h-[250px] object-contain z-10"
+              alt="Character"
+            />
 
-          <div className="absolute bottom-[450px] w-[180px] h-[40px] bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.35)_0%,transparent_70%)]" />
+            {previewItems.map((item) => (
+              <img
+                key={item.id}
+                src={item.outfitImage || item.image}
+                className="absolute w-[250px] h-[250px] object-contain z-20 pointer-events-none"
+                alt={item.name}
+              />
+            ))}
+          </div>
 
-          <button className="flex items-center justify-center rounded-full text-xs px-3 py-1 bg-[#EF5F52] text-white ">
+          <div className="absolute top-[295px] w-[180px] h-[40px] bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.35)_0%,transparent_70%)] z-30" />
+
+          <button
+            onClick={onResetPreview}
+            className="flex items-center justify-center rounded-full text-xs px-3 py-1 bg-[#EF5F52] text-white z-20 hover:bg-[#d64538] transition-colors"
+          >
             Reset
           </button>
         </div>
@@ -38,9 +62,16 @@ export const ShopProfilePanel = ({
         <div className="flex items-center w-1/2 h-[35px] bg-[#1E3411]/40 rounded-3xl">
           <img src={Coin} className="w-[40px] h-[40px]" alt="Coin" />
           <div className="flex flex-1 justify-center items-center">
-            <span className="text-white text-xl">120</span>
+            <span className="text-white text-xl">{totalPrice}</span>
             <span className="text-white text-xl mx-1">/</span>
-            <span className="text-[#FF7070] text-xl">240</span>
+            <span
+              className={cn(
+                'text-xl transition-colors',
+                isOverBudget ? 'text-[#FF7070]' : 'text-white',
+              )}
+            >
+              {USER_BALANCE}
+            </span>
           </div>
         </div>
 
