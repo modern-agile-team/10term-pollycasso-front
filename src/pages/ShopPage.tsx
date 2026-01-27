@@ -1,11 +1,9 @@
-import { useMemo } from 'react';
 import { useCart } from '@/features/cart';
 import {
   useShopFilter,
   useShopPreview,
-  SHOP_CATEGORIES,
+  useProductSorting,
 } from '@/features/shop';
-import { MOCK_PRODUCTS } from '@/mocks/shop.mock';
 import { ShopSidebar, ShopProductList, ShopProfilePanel } from '@/widgets/shop';
 
 const ShopPage = () => {
@@ -23,25 +21,7 @@ const ShopPage = () => {
 
   const { previewItems, wearItem, resetPreview } = useShopPreview();
 
-  const processedProducts = useMemo(() => {
-    const targetCategoryLabel = SHOP_CATEGORIES[activeCategory];
-
-    const filtered = MOCK_PRODUCTS.filter(
-      (item) => item.subCategory === targetCategoryLabel,
-    );
-
-    switch (activeSort) {
-      case 'COST':
-        return filtered.sort((a, b) => a.price - b.price);
-
-      case 'LEVEL':
-        return filtered.sort((a, b) => a.level - b.level);
-
-      case 'POPULAR':
-      default:
-        return filtered;
-    }
-  }, [activeCategory, activeSort]);
+  const processedProducts = useProductSorting(activeCategory, activeSort);
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen gap-[24px] font-ssrm font-bold">
