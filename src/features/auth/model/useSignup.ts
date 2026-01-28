@@ -62,8 +62,12 @@ export const useSignup = () => {
           user: {
             id: decoded.sub,
             nickname: decoded.nickname,
+            tag: decoded.tag,
           },
-          accessToken: loginResult.accessToken,
+          tokens: {
+            accessToken: loginResult.accessToken,
+            refreshToken: loginResult.refreshToken,
+          },
         });
 
         setErrorMessage(null);

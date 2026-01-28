@@ -1,8 +1,11 @@
 import { jwtDecode } from 'jwt-decode';
 
 export interface AccessJwtPayload {
-  sub: string;
+  sub: number;
   nickname: string;
+  tag: string;
+  iat?: number;
+  exp?: number;
 }
 
 export const parseAccessToken = (token: string) => {

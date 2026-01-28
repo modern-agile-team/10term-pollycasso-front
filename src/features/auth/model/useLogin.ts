@@ -45,8 +45,12 @@ export const useLogin = () => {
         user: {
           id: decoded.sub,
           nickname: decoded.nickname,
+          tag: decoded.tag,
         },
-        accessToken: result.accessToken,
+        tokens: {
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        },
       });
 
       setErrorMessage(null);
