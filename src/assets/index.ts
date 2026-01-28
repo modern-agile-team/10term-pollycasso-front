@@ -39,3 +39,4 @@ export { default as CircularFireworks } from './fireworks_circular.webp';
 export { default as WideFireworks } from './fireworks_wide.webp';
 export { default as acc_07 } from './acc_07.svg';
 export { default as acc_10 } from './acc_10.svg';
+export { default as Receipt } from './receipt.svg';

@@ -1,8 +1,10 @@
 import { Bird, Coin } from '@/assets';
 import type { Product } from '@/entities/product';
+import { ShopPurchaseButton } from '@/features/shop-purchase';
 import { cn } from '@/shared/lib';
 
-const USER_BALANCE = 240;
+const USER_BALANCE = 120;
+const USER_LEVEL = 3; // 추가됨
 
 interface ShopProfilePanelProps {
   cart: Product[];
@@ -19,6 +21,7 @@ export const ShopProfilePanel = ({
 }: ShopProfilePanelProps) => {
   const totalPrice = cart.reduce((acc, item) => acc + item.price, 0);
   const isOverBudget = totalPrice > USER_BALANCE;
+  const isCartEmpty = cart.length === 0;
 
   return (
     <div className="flex flex-col justify-between w-[360px] h-[720px]">
@@ -27,7 +30,7 @@ export const ShopProfilePanel = ({
           <div className="flex w-full h-[45px] gap-x-2 z-20">
             <div className="w-[45px] h-[45px] bg-yellow-300 rounded-full"></div>
             <div className="flex flex-col">
-              <span className="text-black text-base">Lv.3</span>
+              <span className="text-black text-base">Lv.{USER_LEVEL}</span>
               <span className="text-[#535353] text-lg">폴리칵소</span>
             </div>
           </div>
@@ -42,7 +45,7 @@ export const ShopProfilePanel = ({
             {previewItems.map((item) => (
               <img
                 key={item.id}
-                src={item.outfitImage || item.image}
+                src={item.image}
                 className="absolute w-[250px] h-[250px] object-contain z-20 pointer-events-none"
                 alt={item.name}
               />
@@ -100,9 +103,14 @@ export const ShopProfilePanel = ({
         </div>
       </div>
 
-      <button className="w-[360px] h-[105px] bg-gray-900 hover:bg-black text-white rounded-[30px] text-4xl">
-        구매하기
-      </button>
+      <ShopPurchaseButton
+        cart={cart}
+        userBalance={USER_BALANCE}
+        userLevel={USER_LEVEL} // 추가됨
+        totalPrice={totalPrice}
+        disabled={isCartEmpty}
+        // isOverBudget은 이전 단계에서 ShopPurchaseButton Props에서 제거했으므로 뺐습니다.
+      />
     </div>
   );
 };
