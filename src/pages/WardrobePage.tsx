@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { CharacterPreview } from '@/entities/character/ui/CharacterPreview';
-import { useShopPreview } from '@/features/shop/model/useShopPreview';
+import { CharacterPreview } from '@/entities/character';
+import { useShopPreview } from '@/features/shop';
 import { MOCK_PRODUCTS } from '@/mocks/shop.mock';
-import { WardrobeProductList } from '@/widgets/wardrobe/ui/WardrobeProductList';
+import { WardrobeProductList } from '@/widgets/wardrobe';
 import {
   useWardrobeFilter,
   WARDROBE_ITEM_CATEGORIES,
@@ -101,7 +101,7 @@ const WardrobePage = () => {
             className={cn(
               'w-[370px] h-[60px] rounded-[20px] transition-colors',
               activeTab === 'SKILL'
-                ? 'bg-[#2D2D2D] text-[#52D843] border-2 border-[#52D843]'
+                ? 'bg-[#2D2D2D] text-white'
                 : 'bg-black hover:bg-[#2D2D2D] text-white',
             )}
           >
