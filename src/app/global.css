@@ -54,3 +54,20 @@
 .custom-cart-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.custom-wardrobe-scrollbar::-webkit-scrollbar {
+  width: 25px;
+}
+
+.custom-wardrobe-scrollbar::-webkit-scrollbar-track {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  margin-bottom: 40px;
+}
+
+.custom-wardrobe-scrollbar::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 20px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
