@@ -11,6 +11,7 @@ export const SORT_OPTIONS_LIST = [
 ] as const;
 
 export const SHOP_CATEGORIES = {
+  ITEM: '기술',
   BIRD: '새',
   TOP: '상의',
   BOTTOM: '하의',
@@ -21,6 +22,7 @@ export const SHOP_CATEGORIES = {
 } as const;
 
 export const SHOP_CATEGORY_LIST = [
+  { key: 'ITEM', label: '기술' },
   { key: 'BIRD', label: '새' },
   { key: 'TOP', label: '상의' },
   { key: 'BOTTOM', label: '하의' },
