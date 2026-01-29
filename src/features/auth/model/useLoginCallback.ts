@@ -21,24 +21,22 @@ export const useLoginCallback = () => {
     const processLogin = async () => {
       try {
         const response = await refreshMutate();
-        const { accessToken } = response;
 
-        if (!accessToken) {
-          throw new Error('토큰이 발급되지 않았습니다.');
+        if (!('accessToken' in response)) {
+          throw new Error('인증 정보가 올바르지 않습니다.');
         }
 
-        const decoded = parseAccessToken(accessToken);
+        const { accessToken } = response;
+        const { sub: id, nickname, tag } = parseAccessToken(accessToken);
 
         setAuth({
-          user: {
-            id: decoded.sub,
-            nickname: decoded.nickname,
-          },
+          user: { id, nickname, tag },
           accessToken: accessToken,
         });
 
         navigate('/welcome', { replace: true });
       } catch (error) {
+        console.error('Callback Login Error:', error);
         alert('로그인 정보를 불러오는데 실패했습니다. 다시 로그인해주세요.');
         navigate('/login', { replace: true });
       }

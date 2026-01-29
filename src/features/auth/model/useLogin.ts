@@ -33,20 +33,18 @@ export const useLogin = () => {
   const { mutate: login, isPending } = useMutation({
     ...authQueries.login(),
 
-    onSuccess: (result) => {
-      if (!('accessToken' in result)) {
-        setErrorMessage(result.message ?? '로그인에 실패했습니다.');
+    onSuccess: (response) => {
+      if (!('accessToken' in response)) {
+        setErrorMessage(response.message ?? '로그인에 실패했습니다.');
         return;
       }
 
-      const decoded = parseAccessToken(result.accessToken);
+      const { accessToken } = response;
+      const { sub: id, nickname, tag } = parseAccessToken(accessToken);
 
       setAuth({
-        user: {
-          id: decoded.sub,
-          nickname: decoded.nickname,
-        },
-        accessToken: result.accessToken,
+        user: { id, nickname, tag },
+        accessToken: accessToken,
       });
 
       setErrorMessage(null);

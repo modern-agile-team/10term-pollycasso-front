@@ -46,24 +46,22 @@ export const useSignup = () => {
       try {
         const { mutationFn: loginRequest } = authQueries.login();
 
-        const loginResult = await loginRequest!({
+        const response = await loginRequest!({
           username: form.username,
           password: form.password,
         });
 
-        if (!('accessToken' in loginResult)) {
+        if (!('accessToken' in response)) {
           setErrorMessage('로그인에 실패했습니다.');
           return;
         }
 
-        const decoded = parseAccessToken(loginResult.accessToken);
+        const { accessToken } = response;
+        const { sub: id, nickname, tag } = parseAccessToken(accessToken);
 
         setAuth({
-          user: {
-            id: decoded.sub,
-            nickname: decoded.nickname,
-          },
-          accessToken: loginResult.accessToken,
+          user: { id, nickname, tag },
+          accessToken: accessToken,
         });
 
         setErrorMessage(null);

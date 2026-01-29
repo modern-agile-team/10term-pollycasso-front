@@ -3,6 +3,7 @@ import { mutationOptions } from '@tanstack/react-query';
 import { postLogin } from '../api/postLogin';
 import { postRefreshToken } from '../api/postRefreshToken';
 import { postSignup } from '../api/postSignup';
+import { postLogout } from '../api/postLogout';
 
 export const authQueries = {
   auth: () => ['auth'] as const,
@@ -23,5 +24,11 @@ export const authQueries = {
     mutationOptions({
       mutationKey: [...authQueries.auth(), 'refresh'] as const,
       mutationFn: postRefreshToken,
+    }),
+
+  logout: () =>
+    mutationOptions({
+      mutationKey: [...authQueries.auth(), 'logout'] as const,
+      mutationFn: postLogout,
     }),
 };

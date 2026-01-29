@@ -26,7 +26,6 @@ export type SignupResponse = SignupSuccessResponse | SignupFailureResponse;
 export interface SignupSuccessResponse {
   accessToken: string;
 }
-
 export interface SignupFailureResponse {
   code: number;
   message: string;
