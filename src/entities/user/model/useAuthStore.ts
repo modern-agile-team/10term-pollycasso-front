@@ -5,12 +5,12 @@ import type { Outfit } from '@/shared/model';
 
 const defaultOutfit: Outfit = {
   bird: 'bird_01',
-  accessory: null,
-  hat: null,
-  top: null,
-  bottom: null,
-  shoes: null,
-  effect: null,
+  accessory: 'acc_01',
+  hat: 'hat_01',
+  top: 'top_01',
+  bottom: 'bottom_01',
+  shoes: 'shoes_01',
+  effect: 'effect_01',
 };
 
 export const useAuthStore = create<AuthState>()(

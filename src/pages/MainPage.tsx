@@ -39,6 +39,7 @@ const MainPage = () => {
         level={user.level!}
         currentXp={user.currentExp!}
         coin={user.coin!}
+        outfit={user.outfit!}
         onLogout={handleLogout}
       />
 
