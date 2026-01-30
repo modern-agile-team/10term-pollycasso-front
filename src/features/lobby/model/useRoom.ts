@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { io, Socket } from 'socket.io-client';
-
+import { getGameSocket } from '@/shared/api/socket/gameSocketInstance';
 import type { RoomState, Player } from '@/shared/model';
 import { useAuthStore } from '@/entities/user';
 import {
@@ -12,67 +11,74 @@ import {
 
 export const useRoom = () => {
   const { roomId } = useParams<{ roomId: string }>();
-  const { user, accessToken } = useAuthStore();
+  const { user } = useAuthStore();
 
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const gameSocket = getGameSocket();
+
   const [roomState, setRoomState] = useState<RoomState | null>(null);
-
   const myUserId = user?.id;
 
   useEffect(() => {
-    if (!roomId || !accessToken) return;
+    if (!roomId) return;
 
-    const socketInstance = io(`${import.meta.env.VITE_SOCKET_URL}/waiting`, {
-      auth: { token: accessToken },
-      transports: ['websocket'],
-    });
+    const joinRoom = () => {
+      gameSocket.emit('room:join', { roomId: Number(roomId) });
+    };
 
-    setSocket(socketInstance);
-
-    socketInstance.on('room:joinSuccess', (initialState: RoomState) => {
+    const handleJoinSuccess = (initialState: RoomState) => {
       setRoomState(initialState);
-    });
+    };
 
-    // 플레이어 목록만 갱신
-    socketInstance.on(
-      'room:syncPlayerList',
-      ({ players }: { players: Player[] }) => {
-        setRoomState((prev) => (prev ? { ...prev, players } : null));
-      },
-    );
+    const handleSyncPlayerList = ({ players }: { players: Player[] }) => {
+      setRoomState((prev) => (prev ? { ...prev, players } : null));
+    };
 
-    // 방 설정 변경 (제목, 모드 등)
-    socketInstance.on(
-      'room:updateRoom',
-      ({ roomSettings }: { roomSettings: any }) => {
-        setRoomState((prev) =>
-          prev ? { ...prev, settings: roomSettings } : null,
-        );
-      },
-    );
+    const handleUpdateRoom = ({ roomSettings }: { roomSettings: any }) => {
+      setRoomState((prev) =>
+        prev ? { ...prev, settings: roomSettings } : null,
+      );
+    };
 
-    socketInstance.on(
-      'room:updatePlayer',
-      ({ userId, changes }: { userId: string; changes: any }) => {
-        setRoomState((prev) => {
-          if (!prev) return null;
-          return {
-            ...prev,
-            players: prev.players.map((p) =>
-              String(p.userId) === String(userId) ? { ...p, ...changes } : p,
-            ),
-          };
-        });
-      },
-    );
+    const handleUpdatePlayer = ({
+      userId,
+      changes,
+    }: {
+      userId: string;
+      changes: any;
+    }) => {
+      setRoomState((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          players: prev.players.map((p) =>
+            String(p.userId) === String(userId) ? { ...p, ...changes } : p,
+          ),
+        };
+      });
+    };
 
-    // 3. 방 입장 요청
-    socketInstance.emit('room:join', { roomId: Number(roomId) });
+    gameSocket.on('room:joinSuccess', handleJoinSuccess);
+    gameSocket.on('room:syncPlayerList', handleSyncPlayerList);
+    gameSocket.on('room:updateRoom', handleUpdateRoom);
+    gameSocket.on('room:updatePlayer', handleUpdatePlayer);
+
+    // 안전한 입장 요청 로직 (타이밍 이슈 방지)
+    if (gameSocket.connected) {
+      joinRoom();
+    } else {
+      gameSocket.on('connect', joinRoom);
+    }
 
     return () => {
-      socketInstance.disconnect();
+      gameSocket.off('room:joinSuccess', handleJoinSuccess);
+      gameSocket.off('room:syncPlayerList', handleSyncPlayerList);
+      gameSocket.off('room:updateRoom', handleUpdateRoom);
+      gameSocket.off('room:updatePlayer', handleUpdatePlayer);
+
+      // 중복 입장 방지
+      gameSocket.off('connect', joinRoom);
     };
-  }, [roomId, accessToken]);
+  }, [gameSocket, roomId]);
 
   const me = selectMe(roomState, myUserId ?? '');
   const isSolo = roomState?.settings?.gameMode === 'SOLO';
@@ -83,33 +89,33 @@ export const useRoom = () => {
 
   const canStartGame = selectCanStartGame(roomState);
 
-  // 게임 시작 (이벤트명 변경됨)
   const startGame = () => {
-    if (!socket) return;
-    socket.emit('game:startRequest');
+    gameSocket.emit('game:startRequest');
   };
 
-  // 준비 토글 (페이로드 불필요)
   const toggleReady = () => {
-    if (!socket) return;
-    socket.emit('room:readyToggle');
+    gameSocket.emit('room:readyToggle');
   };
 
-  // 팀 변경 (targetTeam)
   const changeTeam = (targetTeam: 'BLUE' | 'RED' | 'NONE') => {
-    if (!socket || !me || me.team === targetTeam) return;
-    socket.emit('room:changeTeam', { targetTeam });
+    if (!me || me.team === targetTeam) return;
+    gameSocket.emit('room:changeTeam', { targetTeam });
   };
 
-  // 강퇴 (ID 타입 숫자 변환)
   const kickUser = (targetUserId: string | number) => {
-    if (!socket) return;
-    socket.emit('room:kickUser', { targetUserId: Number(targetUserId) });
+    gameSocket.emit('room:kickUser', { targetUserId: Number(targetUserId) });
+  };
+
+  const nudgeUser = (targetUserId: string | number) => {
+    gameSocket.emit('room:nudgeUser', { targetUserId: Number(targetUserId) });
   };
 
   const leaveRoom = () => {
-    if (!socket) return;
-    socket.emit('room:leave');
+    gameSocket.emit('room:leave');
+  };
+
+  const updateStatus = (status: 'IDLE' | 'SHOPPING' | 'CUSTOMIZING') => {
+    gameSocket.emit('room:updateStatus', { status });
   };
 
   return {
@@ -129,7 +135,9 @@ export const useRoom = () => {
       toggleReady,
       leaveRoom,
       changeTeam,
+      nudgeUser,
       kickUser,
+      updateStatus,
     },
     constants: {
       myUserId,
