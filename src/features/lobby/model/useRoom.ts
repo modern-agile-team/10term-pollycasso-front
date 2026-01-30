@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getGameSocket } from '@/shared/api/socket/gameSocketInstance';
+import { getGameSocket } from '@/shared/api/socket';
 import type { RoomState, Player } from '@/shared/model';
 import { useAuthStore } from '@/entities/user';
 import {
