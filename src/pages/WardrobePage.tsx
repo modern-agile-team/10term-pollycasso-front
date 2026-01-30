@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { CharacterPreview } from '@/entities/character';
 import { useShopPreview } from '@/features/shop';
 import { MOCK_PRODUCTS } from '@/mocks/shop.mock';
@@ -8,10 +8,25 @@ import {
   WARDROBE_ITEM_CATEGORIES,
 } from '@/widgets/wardrobe';
 import { cn } from '@/shared/lib';
+import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+import { useNudgeListener } from '@/features/lobby/model/useNudgeListener';
 
 const USER_LEVEL = 3;
 
 const WardrobePage = () => {
+  const { gameSocket } = useGameSocket();
+  useNudgeListener();
+
+  useEffect(() => {
+    if (!gameSocket) return;
+
+    gameSocket.emit('room:updateStatus', { status: 'CUSTOMIZING' });
+
+    return () => {
+      gameSocket.emit('room:updateStatus', { status: 'IDLE' });
+    };
+  }, [gameSocket]);
+
   const { previewItems, resetPreview, wearItem } = useShopPreview();
 
   const {

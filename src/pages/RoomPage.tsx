@@ -51,6 +51,7 @@ const RoomPage = () => {
               amIHost={derived.amIHost}
               myUserId={me?.userId ?? ''}
               onKick={actions.handleKick}
+              onNudge={actions.handleNudge}
             />
             <TeamSection
               gradient={bottomGradient}
@@ -59,6 +60,7 @@ const RoomPage = () => {
               amIHost={derived.amIHost}
               myUserId={me?.userId ?? ''}
               onKick={actions.handleKick}
+              onNudge={actions.handleNudge}
             />
           </div>
         </div>

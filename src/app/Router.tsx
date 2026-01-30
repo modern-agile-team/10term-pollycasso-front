@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router';
 
 import { RootLayout } from '@/shared/ui/RootLayout';
 import { Spinner } from '@/shared/ui/Spinner';
 import PrivateRoute from './PrivateRoute';
+import { GameSocketProvider } from '@/shared/api/socket/GameSocketProvider';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const LoginCallbackPage = lazy(() => import('@/pages/LoginCallbackPage'));
@@ -11,7 +12,6 @@ const SignupPage = lazy(() => import('@/pages/SignupPage'));
 const WelcomePage = lazy(() => import('@/pages/WelcomePage'));
 const MainPage = lazy(() => import('@/pages/MainPage'));
 const RoomPage = lazy(() => import('@/pages/RoomPage'));
-// TODO: 페이지에서 대기실, 로딩, 게임 위젯을 교체하는 방식으로 추후 작성 예정
 const GameWidget = lazy(() => import('@/widgets/game/ui/GameWidget'));
 const FriendPage = lazy(() => import('@/pages/FriendPage'));
 const ShopPage = lazy(() => import('@/pages/ShopPage'));
@@ -25,57 +25,42 @@ const router = createBrowserRouter([
       </Suspense>
     ),
     children: [
-      {
-        path: '/login',
-        element: <LoginPage />,
-      },
-      {
-        path: '/auth/callback',
-        element: <LoginCallbackPage />,
-      },
-      {
-        path: '/signup',
-        element: <SignupPage />,
-      },
-      {
-        path: '/welcome',
-        element: <WelcomePage />,
-      },
-      {
-        path: '/friend',
-        element: <FriendPage />,
-      },
-      {
-        path: '/shop',
-        element: <ShopPage />,
-      },
-      {
-        path: '/Wardrobe',
-        element: <WardrobePage />,
-      },
-      {
-        path: '/dev/gameWidget',
-        element: <GameWidget />,
-      },
+      { path: '/login', element: <LoginPage /> },
+      { path: '/auth/callback', element: <LoginCallbackPage /> },
+      { path: '/signup', element: <SignupPage /> },
+      { path: '/welcome', element: <WelcomePage /> },
+      // 테스트용 외부 라우트
+      { path: '/friend', element: <FriendPage /> },
+      { path: '/shop', element: <ShopPage /> },
+      { path: '/Wardrobe', element: <WardrobePage /> },
+      { path: '/dev/gameWidget', element: <GameWidget /> },
+
       {
         element: <PrivateRoute />,
         children: [
-          {
-            path: '/',
-            element: <MainPage />,
-          },
+          { path: '/', element: <MainPage /> },
           {
             path: '/rooms/:roomId',
-            element: <RoomPage />,
+            element: (
+              <GameSocketProvider>
+                <Outlet />
+              </GameSocketProvider>
+            ),
+            children: [
+              {
+                index: true,
+                element: <RoomPage />,
+              },
+              {
+                path: 'shop',
+                element: <ShopPage />,
+              },
+              {
+                path: 'wardrobe',
+                element: <WardrobePage />,
+              },
+            ],
           },
-          {
-            path: '/dev/gameWidget',
-            element: <GameWidget />,
-          },
-          // {
-          //   path: '/dev/loading',
-          //   element: <LoadingPage />,
-          // },
         ],
       },
     ],
