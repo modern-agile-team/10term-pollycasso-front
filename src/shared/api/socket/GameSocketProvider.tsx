@@ -15,6 +15,8 @@ export const GameSocketProvider = ({ children }: { children: ReactNode }) => {
   const gameSocket = getGameSocket();
 
   const [isGameConnected, setIsGameConnected] = useState(gameSocket.connected);
+
+  // 리액트 상태 구독용 (변경 감지용)
   const token = useAuthStore((state) => state.accessToken);
 
   useEffect(() => {
@@ -22,12 +24,8 @@ export const GameSocketProvider = ({ children }: { children: ReactNode }) => {
 
     gameSocket.auth = { token };
 
-    const handleConnect = () => {
-      setIsGameConnected(true);
-    };
-    const handleDisconnect = () => {
-      setIsGameConnected(false);
-    };
+    const handleConnect = () => setIsGameConnected(true);
+    const handleDisconnect = () => setIsGameConnected(false);
 
     gameSocket.on('connect', handleConnect);
     gameSocket.on('disconnect', handleDisconnect);
