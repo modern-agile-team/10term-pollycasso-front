@@ -1,5 +1,6 @@
 import { cn } from '@/shared/lib';
 import type { Product } from '../model/types';
+import { getShopItemUrl } from '@/shared/lib/assets';
 
 interface WardrobeItemCardProps {
   product: Product;
@@ -35,7 +36,7 @@ export const WardrobeItemCard = ({
       </div>
 
       <img
-        src={product.image}
+        src={getShopItemUrl(product.image)}
         className="flex-1 object-contain px-4 my-2"
         alt={product.name}
       />

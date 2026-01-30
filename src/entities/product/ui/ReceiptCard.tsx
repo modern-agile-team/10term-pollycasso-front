@@ -1,4 +1,5 @@
 import type { Product } from '../model/types';
+import { getShopItemUrl } from '@/shared/lib/assets';
 
 interface ReceiptCardProps {
   product: Product;
@@ -21,7 +22,7 @@ export const ReceiptCard = ({ product }: ReceiptCardProps) => {
 
       <div className="flex-1 w-full flex items-center justify-center overflow-hidden">
         <img
-          src={product.image}
+          src={getShopItemUrl(product.image)}
           className="w-full h-full object-contain"
           alt={product.name}
         />
