@@ -65,10 +65,16 @@ export const useRoom = () => {
             setPasswordError(koreanMessage);
             break;
 
+          case 'ROOM_KICKED':
+            navigate('/', {
+              state: { isKicked: true },
+              replace: true,
+            });
+            break;
+
           case 'ROOM_NOT_FOUND':
           case 'ROOM_FULL':
           case 'GAME_ALREADY_STARTED':
-          case 'ROOM_KICKED': // TODO: 위치 고민
           case 'ACCESS_TOKEN_MISSING':
           case 'EXPIRED_ACCESS_TOKEN':
           case 'INVALID_ACCESS_TOKEN':

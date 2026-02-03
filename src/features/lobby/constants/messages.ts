@@ -6,7 +6,7 @@ export const ENTRY_ERROR_MESSAGES: Record<string, string> = {
   ROOM_NOT_FOUND: '존재하지 않거나 삭제된 방이에요.',
   ROOM_FULL: '방이 꽉 찼습니다. 빈 자리가 날 때까지 기다려주세요!',
   GAME_ALREADY_STARTED: '이미 게임이 진행 중이에요!',
-  ROOM_KICKED: '강퇴당했습니다!', // TODO: 위치 고민
+  ROOM_KICKED: '강퇴당했습니다!',
 
   ACCESS_TOKEN_MISSING: '로그인 정보가 없습니다. 다시 로그인해주세요!',
   EXPIRED_ACCESS_TOKEN: '로그인 세션이 만료되었습니다.',
