@@ -5,6 +5,7 @@ import { RootLayout } from '@/shared/ui/RootLayout';
 import { Spinner } from '@/shared/ui/Spinner';
 import PrivateRoute from './PrivateRoute';
 import { GameSocketProvider } from '@/shared/api/socket/GameSocketProvider';
+import { ChatSocketProvider } from '@/shared/api/socket/ChatSocketProvider';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const LoginCallbackPage = lazy(() => import('@/pages/LoginCallbackPage'));
@@ -29,7 +30,6 @@ const router = createBrowserRouter([
       { path: '/auth/callback', element: <LoginCallbackPage /> },
       { path: '/signup', element: <SignupPage /> },
       { path: '/welcome', element: <WelcomePage /> },
-      // 테스트용 외부 라우트
       { path: '/friend', element: <FriendPage /> },
       { path: '/shop', element: <ShopPage /> },
       { path: '/Wardrobe', element: <WardrobePage /> },
@@ -38,26 +38,35 @@ const router = createBrowserRouter([
       {
         element: <PrivateRoute />,
         children: [
-          { path: '/', element: <MainPage /> },
           {
-            path: '/rooms/:roomId',
             element: (
-              <GameSocketProvider>
+              <ChatSocketProvider>
                 <Outlet />
-              </GameSocketProvider>
+              </ChatSocketProvider>
             ),
             children: [
+              { path: '/', element: <MainPage /> },
               {
-                index: true,
-                element: <RoomPage />,
-              },
-              {
-                path: 'shop',
-                element: <ShopPage />,
-              },
-              {
-                path: 'wardrobe',
-                element: <WardrobePage />,
+                path: '/rooms/:roomId',
+                element: (
+                  <GameSocketProvider>
+                    <Outlet />
+                  </GameSocketProvider>
+                ),
+                children: [
+                  {
+                    index: true,
+                    element: <RoomPage />,
+                  },
+                  {
+                    path: 'shop',
+                    element: <ShopPage />,
+                  },
+                  {
+                    path: 'wardrobe',
+                    element: <WardrobePage />,
+                  },
+                ],
               },
             ],
           },
