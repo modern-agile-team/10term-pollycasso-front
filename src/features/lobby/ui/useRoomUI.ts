@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router';
-
 import { useRoom } from '../model/useRoom';
 
 export const useRoomUI = () => {
   const navigate = useNavigate();
+
   const {
     roomState,
     me,
@@ -15,6 +15,8 @@ export const useRoomUI = () => {
       bottomTeamPlayers,
       topTeamId,
       bottomTeamId,
+      isPasswordRequired,
+      passwordError,
     },
     actions: {
       startGame,
@@ -24,6 +26,7 @@ export const useRoomUI = () => {
       kickUser,
       nudgeUser,
       updateStatus,
+      joinWithPassword,
     },
   } = useRoom();
 
@@ -60,6 +63,11 @@ export const useRoomUI = () => {
     }
   };
 
+  const handleLeaveImmediately = () => {
+    leaveRoom();
+    navigate('/');
+  };
+
   const handleChangeTeam = (targetTeam: 'BLUE' | 'RED') => {
     changeTeam(targetTeam);
   };
@@ -91,15 +99,19 @@ export const useRoomUI = () => {
       bottomTeamPlayers,
       topTeamId,
       bottomTeamId,
+      isPasswordRequired,
+      passwordError,
     },
     actions: {
       handleMainAction,
       handleLeave,
+      handleLeaveImmediately,
       handleChangeTeam,
       handleKick,
       handleNudge,
       handleUpdateStatus,
       updateStatus,
+      joinWithPassword,
     },
   };
 };

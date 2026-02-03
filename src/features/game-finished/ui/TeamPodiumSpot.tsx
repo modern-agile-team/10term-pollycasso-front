@@ -1,4 +1,4 @@
-import { Bird, Coin, LaurelWreath } from '@/assets';
+import { Coin, LaurelWreath } from '@/assets';
 import { TEAM_RANK_STYLES } from '../constants/styles';
 
 interface PodiumSpotProps {
@@ -22,7 +22,7 @@ export const TeamPodiumSpot = ({
 
   return (
     <div className={styles.wrapper}>
-      <img src={Bird} className="relative w-full h-full" alt="bird" />
+      <img src={''} className="relative w-full h-full" alt="bird" />
 
       <img
         src={LaurelWreath}

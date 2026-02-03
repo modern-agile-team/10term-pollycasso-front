@@ -1,32 +1,88 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { getGameSocket } from '@/shared/api/socket';
-import type { RoomState, Player } from '@/shared/model';
+import type { RoomState, Player, SystemNotification } from '@/shared/model';
 import { useAuthStore } from '@/entities/user';
 import {
   selectCanStartGame,
   selectMe,
   selectTopBottomTeams,
 } from './roomSelectors';
+import { ENTRY_ERROR_MESSAGES } from '../constants/messages';
 
 export const useRoom = () => {
+  const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
   const { user } = useAuthStore();
-
   const gameSocket = getGameSocket();
 
   const [roomState, setRoomState] = useState<RoomState | null>(null);
+
+  const [isPasswordRequired, setIsPasswordRequired] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const myUserId = user?.id;
+
+  const joinRoom = useCallback(
+    (password?: string) => {
+      if (!roomId) return;
+
+      setPasswordError(null);
+
+      gameSocket.emit('room:join', {
+        roomId: Number(roomId),
+        ...(password && { password }),
+      });
+    },
+    [gameSocket, roomId],
+  );
 
   useEffect(() => {
     if (!roomId) return;
 
-    const joinRoom = () => {
-      gameSocket.emit('room:join', { roomId: Number(roomId) });
-    };
-
     const handleJoinSuccess = (initialState: RoomState) => {
       setRoomState(initialState);
+
+      setIsPasswordRequired(false);
+      setPasswordError(null);
+    };
+
+    const handleSystemNotification = (response: SystemNotification) => {
+      if (response.status >= 400) {
+        // 메시지 상수에서 찾고, 없으면 백엔드 메시지, 그것도 없으면 기본값
+        const koreanMessage =
+          ENTRY_ERROR_MESSAGES[response.code] ||
+          response.message ||
+          ENTRY_ERROR_MESSAGES.DEFAULT;
+
+        switch (response.code) {
+          case 'ROOM_PASSWORD_REQUIRED':
+            setIsPasswordRequired(true);
+            break;
+
+          case 'ROOM_INVALID_PASSWORD':
+          case 'INVALID_INPUT':
+            setPasswordError(koreanMessage);
+            break;
+
+          case 'ROOM_NOT_FOUND':
+          case 'ROOM_FULL':
+          case 'GAME_ALREADY_STARTED':
+          case 'ROOM_KICKED': // TODO: 위치 고민
+          case 'ACCESS_TOKEN_MISSING':
+          case 'EXPIRED_ACCESS_TOKEN':
+          case 'INVALID_ACCESS_TOKEN':
+          case 'PERMISSION_DENIED':
+            alert(koreanMessage);
+            navigate('/');
+            break;
+
+          default:
+            alert(koreanMessage);
+            navigate('/');
+            break;
+        }
+      }
     };
 
     const handleSyncPlayerList = ({ players }: { players: Player[] }) => {
@@ -62,11 +118,12 @@ export const useRoom = () => {
     gameSocket.on('room:updateRoom', handleUpdateRoom);
     gameSocket.on('room:updatePlayer', handleUpdatePlayer);
 
-    // 안전한 입장 요청 로직 (타이밍 이슈 방지)
+    gameSocket.on('system:notification', handleSystemNotification);
+
     if (gameSocket.connected) {
       joinRoom();
     } else {
-      gameSocket.on('connect', joinRoom);
+      gameSocket.once('connect', () => joinRoom());
     }
 
     return () => {
@@ -74,52 +131,30 @@ export const useRoom = () => {
       gameSocket.off('room:syncPlayerList', handleSyncPlayerList);
       gameSocket.off('room:updateRoom', handleUpdateRoom);
       gameSocket.off('room:updatePlayer', handleUpdatePlayer);
-
-      // 중복 입장 방지
-      gameSocket.off('connect', joinRoom);
+      gameSocket.off('system:notification', handleSystemNotification);
     };
-  }, [gameSocket, roomId]);
+  }, [gameSocket, roomId, joinRoom]);
 
   const me = selectMe(roomState, myUserId ?? '');
   const isSolo = roomState?.settings?.gameMode === 'SOLO';
   const amIHost = String(roomState?.hostId) === String(myUserId);
-
   const { topTeamId, bottomTeamId, topTeamPlayers, bottomTeamPlayers } =
     selectTopBottomTeams(roomState, myUserId ?? '');
-
   const canStartGame = selectCanStartGame(roomState);
 
-  const startGame = () => {
-    gameSocket.emit('game:startRequest');
-  };
-
-  const toggleReady = () => {
-    gameSocket.emit('room:readyToggle');
-  };
-
+  const startGame = () => gameSocket.emit('game:startRequest');
+  const toggleReady = () => gameSocket.emit('room:readyToggle');
   const changeTeam = (targetTeam: 'BLUE' | 'RED' | 'NONE') => {
     if (!me || me.team === targetTeam) return;
     gameSocket.emit('room:changeTeam', { targetTeam });
   };
-
-  const kickUser = (targetUserId: string | number) => {
+  const kickUser = (targetUserId: string | number) =>
     gameSocket.emit('room:kickUser', { targetUserId: Number(targetUserId) });
-  };
-
-  const nudgeUser = (targetUserId: string | number) => {
+  const nudgeUser = (targetUserId: string | number) =>
     gameSocket.emit('room:nudgeUser', { targetUserId: Number(targetUserId) });
-  };
-
-  const leaveRoom = () => {
-    gameSocket.emit('room:leave');
-  };
-
+  const leaveRoom = () => gameSocket.emit('room:leave');
   const updateStatus = (status: 'IDLE' | 'SHOPPING' | 'CUSTOMIZING') => {
-    // 상점이나 옷장 이동 시 준비 해제
-    if (status !== 'IDLE' && me?.isReady) {
-      gameSocket.emit('room:readyToggle');
-    }
-
+    if (status !== 'IDLE' && me?.isReady) gameSocket.emit('room:readyToggle');
     gameSocket.emit('room:updateStatus', { status });
   };
 
@@ -134,6 +169,9 @@ export const useRoom = () => {
       bottomTeamPlayers,
       topTeamId,
       bottomTeamId,
+      // UI에 필요한 상태들
+      isPasswordRequired,
+      passwordError,
     },
     actions: {
       startGame,
@@ -143,6 +181,7 @@ export const useRoom = () => {
       nudgeUser,
       kickUser,
       updateStatus,
+      joinWithPassword: (password: string) => joinRoom(password),
     },
     constants: {
       myUserId,

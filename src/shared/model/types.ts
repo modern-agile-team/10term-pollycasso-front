@@ -22,3 +22,10 @@ export interface SendMessageRequest {
   targetNickname?: string;
   targetId?: string;
 }
+
+export interface SystemNotification {
+  status: number;
+  code: string;
+  errors?: { field: string; reason: string }[];
+  message?: string;
+}

@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { StarIcon } from '@heroicons/react/24/solid';
 
-import { Bird, Coin } from '@/assets';
+import { Coin } from '@/assets';
 
 interface RankRowProps {
   rank: number;
@@ -49,7 +49,7 @@ export const RankRow = ({
 
         <div className="w-16 h-16 bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-white shadow-sm">
           <img
-            src={Bird}
+            src={''}
             alt="avatar"
             className="w-full h-full object-cover mt-6"
           />

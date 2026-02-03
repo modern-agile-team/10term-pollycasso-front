@@ -1,13 +1,6 @@
 import { StarIcon } from '@heroicons/react/24/solid';
 
-import {
-  Bird,
-  Coin,
-  GoldBelt,
-  SilverBelt,
-  BronzeBelt,
-  LaurelWreath,
-} from '@/assets';
+import { Coin, GoldBelt, SilverBelt, BronzeBelt, LaurelWreath } from '@/assets';
 import { RANK_STYLES, SPOTLIGHT_STYLES } from '../constants/styles';
 
 const BELT_IMAGES = {
@@ -44,7 +37,7 @@ export const SoloPodiumSpot = ({
         }}
       />
 
-      <img src={Bird} className={styles.bird} alt="bird" />
+      <img src={''} className={styles.bird} alt="bird" />
 
       <img src={beltImg} className={styles.belt} alt="belt" />
 
