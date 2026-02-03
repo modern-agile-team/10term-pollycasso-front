@@ -1,16 +1,17 @@
 import { useMemo } from 'react';
-import { MOCK_PRODUCTS } from '@/mocks/shop.mock';
 import type { CategoryType, SortType } from '../model/types';
-import { SHOP_CATEGORIES } from '@/features/shop';
+import { SHOP_CATEGORIES } from '../constants/shop.constants';
+import type { Product } from '@/entities/product';
 
 export const useProductSorting = (
   activeCategory: CategoryType,
   activeSort: SortType,
+  products: Product[],
 ) => {
   return useMemo(() => {
     const targetCategoryLabel = SHOP_CATEGORIES[activeCategory];
 
-    const filtered = MOCK_PRODUCTS.filter(
+    const filtered = products.filter(
       (item) => item.subCategory === targetCategoryLabel,
     );
 
@@ -23,5 +24,5 @@ export const useProductSorting = (
       default:
         return filtered;
     }
-  }, [activeCategory, activeSort]);
+  }, [activeCategory, activeSort, products]);
 };

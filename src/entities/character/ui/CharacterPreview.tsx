@@ -1,16 +1,10 @@
+import { useMemo } from 'react';
 import { cn } from '@/shared/lib';
+import { getOutfitItemUrl } from '@/shared/lib/assets';
+import { SHOP_CATEGORIES } from '@/features/shop/constants/shop.constants';
+import type { Product } from '@/entities/product';
 
-// TODO: FSD 원칙에 위배되기 때문에 파일 내 작성. 차후 수정 필요합니다.
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  level: number;
-  subCategory?: string;
-  description?: string;
-  image: string;
-  outfitImage?: string;
-}
+const DEFAULT_BIRD_ID = 'bird_01';
 
 interface CharacterPreviewProps {
   level: number;
@@ -28,6 +22,16 @@ interface CharacterPreviewProps {
   };
 }
 
+const LAYER_ORDER = [
+  SHOP_CATEGORIES.BIRD,
+  SHOP_CATEGORIES.ACCESSORY,
+  SHOP_CATEGORIES.HAT,
+  SHOP_CATEGORIES.SHOES,
+  SHOP_CATEGORIES.BOTTOM,
+  SHOP_CATEGORIES.TOP,
+  SHOP_CATEGORIES.EFFECT,
+];
+
 export const CharacterPreview = ({
   level,
   nickname = '폴리칵소',
@@ -36,6 +40,22 @@ export const CharacterPreview = ({
   showResetButton = true,
   classNames,
 }: CharacterPreviewProps) => {
+  const selectedBird = previewItems.find(
+    (item) => item.subCategory === SHOP_CATEGORIES.BIRD,
+  );
+
+  const birdImageId = selectedBird ? selectedBird.image : DEFAULT_BIRD_ID;
+
+  const wearables = useMemo(() => {
+    return previewItems
+      .filter((item) => item.subCategory !== SHOP_CATEGORIES.BIRD)
+      .sort((a, b) => {
+        const indexA = LAYER_ORDER.indexOf(a.subCategory!);
+        const indexB = LAYER_ORDER.indexOf(b.subCategory!);
+        return indexA - indexB;
+      });
+  }, [previewItems]);
+
   return (
     <div
       className={cn(
@@ -57,7 +77,6 @@ export const CharacterPreview = ({
             classNames?.levelIcon,
           )}
         />
-
         <div className="flex flex-col justify-center">
           <span
             className={cn(
@@ -68,7 +87,6 @@ export const CharacterPreview = ({
           >
             Lv.{level}
           </span>
-
           <span
             className={cn(
               'text-[#535353] leading-none',
@@ -83,16 +101,16 @@ export const CharacterPreview = ({
 
       <div className="relative flex-1 w-full flex items-center justify-center z-10 my-2">
         <img
-          src={''}
+          src={getOutfitItemUrl(birdImageId)}
           className="absolute w-[90%] h-auto object-contain z-10"
-          alt="Character"
+          alt="Character Body"
         />
 
-        {previewItems.map((item) => (
+        {wearables.map((item) => (
           <img
             key={item.id}
-            src={item.image}
-            className="absolute h-[90%] w-auto object-contain z-20 pointer-events-none"
+            src={getOutfitItemUrl(item.image)}
+            className="absolute w-[90%] h-auto object-contain z-20 pointer-events-none"
             alt={item.name}
           />
         ))}
@@ -109,7 +127,7 @@ export const CharacterPreview = ({
       {showResetButton && onReset && (
         <button
           onClick={onReset}
-          className="flex items-center justify-center rounded-full text-xs px-3 py-1 bg-[#EF5F52] text-white z-20 hover:bg-[#d64538] transition-colors shrink-0 mb-2"
+          className="flex items-center justify-center rounded-full text-xs px-3 py-1 bg-[#EF5F52] text-white z-30 hover:bg-[#d64538] transition-colors shrink-0 mb-2 cursor-pointer"
         >
           Reset
         </button>

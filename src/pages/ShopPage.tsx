@@ -9,6 +9,7 @@ import {
 } from '@/features/shop';
 import { ShopSidebar, ShopProductList, ShopProfilePanel } from '@/widgets/shop';
 import { useNudgeListener } from '@/features/lobby/model/useNudgeListener';
+import { MOCK_TOTAL_PRODUCTS } from '@/mocks/shopData';
 
 const ShopPage = () => {
   const { gameSocket } = useGameSocket();
@@ -38,7 +39,13 @@ const ShopPage = () => {
 
   const { previewItems, wearItem, resetPreview } = useShopPreview();
 
-  const processedProducts = useProductSorting(activeCategory, activeSort);
+  const processedProducts = useProductSorting(
+    activeCategory,
+    activeSort,
+    MOCK_TOTAL_PRODUCTS,
+  );
+
+  const myInventoryIds = [101, 102, 201, 701];
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen gap-[24px] font-ssrm font-bold">
@@ -55,6 +62,7 @@ const ShopPage = () => {
       <ShopProductList
         products={processedProducts}
         cart={cart}
+        inventoryIds={myInventoryIds}
         onAddToCart={addToCart}
         onWearItem={wearItem}
       />
