@@ -7,11 +7,11 @@ import {
 } from '@/entities/chat/lib/mention.lib';
 import { useAuthStore } from '@/entities/user';
 import { mockChannels, mockFriends } from '@/mocks/chat.mock';
-import { useSocket } from '@/shared/api/socket';
-import type { Friend } from '@/shared/model';
+import type { ChatMessage, Friend } from '@/shared/model';
+import { useChatSocket } from '@/shared/api/socket/ChatSocketProvider';
 
 export const useMainChat = () => {
-  const { messages, sendMessage: emitMessage } = useSocket();
+  const { chatSocket, isChatConnected } = useChatSocket();
 
   const user = useAuthStore((state) => state.user);
   const currentUserId = user?.id;
@@ -19,6 +19,7 @@ export const useMainChat = () => {
   const [input, setInput] = useState('');
   const [selected, setSelected] = useState(mockChannels[0]);
 
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isMentionOpen, setIsMentionOpen] = useState(false);
   const [filteredFriends, setFilteredFriends] = useState<Friend[]>(mockFriends);
   const [highlightIndex, setHighlightIndex] = useState(0);
@@ -27,6 +28,20 @@ export const useMainChat = () => {
   const [isChannelDropdownOpen, setIsChannelDropdownOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!chatSocket) return;
+
+    const handleLobbyMessage = (message: ChatMessage) => {
+      setMessages((prev) => [...prev, message]);
+    };
+
+    chatSocket.on('lobby:message', handleLobbyMessage);
+
+    return () => {
+      chatSocket.off('lobby:message', handleLobbyMessage);
+    };
+  }, [chatSocket]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollTo({
@@ -110,28 +125,24 @@ export const useMainChat = () => {
   };
 
   const sendMessage = () => {
-    if (!user) return;
+    if (!user || !chatSocket) return;
 
     const trimmed = input.trim();
-
-    // Empty or "@"
     if (isEmptyOrAt(trimmed)) return;
 
     const whisperData = parseWhisper(trimmed);
-
     const isDirectChannel = selected.value === 'direct';
 
     if (isDirectChannel && whisperData) {
-      emitMessage({
+      chatSocket.emit('lobby:send', {
         channel: 'direct',
         message: whisperData.message,
-        targetId: whisperData.targetId,
-        targetNickname: whisperData.targetNickname,
+        targetId: Number(whisperData.targetId),
       });
     } else {
       if (isAtOnly(trimmed)) return;
 
-      emitMessage({
+      chatSocket.emit('lobby:send', {
         channel: 'global',
         message: trimmed,
       });
