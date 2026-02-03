@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { getGameSocket } from '@/shared/api/socket';
 import type { RoomState, Player, SystemNotification } from '@/shared/model';
 import { useAuthStore } from '@/entities/user';
@@ -12,6 +12,7 @@ import { ENTRY_ERROR_MESSAGES } from '../constants/messages';
 
 export const useRoom = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { roomId } = useParams<{ roomId: string }>();
   const { user } = useAuthStore();
   const gameSocket = getGameSocket();
@@ -22,6 +23,7 @@ export const useRoom = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const myUserId = user?.id;
+  const initialPassword = location.state?.password;
 
   const joinRoom = useCallback(
     (password?: string) => {
@@ -127,9 +129,9 @@ export const useRoom = () => {
     gameSocket.on('system:notification', handleSystemNotification);
 
     if (gameSocket.connected) {
-      joinRoom();
+      joinRoom(initialPassword);
     } else {
-      gameSocket.once('connect', () => joinRoom());
+      gameSocket.once('connect', () => joinRoom(initialPassword));
     }
 
     return () => {
@@ -139,7 +141,7 @@ export const useRoom = () => {
       gameSocket.off('room:updatePlayer', handleUpdatePlayer);
       gameSocket.off('system:notification', handleSystemNotification);
     };
-  }, [gameSocket, roomId, joinRoom]);
+  }, [gameSocket, roomId, joinRoom, location.state?.password]);
 
   const me = selectMe(roomState, myUserId ?? '');
   const isSolo = roomState?.settings?.gameMode === 'SOLO';

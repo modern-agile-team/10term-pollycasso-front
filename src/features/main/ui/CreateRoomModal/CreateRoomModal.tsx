@@ -127,7 +127,9 @@ export const CreateRoomModal = () => {
       mutate(data, {
         onSuccess: (room: Room) => {
           close();
-          navigate(`/rooms/${room.id}`);
+          navigate(`/rooms/${room.id}`, {
+            state: { password: data.password },
+          });
         },
       });
     }
