@@ -16,7 +16,15 @@ export const useRoomUI = () => {
       topTeamId,
       bottomTeamId,
     },
-    actions: { startGame, toggleReady, leaveRoom, changeTeam, kickUser },
+    actions: {
+      startGame,
+      toggleReady,
+      leaveRoom,
+      changeTeam,
+      kickUser,
+      nudgeUser,
+      updateStatus,
+    },
   } = useRoom();
 
   const isMyTeamBlue = topTeamId === 'BLUE';
@@ -62,6 +70,14 @@ export const useRoomUI = () => {
     }
   };
 
+  const handleNudge = (targetId: string) => {
+    nudgeUser(targetId);
+  };
+
+  const handleUpdateStatus = (status: 'IDLE' | 'SHOPPING' | 'CUSTOMIZING') => {
+    updateStatus(status);
+  };
+
   return {
     roomState,
     me,
@@ -81,6 +97,9 @@ export const useRoomUI = () => {
       handleLeave,
       handleChangeTeam,
       handleKick,
+      handleNudge,
+      handleUpdateStatus,
+      updateStatus,
     },
   };
 };

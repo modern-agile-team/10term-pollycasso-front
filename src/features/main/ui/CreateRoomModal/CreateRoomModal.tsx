@@ -93,7 +93,7 @@ export const CreateRoomModal = () => {
     mutate(data, {
       onSuccess: (room: Room) => {
         close();
-        navigate(`/room/${room.id}`);
+        navigate(`/rooms/${room.id}`);
       },
       onError: () => {
         alert('방 생성에 실패했습니다.');

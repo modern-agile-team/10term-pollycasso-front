@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-
-import type { RoomState } from '@/entities/game';
+import { getGameSocket } from '@/shared/api/socket';
+import type { RoomState, Player } from '@/shared/model';
 import { useAuthStore } from '@/entities/user';
-import { useSocket } from '@/shared/api/socket';
 import {
   selectCanStartGame,
   selectMe,
@@ -11,33 +10,79 @@ import {
 } from './roomSelectors';
 
 export const useRoom = () => {
-  const { roomId } = useParams();
+  const { roomId } = useParams<{ roomId: string }>();
   const { user } = useAuthStore();
-  const { socket } = useSocket();
 
-  const myUserId = user?.id;
+  const gameSocket = getGameSocket();
+
   const [roomState, setRoomState] = useState<RoomState | null>(null);
+  const myUserId = user?.id;
 
   useEffect(() => {
-    if (!roomId || !socket) return;
+    if (!roomId) return;
 
-    const handleGameState = (newState: RoomState) => {
-      setRoomState(newState);
+    const joinRoom = () => {
+      gameSocket.emit('room:join', { roomId: Number(roomId) });
     };
 
-    socket.on('room:stateSync', handleGameState);
+    const handleJoinSuccess = (initialState: RoomState) => {
+      setRoomState(initialState);
+    };
 
-    socket.emit('room:join', { roomId });
+    const handleSyncPlayerList = ({ players }: { players: Player[] }) => {
+      setRoomState((prev) => (prev ? { ...prev, players } : null));
+    };
+
+    const handleUpdateRoom = ({ roomSettings }: { roomSettings: any }) => {
+      setRoomState((prev) =>
+        prev ? { ...prev, settings: roomSettings } : null,
+      );
+    };
+
+    const handleUpdatePlayer = ({
+      userId,
+      changes,
+    }: {
+      userId: string;
+      changes: any;
+    }) => {
+      setRoomState((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          players: prev.players.map((p) =>
+            String(p.userId) === String(userId) ? { ...p, ...changes } : p,
+          ),
+        };
+      });
+    };
+
+    gameSocket.on('room:joinSuccess', handleJoinSuccess);
+    gameSocket.on('room:syncPlayerList', handleSyncPlayerList);
+    gameSocket.on('room:updateRoom', handleUpdateRoom);
+    gameSocket.on('room:updatePlayer', handleUpdatePlayer);
+
+    // 안전한 입장 요청 로직 (타이밍 이슈 방지)
+    if (gameSocket.connected) {
+      joinRoom();
+    } else {
+      gameSocket.on('connect', joinRoom);
+    }
 
     return () => {
-      socket.off('room:stateSync', handleGameState);
-      socket.emit('room:leave');
+      gameSocket.off('room:joinSuccess', handleJoinSuccess);
+      gameSocket.off('room:syncPlayerList', handleSyncPlayerList);
+      gameSocket.off('room:updateRoom', handleUpdateRoom);
+      gameSocket.off('room:updatePlayer', handleUpdatePlayer);
+
+      // 중복 입장 방지
+      gameSocket.off('connect', joinRoom);
     };
-  }, [roomId, socket]);
+  }, [gameSocket, roomId]);
 
   const me = selectMe(roomState, myUserId ?? '');
   const isSolo = roomState?.settings?.gameMode === 'SOLO';
-  const amIHost = roomState?.hostId === myUserId;
+  const amIHost = String(roomState?.hostId) === String(myUserId);
 
   const { topTeamId, bottomTeamId, topTeamPlayers, bottomTeamPlayers } =
     selectTopBottomTeams(roomState, myUserId ?? '');
@@ -45,43 +90,37 @@ export const useRoom = () => {
   const canStartGame = selectCanStartGame(roomState);
 
   const startGame = () => {
-    if (!roomId || !socket) return;
-    socket.emit('room:start', { roomId });
+    gameSocket.emit('game:startRequest');
   };
 
   const toggleReady = () => {
-    if (!me || !myUserId || !socket) return;
-    socket.emit('room:readyToggle', { userId: myUserId });
+    gameSocket.emit('room:readyToggle');
+  };
+
+  const changeTeam = (targetTeam: 'BLUE' | 'RED' | 'NONE') => {
+    if (!me || me.team === targetTeam) return;
+    gameSocket.emit('room:changeTeam', { targetTeam });
+  };
+
+  const kickUser = (targetUserId: string | number) => {
+    gameSocket.emit('room:kickUser', { targetUserId: Number(targetUserId) });
+  };
+
+  const nudgeUser = (targetUserId: string | number) => {
+    gameSocket.emit('room:nudgeUser', { targetUserId: Number(targetUserId) });
   };
 
   const leaveRoom = () => {
-    if (!myUserId || !socket) return;
-    socket.emit('room:leave');
+    gameSocket.emit('room:leave');
   };
 
-  const changeTeam = (targetTeam: 'BLUE' | 'RED') => {
-    if (!myUserId || !socket) return;
-    if (me?.teamId === targetTeam) return;
+  const updateStatus = (status: 'IDLE' | 'SHOPPING' | 'CUSTOMIZING') => {
+    // 상점이나 옷장 이동 시 준비 해제
+    if (status !== 'IDLE' && me?.isReady) {
+      gameSocket.emit('room:readyToggle');
+    }
 
-    socket.emit('room:changeTeam', {
-      userId: myUserId,
-      targetTeamId: targetTeam,
-    });
-
-    setRoomState((prev) => {
-      if (!prev) return null;
-      return {
-        ...prev,
-        players: prev.players.map((p) =>
-          p.userId === myUserId ? { ...p, teamId: targetTeam } : p,
-        ),
-      };
-    });
-  };
-
-  const kickUser = (targetUserId: string) => {
-    if (!socket) return;
-    socket.emit('room:kickUser', { targetUserId });
+    gameSocket.emit('room:updateStatus', { status });
   };
 
   return {
@@ -101,7 +140,9 @@ export const useRoom = () => {
       toggleReady,
       leaveRoom,
       changeTeam,
+      nudgeUser,
       kickUser,
+      updateStatus,
     },
     constants: {
       myUserId,

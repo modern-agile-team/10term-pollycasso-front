@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+
 import { useCart } from '@/features/cart';
 import {
   useShopFilter,
@@ -5,9 +8,23 @@ import {
   useProductSorting,
 } from '@/features/shop';
 import { ShopSidebar, ShopProductList, ShopProfilePanel } from '@/widgets/shop';
+import { useNudgeListener } from '@/features/lobby/model/useNudgeListener';
 import { MOCK_TOTAL_PRODUCTS } from '@/mocks/shopData';
 
 const ShopPage = () => {
+  const { gameSocket } = useGameSocket();
+  useNudgeListener();
+
+  useEffect(() => {
+    if (!gameSocket) return;
+
+    gameSocket.emit('room:updateStatus', { status: 'SHOPPING' });
+
+    return () => {
+      gameSocket.emit('room:updateStatus', { status: 'IDLE' });
+    };
+  }, [gameSocket]);
+
   const { cart, addToCart, removeFromCart } = useCart();
 
   const {
