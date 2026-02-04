@@ -7,7 +7,7 @@ export interface ApiSuccessResponse<T> {
 }
 
 export interface ApiFailureResponse {
-  code: number;
+  code: string;
   message: string;
   errors?: { field: string; reason: string }[];
 }
