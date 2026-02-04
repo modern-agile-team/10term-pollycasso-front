@@ -4,11 +4,11 @@ export const CDN_BASE_URL = import.meta.env.VITE_ASSET_CDN_URL;
 
 export const OUTFIT_LAYERS: (keyof Outfit)[] = [
   'bird',
-  'accessory',
   'hat',
   'bottom',
   'top',
   'shoes',
+  'accessory',
   'effect',
 ];
 
