@@ -18,11 +18,14 @@ import { MaxPlayerSelector } from './MaxPlayerSelector';
 import { PasswordInput } from './PasswordInput';
 import { RoomTitleInput } from './RoomTitleInput';
 import { VisibilitySelector } from './VisibilitySelector';
+import { getGameSocket } from '@/shared/api/socket';
 
 export const CreateRoomModal = () => {
   const navigate = useNavigate();
-  const { isOpen, close } = useCreateRoomModalStore();
+  const { isOpen, close, mode, initialData } = useCreateRoomModalStore();
   const { mutate, isPending } = useCreateRoomMutation();
+
+  const isEdit = mode === 'EDIT';
 
   const form = useForm<CreateRoomForm>({
     resolver: zodResolver(createRoomSchema),
@@ -36,7 +39,25 @@ export const CreateRoomModal = () => {
     },
   });
 
-  const { watch, setValue, handleSubmit, formState } = form;
+  const { watch, setValue, handleSubmit, formState, reset } = form;
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    if (isEdit && initialData) {
+      reset(initialData);
+    } else if (mode === 'CREATE') {
+      const randomTitle =
+        TITLE_PRESETS[Math.floor(Math.random() * TITLE_PRESETS.length)];
+      reset({
+        name: randomTitle,
+        mode: 'SOLO',
+        maxPlayers: 3,
+        isPrivate: false,
+        password: '',
+      });
+    }
+  }, [isOpen, mode, initialData, reset]);
 
   const gameMode = watch('mode');
   const maxPlayers = watch('maxPlayers');
@@ -86,19 +107,32 @@ export const CreateRoomModal = () => {
   };
 
   const onSubmit = (data: CreateRoomForm) => {
-    if (!data.isPrivate && data.password === '') {
-      delete data.password;
-    }
+    if (isEdit) {
+      const gameSocket = getGameSocket();
 
-    mutate(data, {
-      onSuccess: (room: Room) => {
-        close();
-        navigate(`/rooms/${room.id}`);
-      },
-      onError: () => {
-        alert('방 생성에 실패했습니다.');
-      },
-    });
+      gameSocket.emit('room:updateSettings', {
+        name: data.name,
+        mode: data.mode,
+        maxPlayers: data.maxPlayers,
+        isPrivate: data.isPrivate,
+        ...(data.isPrivate && data.password && { password: data.password }),
+      });
+
+      close();
+    } else {
+      if (!data.isPrivate) {
+        delete data.password;
+      }
+
+      mutate(data, {
+        onSuccess: (room: Room) => {
+          close();
+          navigate(`/rooms/${room.id}`, {
+            state: { password: data.password },
+          });
+        },
+      });
+    }
   };
 
   if (!isOpen) return null;
@@ -164,7 +198,7 @@ export const CreateRoomModal = () => {
             )}
           >
             <span className={isPending ? 'opacity-0' : 'opacity-100'}>
-              방만들기
+              {isEdit ? '설정 저장하기' : '방 만들기'}
             </span>
             {isPending && (
               <Spinner overlay={true} transparent={true} size="md" />

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import { MainChat } from '@/entities/chat';
 import { useAuthStore } from '@/entities/user';
@@ -10,16 +10,29 @@ import {
   SideBar,
   useCreateRoomModalStore,
   useSearchStore,
+  KickModal,
 } from '@/features/main';
+import { useEffect, useState } from 'react';
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const user = useAuthStore((state) => state.user);
   const { logout } = useLogout();
 
   const { searchQuery, setSearchQuery, setCommitSearch } = useSearchStore();
   const { open: openCreateRoomModal } = useCreateRoomModalStore();
+
+  const [isKickModalOpen, setIsKickModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.isKicked) {
+      setIsKickModalOpen(true);
+
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   if (!user) {
     navigate('/login');
@@ -31,6 +44,14 @@ const MainPage = () => {
   const handleEnterRoom = (id: number) => {
     navigate(`/rooms/${id}`);
   };
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login', { replace: true });
+    }
+  }, [user, navigate]);
+
+  if (!user) return null;
 
   return (
     <div className="flex items-center justify-center min-w-[1500px] mx-auto min-h-screen gap-x-10 font-ssrm font-bold">
@@ -61,6 +82,10 @@ const MainPage = () => {
       </div>
 
       <CreateRoomModal />
+
+      {isKickModalOpen && (
+        <KickModal onConfirm={() => setIsKickModalOpen(false)} />
+      )}
     </div>
   );
 };

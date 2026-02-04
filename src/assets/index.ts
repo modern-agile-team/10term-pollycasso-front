@@ -31,5 +31,4 @@ export { default as SilverBelt } from './belt_silver.svg';
 export { default as BronzeBelt } from './belt_bronze.svg';
 export { default as Coin } from './coin.svg';
 export { default as LaurelWreath } from './laurel_wreath.svg';
-export { default as Bird } from './bird.svg';
 export { default as Receipt } from './receipt.svg';

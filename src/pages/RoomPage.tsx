@@ -6,6 +6,7 @@ import {
   useRoomUI,
   RoomEntryGuard,
 } from '@/features/lobby';
+import { CreateRoomModal } from '@/features/main';
 
 const RoomPage = () => {
   const { roomState, me, derived, actions, topGradient, bottomGradient } =
@@ -71,7 +72,12 @@ const RoomPage = () => {
             </div>
 
             <div className="flex flex-col justify-between w-[560px] p-5 rounded-3xl">
-              <RoomDashboard onUpdateStatus={actions.updateStatus} />
+              <RoomDashboard
+                onOpenSettings={
+                  derived.amIHost ? actions.handleOpenSettings : undefined
+                }
+                onUpdateStatus={actions.handleUpdateStatus}
+              />
 
               <RoomActionButtons
                 amIHost={derived.amIHost}
@@ -82,6 +88,8 @@ const RoomPage = () => {
               />
             </div>
           </div>
+
+          <CreateRoomModal />
         </div>
       )}
     </RoomEntryGuard>

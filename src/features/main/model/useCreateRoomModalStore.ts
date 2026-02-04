@@ -1,17 +1,30 @@
 import { create } from 'zustand';
+import type { CreateRoomForm } from '../lib/validators';
 
 interface CreateRoomModalStore {
   isOpen: boolean;
-
-  open: () => void;
+  mode: 'CREATE' | 'EDIT';
+  initialData: CreateRoomForm | null;
+  open: (mode?: 'CREATE' | 'EDIT', data?: CreateRoomForm | null) => void;
   close: () => void;
-  toggle: () => void;
 }
 
 export const useCreateRoomModalStore = create<CreateRoomModalStore>((set) => ({
   isOpen: false,
+  mode: 'CREATE',
+  initialData: null,
 
-  open: () => set({ isOpen: true }),
-  close: () => set({ isOpen: false }),
-  toggle: () => set((state) => ({ isOpen: !state.isOpen })),
+  open: (mode = 'CREATE', data = null) =>
+    set({
+      isOpen: true,
+      mode,
+      initialData: data ?? null,
+    }),
+
+  close: () =>
+    set({
+      isOpen: false,
+      mode: 'CREATE',
+      initialData: null,
+    }),
 }));

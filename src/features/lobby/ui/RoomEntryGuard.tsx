@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Spinner } from '@/shared/ui/Spinner';
-import { PasswordModal } from '@/features/main/ui/PasswordModal';
+import { PasswordModal } from './PasswordModal';
 
 interface RoomEntryGuardProps {
   isLoading: boolean;

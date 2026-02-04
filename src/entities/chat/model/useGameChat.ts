@@ -2,11 +2,11 @@ import type { KeyboardEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
 import { useAuthStore } from '@/entities/user';
-import { useSocket } from '@/shared/api/socket';
+import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
 import type { ChatMessage } from '@/shared/model';
 
 export const useGameChat = () => {
-  const { socket } = useSocket();
+  const { gameSocket } = useGameSocket();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
@@ -16,18 +16,24 @@ export const useGameChat = () => {
   const MY_USER_ID = useAuthStore((state) => state.user?.id);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!gameSocket) return;
 
     const handleNewMessage = (newMsg: ChatMessage) => {
       setMessages((prev) => [...prev, newMsg]);
     };
 
-    socket.on('chat:newMessage', handleNewMessage);
+    const handleSystemMessage = (sysMsg: ChatMessage) => {
+      setMessages((prev) => [...prev, { ...sysMsg, channel: 'system' }]);
+    };
+
+    gameSocket.on('room:message', handleNewMessage);
+    gameSocket.on('chat:systemMessage', handleSystemMessage);
 
     return () => {
-      socket.off('chat:newMessage', handleNewMessage);
+      gameSocket.off('room:message', handleNewMessage);
+      gameSocket.off('chat:systemMessage', handleSystemMessage);
     };
-  }, [socket]);
+  }, [gameSocket]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollTo({
@@ -37,11 +43,11 @@ export const useGameChat = () => {
   }, [messages]);
 
   const handleSendMessage = () => {
-    if (!input.trim() || !socket) return;
+    if (!input.trim() || !gameSocket) return;
 
-    socket.emit('chat:sendMessage', {
-      userId: MY_USER_ID,
-      message: input,
+    gameSocket.emit('room:send', {
+      channel: 'global',
+      message: input.trim(),
     });
 
     setInput('');

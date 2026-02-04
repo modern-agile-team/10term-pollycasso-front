@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router';
 import { useRoom } from '../model/useRoom';
+// TODO: FSD 원칙 위반 -> 리팩터링 필요
+import { useCreateRoomModalStore } from '@/features/main';
 
 export const useRoomUI = () => {
   const navigate = useNavigate();
@@ -29,6 +31,8 @@ export const useRoomUI = () => {
       joinWithPassword,
     },
   } = useRoom();
+
+  const { open: openRoomSettingsModal } = useCreateRoomModalStore();
 
   const isMyTeamBlue = topTeamId === 'BLUE';
 
@@ -86,6 +90,20 @@ export const useRoomUI = () => {
     updateStatus(status);
   };
 
+  const handleOpenSettings = () => {
+    if (!roomState || !amIHost) return;
+
+    const initialData = {
+      name: roomState.settings.roomTitle,
+      mode: roomState.settings.gameMode,
+      maxPlayers: roomState.settings.maxPlayers,
+      isPrivate: roomState.settings.isPrivate,
+      password: '',
+    };
+
+    openRoomSettingsModal('EDIT', initialData);
+  };
+
   return {
     roomState,
     me,
@@ -110,6 +128,7 @@ export const useRoomUI = () => {
       handleKick,
       handleNudge,
       handleUpdateStatus,
+      handleOpenSettings,
       updateStatus,
       joinWithPassword,
     },
