@@ -8,6 +8,7 @@ import {
 } from '@/features/ranking';
 import type { PeriodId, RankingCriteria } from '@/features/ranking';
 import { RANKING_MOCK_DATA } from '@/mocks/ranking.mock';
+import { BackButton } from '@/shared/ui/BackButton';
 
 const RankingPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodId>('daily');
@@ -19,6 +20,8 @@ const RankingPage = () => {
 
   return (
     <div className="relative flex items-center justify-center w-full min-h-screen font-ssrm font-bold overflow-hidden">
+      <BackButton />
+
       <span className="absolute top-[88px] text-white text-6xl">RANK</span>
 
       <RankingHeader />

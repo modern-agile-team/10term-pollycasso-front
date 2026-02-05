@@ -10,6 +10,7 @@ import {
 import { cn } from '@/shared/lib';
 import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
 import { useNudgeListener } from '@/features/lobby/model/useNudgeListener';
+import { BackButton } from '@/shared/ui/BackButton';
 
 const USER_LEVEL = 3;
 
@@ -48,6 +49,8 @@ const WardrobePage = () => {
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen gap-[24px] font-ssrm font-bold">
+      <BackButton />
+
       <div className="flex flex-col gap-y-5 w-[500px] h-[720px] rounded-[30px] bg-[#1E3411]/40 shadow-inner p-6">
         <CharacterPreview
           level={USER_LEVEL}

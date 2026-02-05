@@ -4,6 +4,7 @@ import { Sidebar } from '@/widgets/sidebar';
 import { ProfileSection, SettingsSection } from '@/features/mypage';
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
+import { BackButton } from '@/shared/ui/BackButton';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ const MyPage = () => {
 
   return (
     <div className="flex items-center justify-center min-w-[1500px] mx-auto min-h-screen gap-x-10 font-ssrm font-bold">
+      <BackButton />
+
       <Sidebar
         nickname={user.nickname}
         level={user.level!}
