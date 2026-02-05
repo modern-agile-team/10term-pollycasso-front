@@ -20,6 +20,7 @@ const WardrobePage = lazy(() => import('@/pages/WardrobePage'));
 const RankingPage = lazy(() => import('@/pages/RankingPage'));
 const MyPage = lazy(() => import('@/pages/MyPage'));
 const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 const router = createBrowserRouter([
   {
@@ -39,18 +40,6 @@ const router = createBrowserRouter([
       { path: '/dev/gameWidget', element: <GameWidget /> },
       { path: '/ranking', element: <RankingPage /> },
       { path: '/mypage', element: <MyPage /> },
-      {
-        path: '/admin',
-        element: (
-          <Suspense
-            fallback={<Spinner fixed size="xl" message="관리자 로딩중..." />}
-          >
-            <div style={{ backgroundColor: '#f0f0f0', minHeight: '100vh' }}>
-              <AdminPage />
-            </div>
-          </Suspense>
-        ),
-      },
 
       {
         element: <PrivateRoute />,
@@ -71,18 +60,9 @@ const router = createBrowserRouter([
                   </GameSocketProvider>
                 ),
                 children: [
-                  {
-                    index: true,
-                    element: <RoomPage />,
-                  },
-                  {
-                    path: 'shop',
-                    element: <ShopPage />,
-                  },
-                  {
-                    path: 'wardrobe',
-                    element: <WardrobePage />,
-                  },
+                  { index: true, element: <RoomPage /> },
+                  { path: 'shop', element: <ShopPage /> },
+                  { path: 'wardrobe', element: <WardrobePage /> },
                 ],
               },
             ],
@@ -90,6 +70,32 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+
+  {
+    path: '/admin',
+    element: (
+      <Suspense
+        fallback={<Spinner fixed size="xl" message="관리자 로딩중..." />}
+      >
+        <div className="bg-[#f0f0f0] min-h-screen">
+          <AdminPage />
+        </div>
+      </Suspense>
+    ),
+  },
+
+  {
+    path: '*',
+    element: (
+      <Suspense
+        fallback={<Spinner fixed size="xl" message="길을 찾는 중..." />}
+      >
+        <div className="bg-white min-h-screen">
+          <NotFoundPage />
+        </div>
+      </Suspense>
+    ),
   },
 ]);
 
