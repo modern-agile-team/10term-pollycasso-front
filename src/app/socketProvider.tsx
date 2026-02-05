@@ -10,7 +10,6 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
   const socketRef = useRef<Socket | null>(null);
 
   const [isConnected, setIsConnected] = useState(false);
-
   const [messages] = useState<ChatMessage[]>([]);
 
   const token = useAuthStore((state) => state.accessToken);
@@ -45,14 +44,24 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
+    const handleBeforeUnload = () => {
+      if (socket.connected) {
+        socket.disconnect();
+      }
+    };
+
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
     socket.on('error', handleError);
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
       socket.off('connect', handleConnect);
       socket.off('disconnect', handleDisconnect);
       socket.off('error', handleError);
+
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [token, clearAuth]);
 

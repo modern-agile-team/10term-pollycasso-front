@@ -5,6 +5,8 @@ import { SocketGlobalAlert } from '@/shared/ui/SocketGlobalAlert';
 import QueryProvider from './queryProvider';
 import Router from './Router';
 import { SocketProvider } from './socketProvider';
+import { FriendSocketProvider } from '@/shared/api/socket/FriendSocketProvider';
+import { ChatSocketProvider } from '@/shared/api/socket/ChatSocketProvider';
 
 const App = () => {
   return (
@@ -12,9 +14,13 @@ const App = () => {
       <SocketProvider>
         <SocketGlobalAlert />
 
-        <OverlayProvider>
-          <Router />
-        </OverlayProvider>
+        <FriendSocketProvider>
+          <ChatSocketProvider>
+            <OverlayProvider>
+              <Router />
+            </OverlayProvider>
+          </ChatSocketProvider>
+        </FriendSocketProvider>
 
         <ToastContainer
           position="top-center"
