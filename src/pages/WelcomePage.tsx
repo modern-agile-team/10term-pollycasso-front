@@ -1,53 +1,29 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
-
 import { useAuthStore } from '@/entities/user';
 import { OUTFIT_LAYERS } from '@/shared/lib/cdn';
 import { getOutfitItemUrl } from '@/shared/lib/assets';
+import { welcomeVariants, useWelcomeLogic } from '@/features/welcome';
 
 const WelcomePage = () => {
-  const navigate = useNavigate();
-
   const user = useAuthStore((state) => state.user);
-  const [leaving, setLeaving] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/login', { replace: true });
-    }
-  }, [user, navigate]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const timer = setTimeout(() => {
-      setLeaving(true);
-      setTimeout(() => navigate('/', { replace: true }), 500);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [user, navigate]);
+  const { leaving, animType } = useWelcomeLogic(user);
 
   if (!user) return null;
 
-  const { outfit } = user;
+  const currentVariant = welcomeVariants[animType];
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
       <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={leaving ? { opacity: 0, scale: 3 } : { opacity: 1, scale: 1 }}
-        transition={{
-          duration: 0.5,
-          ease: 'easeInOut',
-          scale: { type: 'spring', bounce: 0.4 },
-        }}
+        custom={leaving}
+        initial="initial"
+        animate="animate"
+        variants={currentVariant}
         className="relative w-[250px] h-[250px] bg-white rounded-full shadow-lg border-4 border-white overflow-hidden flex items-center justify-center"
       >
         <div className="relative w-full h-full bg-black/5">
           {OUTFIT_LAYERS.map((layer) => {
-            const partId = outfit![layer];
+            const partId = user.outfit![layer];
             if (!partId) return null;
 
             return (
@@ -64,11 +40,10 @@ const WelcomePage = () => {
       </motion.div>
 
       <div className="mt-10 text-center font-ssrm font-bold">
-        <span className="text-4xl text-green-500">{user.nickname}</span>
-        <span className="text-4xl">
-          님<br />
-        </span>
-        <p className="mt-1 text-4xl">안녕하세요!</p>
+        <p className="text-4xl text-gray-800">
+          <span className="text-green-500">{user.nickname}</span> 님
+        </p>
+        <p className="mt-2 text-4xl text-gray-800">안녕하세요!</p>
       </div>
     </div>
   );
