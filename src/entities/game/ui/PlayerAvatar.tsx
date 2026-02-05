@@ -1,8 +1,4 @@
-const getLevelColor = (level: number) => {
-  if (level >= 20) return 'bg-red-500';
-  if (level >= 10) return 'bg-yellow-400';
-  return 'bg-green-500';
-};
+import { getLevelColor } from '@/shared/lib/color';
 
 export const PlayerAvatar = ({
   nickname,

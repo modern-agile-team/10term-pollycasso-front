@@ -2,6 +2,7 @@ import { Coin } from '@/assets';
 import type { Product } from '../model/types';
 import { cn } from '@/shared/lib';
 import { getShopItemUrl } from '@/shared/lib/assets';
+import { getLevelColor } from '@/shared/lib/color';
 
 interface ProductItemProps {
   product: Product;
@@ -30,11 +31,19 @@ export const ProductCard = ({
 
   return (
     <div
-      className="flex flex-col items-center justify-between w-[240px] h-[350px] bg-white rounded-[20px] text-2xl font-bold text-gray-400 p-5 cursor-pointer hover:scale-[1.02] transition-transform relative" // relative 추가 (필요시)
+      className="group flex flex-col items-center justify-between w-[240px] h-[350px] bg-white rounded-[20px] text-2xl font-bold text-gray-400 p-5 cursor-pointer hover:scale-[1.02] transition-all duration-300 relative overflow-hidden shadow-md"
       onClick={() => onWearItem(product)}
     >
+      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 bg-black/50 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-100 pointer-events-none scale-110">
+        <p className="text-white text-base font-medium leading-snug break-keep text-center">
+          {product.description}
+        </p>
+      </div>
+
       <div className="w-full h-[52px] flex gap-x-2">
-        <div className="w-[45px] h-[45px] bg-yellow-300 rounded-full shrink-0"></div>
+        <div
+          className={`w-[45px] h-[45px] ${getLevelColor(product.level)} rounded-full shrink-0`}
+        ></div>
         <div className="flex flex-col justify-center flex-1 text-base overflow-hidden">
           <span className="text-black text-lg">Lv.{product.level}</span>
           <span className="text-[#535353] truncate text-xl">
@@ -57,7 +66,7 @@ export const ProductCard = ({
         />
       </div>
 
-      <div className="flex justify-between w-full h-[45px] rounded-lg overflow-hidden shrink-0">
+      <div className="flex justify-between w-full h-[45px] rounded-lg overflow-hidden shrink-0 z-30">
         <div className="flex items-center justify-center w-2/3 h-full bg-black">
           <img src={Coin} className="w-5 h-5" alt="coin" />
           <span className="text-white text-lg ml-2 pt-0.5">

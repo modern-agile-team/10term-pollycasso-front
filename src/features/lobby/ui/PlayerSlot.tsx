@@ -9,6 +9,7 @@ import { cn } from '@/shared/lib';
 import ScalableText from './ScalableText';
 import { getOutfitImageUrl, OUTFIT_LAYERS } from '@/shared/lib/cdn';
 import type { Player } from '@/shared/model';
+import { getLevelColor } from '@/shared/lib/color';
 
 interface PlayerSlotProps {
   player?: Player;
@@ -133,7 +134,9 @@ export const PlayerSlot = ({
 
       <div className="flex items-center justify-between w-full mb-4">
         <div className="flex items-center gap-2 w-full">
-          <div className="relative flex justify-center items-center shrink-0 w-10 h-10 rounded-full bg-[#82DC99] text-white font-bold text-lg shadow-sm">
+          <div
+            className={`relative flex justify-center items-center shrink-0 w-10 h-10 rounded-full ${getLevelColor(player.level)} text-white font-bold text-lg shadow-sm`}
+          >
             {isHost && (
               <img
                 src={Crown}
