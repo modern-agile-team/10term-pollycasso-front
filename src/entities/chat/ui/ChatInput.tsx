@@ -6,8 +6,6 @@ import { cn } from '@/shared/lib';
 import type { Friend } from '@/shared/model';
 import { mapFriendsToSuggestions, MENTION_STYLE } from './chatInput.styles';
 
-// HTML input 대신 라이브러리 컴포넌트의 타입을 상속받아
-// onKeyDown의 타입 불일치 문제 방지합니다.
 interface ChatInputProps
   extends Omit<ComponentProps<typeof MentionsInput>, 'value' | 'onChange'> {
   value: string;
@@ -29,12 +27,21 @@ export const ChatInput = ({
     ? mapFriendsToSuggestions(friends)
     : [];
 
-  const renderSuggestion = (suggestion: SuggestionDataItem) => (
-    <div className="flex items-center gap-2">
-      <div className="w-2 h-2 bg-green-500 rounded-full" />
-      <span className="text-gray-800">{suggestion.display}</span>
-    </div>
-  );
+  const renderSuggestion = (
+    suggestion: SuggestionDataItem & { isOnline?: boolean },
+  ) => {
+    const statusColor = suggestion.isOnline ? 'bg-[#2ADB75]' : 'bg-gray-400';
+
+    const textColor = suggestion.isOnline ? 'text-gray-800' : 'text-gray-400';
+
+    return (
+      <div className="flex items-center gap-2 py-1">
+        <div className={cn('w-2 h-2 rounded-full', statusColor)} />
+
+        <span className={cn(textColor)}>{suggestion.display}</span>
+      </div>
+    );
+  };
 
   return (
     <div className={cn('h-full w-full flex items-center', className)}>

@@ -52,4 +52,15 @@ export const MENTION_STYLE = {
 };
 
 export const mapFriendsToSuggestions = (friends: Friend[]) =>
-  friends.map((f) => ({ id: String(f.id), display: f.name }));
+  friends
+    .sort((a, b) => {
+      if (a.isOnline !== b.isOnline) {
+        return Number(b.isOnline) - Number(a.isOnline);
+      }
+      return a.nickname.localeCompare(b.nickname);
+    })
+    .map((friend) => ({
+      id: String(friend.userId),
+      display: friend.nickname,
+      isOnline: friend.isOnline,
+    }));
