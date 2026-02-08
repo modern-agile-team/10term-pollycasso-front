@@ -1,9 +1,14 @@
+<div align="center">
 
-<img width="256" height="256" alt="ChatGPT Image 2025년 9월 3일 오후 02_04_21" src="https://github.com/user-attachments/assets/c2c6eb97-cd96-45df-9dbe-857f084218a9" />
+<img width="1920" height="640" alt="Image" src="https://github.com/user-attachments/assets/36710129-6608-4cec-b96f-754ae3292e7d" />
+
+### 🎨 실시간 드로잉 배틀! 폴리카소(Pollycasso) 🦜
+
+</div>
 
 # 🚀 소개
 
-- 실시간 드로잉 배틀! 모던 애자일 10기 메인 프로젝트 '폴리카소(Pollycasso)' 프론트엔드 레포지토리입니다.
+- 인덕대학교 IT 웹개발 동아리 모던 애자일 10기 메인 프로젝트 '폴리카소(Pollycasso)' 프론트엔드 레포지토리입니다.
 
 # 🛠️ 사용 라이브러리 & 스택
 
