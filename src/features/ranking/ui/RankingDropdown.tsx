@@ -8,7 +8,7 @@ interface RankingDropdownProps {
 
 export const RankingDropdown = ({ onSelect }: RankingDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<RankingCriteria>('coins');
+  const [selected, setSelected] = useState<RankingCriteria>('score');
 
   const handleToggle = () => setIsOpen(!isOpen);
 
@@ -22,7 +22,7 @@ export const RankingDropdown = ({ onSelect }: RankingDropdownProps) => {
     selected === 'coins' ? 'score' : 'coins';
 
   return (
-    <div className="absolute top-[231px] right-80 z-20 flex flex-col items-center w-[200px]">
+    <div className="absolute top-[261px] right-[160px] z-20 flex flex-col items-center w-[200px]">
       <div
         className={`
           absolute top-0 w-full bg-[#F2F2F2] rounded-[30px] shadow-md transition-all duration-300 overflow-hidden

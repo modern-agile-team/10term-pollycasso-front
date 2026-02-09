@@ -8,7 +8,7 @@ export const RankingSidebar = ({
   selectedPeriod: PeriodId;
   onPeriodChange: (id: PeriodId) => void;
 }) => (
-  <div className="absolute flex flex-col right-[166px] top-[230px] gap-y-8 z-0">
+  <div className="absolute flex flex-col -right-3 top-[250px] gap-y-8 z-10">
     {PERIODS.map((period) => (
       <button
         key={period.id}
