@@ -9,6 +9,7 @@ import {
   selectTopBottomTeams,
 } from './roomSelectors';
 import { ENTRY_ERROR_MESSAGES } from '../constants/messages';
+import type { UpdateGameStatePayload } from '@/features/lobby/model/types';
 
 export const useRoom = () => {
   const navigate = useNavigate();
@@ -129,11 +130,28 @@ export const useRoom = () => {
       joinRoom(initialPassword);
     };
 
+    const handleUpdateGameState = ({
+      phase,
+      endsAt,
+      phaseContext,
+    }: UpdateGameStatePayload) => {
+      setRoomState((prev) => {
+        if (!prev) return prev; // joinSuccess 이전이면 무시
+        return {
+          ...prev,
+          status: phase,
+          endsAt,
+          phaseContext,
+        };
+      });
+    };
+
     gameSocket.on('room:joinSuccess', handleJoinSuccess);
     gameSocket.on('room:syncPlayerList', handleSyncPlayerList);
     gameSocket.on('room:updateRoom', handleUpdateRoom);
     gameSocket.on('room:updatePlayer', handleUpdatePlayer);
     gameSocket.on('room:stateSync', handleStateSync);
+    gameSocket.on('room:updateGameState', handleUpdateGameState);
     gameSocket.on('connect', handleConnect);
 
     gameSocket.on('system:notification', handleSystemNotification);
@@ -149,6 +167,7 @@ export const useRoom = () => {
       gameSocket.off('room:updatePlayer', handleUpdatePlayer);
       gameSocket.off('system:notification', handleSystemNotification);
       gameSocket.off('room:stateSync', handleStateSync);
+      gameSocket.off('room:updateGameState', handleUpdateGameState);
       gameSocket.off('connect', handleConnect);
     };
   }, [gameSocket, roomId, joinRoom, initialPassword, navigate]);
