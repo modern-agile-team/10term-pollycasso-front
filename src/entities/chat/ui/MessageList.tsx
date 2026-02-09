@@ -6,7 +6,7 @@ import { MessageItem } from './MessageItem';
 
 interface MessageListProps {
   messages: ChatMessage[];
-  messagesEndRef: RefObject<HTMLDivElement | null>;
+  messageListRef: RefObject<HTMLDivElement | null>;
   className?: string;
   currentUserId?: string;
   showChannelTag?: boolean;
@@ -14,7 +14,7 @@ interface MessageListProps {
 
 export const MessageList = ({
   messages,
-  messagesEndRef,
+  messageListRef,
   className,
   currentUserId,
   showChannelTag,
@@ -22,7 +22,7 @@ export const MessageList = ({
   const isEmpty = messages.length === 0;
   return (
     <div
-      ref={messagesEndRef}
+      ref={messageListRef}
       className={cn(
         'flex flex-col gap-1 overflow-y-auto pr-2 text-sm leading-tight',
         'scrollbar-thin scrollbar-thumb-[#D3D3D3] scrollbar-track-transparent',

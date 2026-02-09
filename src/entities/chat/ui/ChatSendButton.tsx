@@ -13,7 +13,7 @@ export const ChatSendButton = ({ disabled, onSend }: ChatSendButtonProps) => {
       onClick={onSend}
       disabled={disabled}
       className={cn(
-        'w-8 h-8 flex items-center justify-center rounded-full text-white transition self-center mr-2',
+        'w-8 h-8 flex items-center justify-center rounded-full text-white transition self-center ml-8',
         disabled
           ? 'bg-[#2a7140]/70 cursor-not-allowed'
           : 'bg-[#2a7140] hover:bg-[#1d6133]',

@@ -1,6 +1,8 @@
 export interface Friend {
-  id: string;
-  name: string;
+  userId: number | string;
+  nickname: string;
+  outfit?: any;
+  isOnline?: boolean;
 }
 
 export type ChatChannel = 'global' | 'direct' | 'system';

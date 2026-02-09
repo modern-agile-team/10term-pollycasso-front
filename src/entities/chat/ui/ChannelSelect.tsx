@@ -40,7 +40,7 @@ export const ChannelSelect = ({
       </span>
 
       {isOpen && (
-        <div className="absolute left-0 top-[50px] w-[130px] bg-white border border-black rounded-xl shadow-lg z-50 overflow-hidden">
+        <div className="absolute left-0 top-[50px] w-[115px] bg-white border border-black rounded-xl shadow-lg z-50 overflow-hidden">
           <div
             onClick={(e) => {
               e.stopPropagation();

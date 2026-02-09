@@ -10,7 +10,7 @@ export const GameChat = () => {
     <div className="flex flex-col w-full h-full bg-white/40 rounded-2xl overflow-hidden border border-white/5">
       <MessageList
         messages={state.messages}
-        messagesEndRef={messagesEndRef}
+        messageListRef={messageListRef}
         className="flex-1 p-4 h-full text-white"
         currentUserId={state.myUserId}
       />

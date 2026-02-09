@@ -11,6 +11,7 @@ export interface FriendProfile {
   nickname: string;
   outfit: Outfit;
   level: number;
+  tag: string;
   isOnline: boolean;
 }
 

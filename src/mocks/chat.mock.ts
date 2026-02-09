@@ -13,7 +13,7 @@ export const mockChannels: ChannelOption[] = [
 ] as const;
 
 export const mockFriends: Friend[] = [
-  { id: 1, name: '레전드프론트엔드' },
+  { id: 25, name: '테스트용계정2' },
   { id: 2, name: '레전드백엔드' },
   { id: 3, name: 'aa1' },
   { id: 4, name: 'a' },

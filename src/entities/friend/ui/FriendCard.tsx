@@ -22,12 +22,11 @@ export const FriendCard = ({
   nickname,
   outfit,
   level,
+  tag,
   relation,
   isOnline,
   onAction,
 }: FriendCardProps) => {
-  const [displayName, displayTag] = nickname.split('#');
-  const safeTag = displayTag || '0000';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleActionClick = (action: FriendAction, message?: string) => {
@@ -65,7 +64,7 @@ export const FriendCard = ({
 
         <div className="flex flex-col justify-center h-full py-1 overflow-hidden">
           <span className="text-xl lg:text-2xl font-bold truncate pr-2 text-gray-800">
-            {displayName}
+            {nickname}
           </span>
           <div className="flex items-center gap-x-2 mt-1">
             <span
@@ -73,7 +72,7 @@ export const FriendCard = ({
                 level,
               )}`}
             >
-              {safeTag}
+              {tag}
             </span>
             <span
               className={`text-lg lg:text-xl truncate font-semibold ${
@@ -107,7 +106,7 @@ export const FriendCard = ({
                     onClick={() =>
                       handleActionClick(
                         'BLOCK',
-                        `${displayName}님을 차단하시겠습니까?`,
+                        `${nickname}님을 차단하시겠습니까?`,
                       )
                     }
                     className="w-full flex items-center gap-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors text-left"
@@ -118,7 +117,7 @@ export const FriendCard = ({
                     onClick={() =>
                       handleActionClick(
                         'DELETE',
-                        `${displayName}님을 친구 목록에서 삭제하시겠습니까?`,
+                        `${nickname}님을 친구 목록에서 삭제하시겠습니까?`,
                       )
                     }
                     className="w-full flex items-center gap-x-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors text-left font-medium"

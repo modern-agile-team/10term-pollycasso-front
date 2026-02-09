@@ -15,12 +15,10 @@ export const RecommendedFriendCard = ({
   isOnline,
   outfit,
   className,
+  tag,
   onAdd,
   isRequested = false,
 }: RecommendedFriendCardProps) => {
-  const [displayName, displayTag] = nickname.split('#');
-  const safeTag = displayTag || '0000';
-
   return (
     <div className={`flex items-center justify-between p-4 ${className}`}>
       <div className="flex items-center gap-x-4 overflow-hidden">
@@ -47,13 +45,13 @@ export const RecommendedFriendCard = ({
 
         <div className="flex items-center gap-x-2 min-w-0 pr-1">
           <span className="text-xl text-black font-bold truncate max-w-[140px] lg:max-w-[200px]">
-            {displayName}
+            {nickname}
           </span>
 
           <span
             className={`shrink-0 px-1 text-lg text-white font-bold rounded tabular-nums ${getLevelBadgeColor(level)}`}
           >
-            {safeTag}
+            {tag}
           </span>
 
           <span className="shrink-0 text-lg text-white font-bold drop-shadow-sm">
