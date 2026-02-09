@@ -8,25 +8,25 @@ import {
   WARDROBE_ITEM_CATEGORIES,
 } from '@/widgets/wardrobe';
 import { cn } from '@/shared/lib';
-import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+import { useWaitingSocket } from '@/shared/api/socket/WaitingSocketProvider';
 import { useNudgeListener } from '@/features/lobby/model/useNudgeListener';
 import { BackButton } from '@/shared/ui/BackButton';
 
 const USER_LEVEL = 3;
 
 const WardrobePage = () => {
-  const { gameSocket } = useGameSocket();
+  const { waitingSocket } = useWaitingSocket();
   useNudgeListener();
 
   useEffect(() => {
-    if (!gameSocket) return;
+    if (!waitingSocket) return;
 
-    gameSocket.emit('room:updateStatus', { status: 'CUSTOMIZING' });
+    waitingSocket.emit('room:updateStatus', { status: 'CUSTOMIZING' });
 
     return () => {
-      gameSocket.emit('room:updateStatus', { status: 'IDLE' });
+      waitingSocket.emit('room:updateStatus', { status: 'IDLE' });
     };
-  }, [gameSocket]);
+  }, [waitingSocket]);
 
   const { previewItems, resetPreview, wearItem } = useShopPreview();
 

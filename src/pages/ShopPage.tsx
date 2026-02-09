@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+import { useWaitingSocket } from '@/shared/api/socket/WaitingSocketProvider';
 
 import { useCart } from '@/features/cart';
 import {
@@ -13,18 +13,18 @@ import { MOCK_TOTAL_PRODUCTS } from '@/mocks/shopData';
 import { BackButton } from '@/shared/ui/BackButton';
 
 const ShopPage = () => {
-  const { gameSocket } = useGameSocket();
+  const { waitingSocket } = useWaitingSocket();
   useNudgeListener();
 
   useEffect(() => {
-    if (!gameSocket) return;
+    if (!waitingSocket) return;
 
-    gameSocket.emit('room:updateStatus', { status: 'SHOPPING' });
+    waitingSocket.emit('room:updateStatus', { status: 'SHOPPING' });
 
     return () => {
-      gameSocket.emit('room:updateStatus', { status: 'IDLE' });
+      waitingSocket.emit('room:updateStatus', { status: 'IDLE' });
     };
-  }, [gameSocket]);
+  }, [waitingSocket]);
 
   const { cart, addToCart, removeFromCart } = useCart();
 

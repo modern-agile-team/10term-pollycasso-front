@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router';
 import { RootLayout } from '@/shared/ui/RootLayout';
 import { Spinner } from '@/shared/ui/Spinner';
 import PrivateRoute from './PrivateRoute';
-import { GameSocketProvider } from '@/shared/api/socket/GameSocketProvider';
+import { WaitingSocketProvider } from '@/shared/api/socket/WaitingSocketProvider';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const LoginCallbackPage = lazy(() => import('@/pages/LoginCallbackPage'));
@@ -50,9 +50,9 @@ const router = createBrowserRouter([
               {
                 path: '/rooms/:roomId',
                 element: (
-                  <GameSocketProvider>
+                  <WaitingSocketProvider>
                     <Outlet />
-                  </GameSocketProvider>
+                  </WaitingSocketProvider>
                 ),
                 children: [
                   { index: true, element: <GamePage /> },

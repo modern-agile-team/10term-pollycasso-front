@@ -18,7 +18,7 @@ import { MaxPlayerSelector } from './MaxPlayerSelector';
 import { PasswordInput } from './PasswordInput';
 import { RoomTitleInput } from './RoomTitleInput';
 import { VisibilitySelector } from './VisibilitySelector';
-import { getGameSocket } from '@/shared/api/socket';
+import { getWaitingSocket } from '@/shared/api/socket';
 
 export const CreateRoomModal = () => {
   const navigate = useNavigate();
@@ -108,9 +108,9 @@ export const CreateRoomModal = () => {
 
   const onSubmit = (data: CreateRoomForm) => {
     if (isEdit) {
-      const gameSocket = getGameSocket();
+      const waitingSocket = getWaitingSocket();
 
-      gameSocket.emit('room:updateSettings', {
+      waitingSocket.emit('room:updateSettings', {
         name: data.name,
         mode: data.mode,
         maxPlayers: data.maxPlayers,
