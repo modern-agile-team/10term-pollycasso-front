@@ -2,6 +2,9 @@ import { useNavigate } from 'react-router';
 import type { Outfit } from '@/shared/model';
 import { getOutfitImageUrl, OUTFIT_LAYERS } from '@/shared/lib/cdn';
 import { Coin } from '@/assets';
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
 
 interface MenuItem {
   label: string;
@@ -64,6 +67,19 @@ export const Sidebar = ({
   const navigate = useNavigate();
   const menuItems = MENU_CONFIG[currentPage];
 
+  const { isMuted, sfxVolume } = useSound();
+
+  const playClick = () => {
+    if (!isMuted) {
+      SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
+    }
+  };
+
+  const handleNavigate = (path: string) => {
+    playClick();
+    navigate(path);
+  };
+
   return (
     <div className="flex flex-col px-8 py-10 items-center w-[380px] h-[760px] rounded-3xl bg-[#1E3411]/40 text-white">
       <div className="flex self-start items-center gap-x-1 text-yellow-300">
@@ -118,14 +134,14 @@ export const Sidebar = ({
             return (
               <div key={item.label} className="flex justify-between gap-3">
                 <button
-                  onClick={() => navigate(item.path)}
+                  onClick={() => handleNavigate(item.path)}
                   className={`flex-1 h-[72px] rounded-full ${item.color} hover:brightness-110 transition-all`}
                 >
                   {item.label}
                 </button>
                 {nextItem && (
                   <button
-                    onClick={() => navigate(nextItem.path)}
+                    onClick={() => handleNavigate(nextItem.path)}
                     className={`flex-1 h-[72px] rounded-full ${nextItem.color} hover:brightness-110 transition-all`}
                   >
                     {nextItem.label}
@@ -137,7 +153,7 @@ export const Sidebar = ({
           return (
             <button
               key={item.label}
-              onClick={() => navigate(item.path)}
+              onClick={() => handleNavigate(item.path)}
               className={`w-full h-[72px] rounded-full ${item.color} hover:brightness-110 transition-all`}
             >
               {item.label}
@@ -146,7 +162,9 @@ export const Sidebar = ({
         })}
 
         <button
-          onClick={currentPage === 'main' ? onLogout : () => navigate('/')}
+          onClick={
+            currentPage === 'main' ? onLogout : () => handleNavigate('/')
+          }
           className="w-full h-[72px] rounded-full bg-black hover:bg-gray-900 transition-all"
         >
           {currentPage === 'main' ? '로그아웃' : '돌아가기'}

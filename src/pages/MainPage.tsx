@@ -13,6 +13,9 @@ import {
 } from '@/features/main';
 import { useEffect, useState } from 'react';
 import { Sidebar } from '@/widgets/sidebar';
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -25,6 +28,14 @@ const MainPage = () => {
   const { open: openCreateRoomModal } = useCreateRoomModalStore();
 
   const [isKickModalOpen, setIsKickModalOpen] = useState(false);
+
+  const { isMuted, sfxVolume } = useSound();
+
+  const playClick = () => {
+    if (!isMuted) {
+      SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
+    }
+  };
 
   useEffect(() => {
     if (location.state?.isKicked) {
@@ -39,10 +50,24 @@ const MainPage = () => {
     return null;
   }
 
-  const handleLogout = () => logout();
-  const handleSearch = () => setCommitSearch(searchQuery.trim());
+  const handleLogout = () => {
+    playClick();
+    logout();
+  };
+
+  const handleSearch = () => {
+    playClick();
+    setCommitSearch(searchQuery.trim());
+  };
+
   const handleEnterRoom = (id: number) => {
+    playClick();
     navigate(`/rooms/${id}`);
+  };
+
+  const handleCreateRoomClick = () => {
+    playClick();
+    openCreateRoomModal();
   };
 
   useEffect(() => {
@@ -69,13 +94,10 @@ const MainPage = () => {
           searchQuery={searchQuery}
           onChangeSearch={setSearchQuery}
           onSearch={handleSearch}
-          onClickCreateRoom={openCreateRoomModal}
+          onClickCreateRoom={handleCreateRoomClick}
         />
 
-        <RoomList
-          onEnter={handleEnterRoom}
-          onMenu={(id) => console.log(`메뉴 클릭: ${id}`)}
-        />
+        <RoomList onEnter={handleEnterRoom} onMenu={playClick} />
 
         <MainChat />
       </div>
@@ -83,7 +105,12 @@ const MainPage = () => {
       <CreateRoomModal />
 
       {isKickModalOpen && (
-        <KickModal onConfirm={() => setIsKickModalOpen(false)} />
+        <KickModal
+          onConfirm={() => {
+            playClick();
+            setIsKickModalOpen(false);
+          }}
+        />
       )}
     </div>
   );

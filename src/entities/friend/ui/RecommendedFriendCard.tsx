@@ -2,6 +2,9 @@ import { PlusIcon } from '@heroicons/react/24/solid';
 import { getLevelBadgeColor } from '../lib/badgeColor';
 import type { FriendProfile } from '../model/types';
 import { getOutfitImageUrl, OUTFIT_LAYERS } from '@/shared/lib/cdn';
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
 
 interface RecommendedFriendCardProps extends FriendProfile {
   className?: string;
@@ -19,6 +22,14 @@ export const RecommendedFriendCard = ({
   onAdd,
   isRequested = false,
 }: RecommendedFriendCardProps) => {
+  const { isMuted, sfxVolume } = useSound();
+
+  const playClick = () => {
+    if (!isMuted) {
+      SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
+    }
+  };
+
   return (
     <div className={`flex items-center justify-between p-4 ${className}`}>
       <div className="flex items-center gap-x-4 overflow-hidden">
@@ -65,7 +76,12 @@ export const RecommendedFriendCard = ({
       </div>
 
       <button
-        onClick={isRequested ? undefined : onAdd}
+        onClick={() => {
+          if (!isRequested) {
+            playClick();
+            onAdd?.();
+          }
+        }}
         disabled={isRequested}
         className={`shrink-0 p-1 transition-all duration-200 ${isRequested ? 'cursor-default' : 'group cursor-pointer'}`}
       >

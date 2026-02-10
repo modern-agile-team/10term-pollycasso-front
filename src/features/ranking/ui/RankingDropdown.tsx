@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import type { RankingCriteria } from '../model/types';
 import { CRITERIA_LABELS } from '../constants/constants';
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
 
 interface RankingDropdownProps {
   onSelect: (criteria: RankingCriteria) => void;
@@ -10,9 +13,21 @@ export const RankingDropdown = ({ onSelect }: RankingDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<RankingCriteria>('score');
 
-  const handleToggle = () => setIsOpen(!isOpen);
+  const { isMuted, sfxVolume } = useSound();
+
+  const playClick = () => {
+    if (!isMuted) {
+      SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
+    }
+  };
+
+  const handleToggle = () => {
+    playClick();
+    setIsOpen(!isOpen);
+  };
 
   const handleSelect = (criteria: RankingCriteria) => {
+    playClick();
     setSelected(criteria);
     onSelect(criteria);
     setIsOpen(false);

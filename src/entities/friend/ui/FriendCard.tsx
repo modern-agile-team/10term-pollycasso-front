@@ -11,6 +11,9 @@ import type {
   FriendRelation,
 } from '../model/types';
 import { getOutfitImageUrl, OUTFIT_LAYERS } from '@/shared/lib/cdn';
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
 
 interface FriendCardProps extends FriendProfile {
   relation: FriendRelation;
@@ -29,7 +32,17 @@ export const FriendCard = ({
 }: FriendCardProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const { isMuted, sfxVolume } = useSound();
+
+  const playClick = () => {
+    if (!isMuted) {
+      SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
+    }
+  };
+
   const handleActionClick = (action: FriendAction, message?: string) => {
+    playClick();
+
     if (message && !window.confirm(message)) return;
     onAction(action);
     setIsMenuOpen(false);
@@ -89,7 +102,10 @@ export const FriendCard = ({
         {relation === 'FRIEND' && (
           <div className="relative">
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => {
+                playClick();
+                setIsMenuOpen(!isMenuOpen);
+              }}
               className="flex items-center"
             >
               <EllipsisVerticalIcon className="w-6 h-6 lg:w-8 lg:h-8 text-gray-400 hover:text-gray-600 transition-colors -mr-2" />
@@ -99,7 +115,10 @@ export const FriendCard = ({
               <>
                 <div
                   className="fixed inset-0 z-10"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => {
+                    playClick();
+                    setIsMenuOpen(false);
+                  }}
                 />
                 <div className="absolute right-0 top-8 w-32 bg-white rounded-xl shadow-xl border border-gray-100 z-20 overflow-hidden py-1 flex flex-col">
                   <button

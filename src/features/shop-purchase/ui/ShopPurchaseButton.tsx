@@ -2,6 +2,9 @@ import { overlay } from 'overlay-kit';
 import { ShopPurchaseModal } from './ShopPurchaseModal';
 import { cn } from '@/shared/lib';
 import type { Product } from '@/entities/product';
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
 
 interface ShopPurchaseButtonProps {
   cart: Product[];
@@ -18,8 +21,12 @@ export const ShopPurchaseButton = ({
   totalPrice,
   disabled,
 }: ShopPurchaseButtonProps) => {
+  const { sfxVolume, isMuted } = useSound();
+
   const handleOpen = () => {
     if (disabled) return;
+
+    if (!isMuted) SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
 
     overlay.open(({ unmount }) => (
       <ShopPurchaseModal

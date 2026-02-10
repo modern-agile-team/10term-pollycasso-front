@@ -20,10 +20,22 @@ import { RoomTitleInput } from './RoomTitleInput';
 import { VisibilitySelector } from './VisibilitySelector';
 import { getGameSocket } from '@/shared/api/socket';
 
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
+
 export const CreateRoomModal = () => {
   const navigate = useNavigate();
   const { isOpen, close, mode, initialData } = useCreateRoomModalStore();
   const { mutate, isPending } = useCreateRoomMutation();
+
+  const { isMuted, sfxVolume } = useSound();
+
+  const playClick = () => {
+    if (!isMuted) {
+      SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
+    }
+  };
 
   const isEdit = mode === 'EDIT';
 
@@ -77,6 +89,7 @@ export const CreateRoomModal = () => {
   const isMax = maxPlayers === allowedPlayers[allowedPlayers.length - 1];
 
   const selectGameMode = (mode: GameMode) => {
+    playClick();
     setValue('mode', mode, { shouldValidate: true });
     const newPlayers = mode === 'TEAM' ? 4 : 3;
     setValue('maxPlayers', newPlayers, { shouldValidate: true });
@@ -85,6 +98,7 @@ export const CreateRoomModal = () => {
   const increaseMaxPlayers = () => {
     const idx = allowedPlayers.indexOf(maxPlayers);
     if (idx < allowedPlayers.length - 1) {
+      playClick();
       const v = allowedPlayers[idx + 1];
       setValue('maxPlayers', v, { shouldValidate: true });
     }
@@ -93,12 +107,14 @@ export const CreateRoomModal = () => {
   const decreaseMaxPlayers = () => {
     const idx = allowedPlayers.indexOf(maxPlayers);
     if (idx > 0) {
+      playClick();
       const v = allowedPlayers[idx - 1];
       setValue('maxPlayers', v, { shouldValidate: true });
     }
   };
 
   const selectVisibility = (v: 'public' | 'private') => {
+    playClick();
     const isPrivate = v === 'private';
     setValue('isPrivate', isPrivate, { shouldValidate: true });
     if (!isPrivate) {
@@ -107,6 +123,8 @@ export const CreateRoomModal = () => {
   };
 
   const onSubmit = (data: CreateRoomForm) => {
+    playClick();
+
     if (isEdit) {
       const gameSocket = getGameSocket();
 
@@ -141,7 +159,10 @@ export const CreateRoomModal = () => {
     <div className="fixed inset-0 flex justify-center items-center bg-black/60 z-50">
       <div className="relative bg-[#F2F2F2] w-[700px] p-6 rounded-2xl shadow-lg flex flex-col items-center">
         <button
-          onClick={close}
+          onClick={() => {
+            playClick();
+            close();
+          }}
           className="absolute top-4 right-4 bg-gray-300 rounded-md p-1"
         >
           <XMarkIcon className="w-7 h-7 text-white" />

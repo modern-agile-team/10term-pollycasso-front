@@ -1,17 +1,29 @@
 import { overlay } from 'overlay-kit';
-
 import { AddFriendModal } from './AddFriendModal';
+import { useSound } from '@/entities/sound';
+import { SoundManager } from '@/shared/api/sound/manager';
+import { SOUND_ASSETS } from '@/shared/api/sound/assets';
 
 export const AddFriendButton = ({
   recommendedFriends,
 }: {
   recommendedFriends: any[];
 }) => {
+  const { isMuted, sfxVolume } = useSound();
+
+  const playClick = () => {
+    if (!isMuted) {
+      SoundManager.playSfx(SOUND_ASSETS.SFX.CLICK, sfxVolume);
+    }
+  };
+
   const handleOpen = () => {
+    playClick();
+
     overlay.open(({ unmount }) => (
       <AddFriendModal
         onClose={unmount}
-        initialRecommendedFriends={recommendedFriends} // 💡 데이터 주입
+        initialRecommendedFriends={recommendedFriends}
       />
     ));
   };
