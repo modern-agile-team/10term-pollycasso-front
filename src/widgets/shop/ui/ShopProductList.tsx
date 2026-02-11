@@ -1,6 +1,6 @@
 import type { Product } from '@/entities/product';
 import { ProductCard } from '@/entities/product';
-import { SHOP_CATEGORIES } from '@/features/shop/constants/shop.constants';
+import { SHOP_CATEGORIES } from '@/features/shop';
 
 interface ShopProductListProps {
   products: Product[];

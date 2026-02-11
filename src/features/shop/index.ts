@@ -5,3 +5,6 @@ export { useShopPreview } from './model/useShopPreview';
 export { useProductSorting } from './model/useProductSorting';
 export { useShop } from './model/useShop';
 export { shopQueries } from './queries/shopQueries';
+export { useCart } from './model/useCart';
+export type { CartItem } from './model/useCart';
+export { ShopPurchaseButton } from './ui/ShopPurchaseButton';

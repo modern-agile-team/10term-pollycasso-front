@@ -2,16 +2,13 @@ import { useEffect, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useWaitingSocket } from '@/shared/api/socket/WaitingSocketProvider';
 import { useAuthStore } from '@/entities/user/model/useAuthStore';
-// TODO: FSD 위반 상점 도메인 리팩터링
-import { useCart } from '@/features/cart';
-import {
-  useShopFilter,
-  useShopPreview,
-  useProductSorting,
-  shopQueries,
-  SHOP_CATEGORIES,
-} from '@/features/shop';
-import { purchaseQueries } from '@/features/shop-purchase';
+import { useCart } from './useCart';
+import type { CartItem } from './useCart';
+import { shopQueries } from '../queries/shopQueries';
+import { useShopFilter } from './useShopFilter';
+import { useShopPreview } from './useShopPreview';
+import { useProductSorting } from './useProductSorting';
+import { SHOP_CATEGORIES } from '../constants/shop.constants';
 
 export const useShop = () => {
   const queryClient = useQueryClient();
@@ -30,10 +27,12 @@ export const useShop = () => {
 
   const allProducts = useMemo(() => {
     const cosmetics = cosmeticsData?.items || [];
-    const consumables = (consumablesData?.items || []).map((item) => ({
-      ...item,
-      subCategory: SHOP_CATEGORIES.ITEM,
-    }));
+    const consumables = (consumablesData?.items || []).map(
+      (item: CartItem) => ({
+        ...item,
+        subCategory: SHOP_CATEGORIES.ITEM,
+      }),
+    );
     return [...cosmetics, ...consumables];
   }, [cosmeticsData, consumablesData]);
 
@@ -44,7 +43,7 @@ export const useShop = () => {
   );
 
   const { mutate: purchase, isPending: isPurchasing } = useMutation({
-    ...purchaseQueries.submit(),
+    ...shopQueries.purchase(),
     onSuccess: (data) => {
       clearCart();
       if (data?.remainingCoins !== undefined) {
@@ -59,10 +58,10 @@ export const useShop = () => {
     if (cart.length === 0) return;
     const payload = {
       cosmeticItems: cart
-        .filter((item) => item.subCategory !== SHOP_CATEGORIES.ITEM)
+        .filter((item) => item.subCategory !== 'ITEM')
         .map((item) => item.id),
       gameItems: cart
-        .filter((item) => item.subCategory === SHOP_CATEGORIES.ITEM)
+        .filter((item) => item.subCategory === 'ITEM')
         .map((item) => ({ itemId: item.id, quantity: item.quantity })),
     };
     purchase(payload);

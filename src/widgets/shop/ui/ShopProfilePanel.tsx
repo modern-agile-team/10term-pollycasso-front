@@ -1,8 +1,8 @@
 import { Coin } from '@/assets';
 import { CharacterPreview } from '@/entities/character';
-import { ShopPurchaseButton } from '@/features/shop-purchase';
+import { ShopPurchaseButton } from '@/features/shop';
 import { cn } from '@/shared/lib';
-import type { CartItem } from '@/features/cart';
+import type { CartItem } from '@/features/shop';
 import type { Product } from '@/entities/product';
 
 interface ShopProfilePanelProps {
