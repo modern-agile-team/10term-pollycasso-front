@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRoute';
 // import { GameSocketProvider } from '@/shared/api/socket/GameSocketProvider';
 // import { SoundProvider } from '@/entities/sound';
 import { WaitingSocketProvider } from '@/shared/api/socket/WaitingSocketProvider';
+import { GameSocketProvider } from '@/shared/api/socket/GameSocketProvider';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage'));
 const LoginCallbackPage = lazy(() => import('@/pages/LoginCallbackPage'));
@@ -53,7 +54,9 @@ const router = createBrowserRouter([
                 path: '/rooms/:roomId',
                 element: (
                   <WaitingSocketProvider>
-                    <Outlet />
+                    <GameSocketProvider>
+                      <Outlet />
+                    </GameSocketProvider>
                   </WaitingSocketProvider>
                 ),
                 children: [

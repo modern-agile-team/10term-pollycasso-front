@@ -13,40 +13,70 @@ import { DrawingPhase } from '@/features/game-drawing';
 import { EvaluatingPhase } from '@/features/game-evaluating';
 import { RoundSummaryPhase } from '@/features/game-round-summary';
 import { FinishedPhase } from '@/features/game-finished';
-import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
 import { PHASE_TIME } from '@/shared/model';
+import type { PhaseContext, RoomStatus } from '@/shared/model';
 import { useGameState } from '../model/useGameState';
 import { useGameSubmission } from '../model/useGameSubmission';
 import { useThemeInput } from '../model/useThemeInput';
 import { useThemeSelecting } from '../model/useThemeSelecting';
+import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+import { SOCKET_EVENTS } from '@/shared/api/socket';
 
-const GameWidget = () => {
-  const { status, players, endsAt, inventory, currentTheme } = useGameState();
-  const { socket } = useSocket();
+interface GameWidgetProps {
+  phase: RoomStatus;
+  endsAt: number | null;
+  phaseContext: PhaseContext | null;
+  playerMap: Record<string, number>;
+}
+
+const GameWidget = ({
+  phase,
+  endsAt,
+  phaseContext,
+  playerMap,
+}: GameWidgetProps) => {
+  const { players, inventory, currentTheme } = useGameState();
+  const { gameSocket } = useGameSocket();
   const { user } = useAuthStore();
 
   const { completedCount, totalCount, isMeReady, toggleReady } =
     useGameSubmission();
 
-  const { isMyTurn } = useThemeSelecting();
+  const syncedPlayers = useMemo(() => {
+    if (!players) return [];
+
+    return players.map((player) => ({
+      ...player,
+      // playerMap에 내 userId(문자열)가 있으면 해당 roomMemberId를 꽂아줌
+      roomMemberId: playerMap[player.userId] || null,
+    }));
+  }, [players, playerMap]);
+
+  const isMyTurn = useMemo(() => {
+    return (
+      phaseContext?.kind === 'THEME_SELECTING' &&
+      phaseContext.selectorId === Number(user?.id)
+    );
+  }, [phaseContext, user]);
+
   const { localInput, handleInputChange, handleRandomTheme } =
     useThemeInput(isMyTurn);
 
   const handleComplete = useCallback(() => {
-    if (status === 'THEME_SELECTING') {
+    if (phase === 'THEME_SELECTING') {
       if (!isMyTurn) return;
       if (!localInput.trim()) {
         alert('주제를 입력해주세요!');
         return;
       }
-      socket?.emit(SOCKET_EVENTS.GAME_THEME_SUBMIT, { theme: localInput });
+      gameSocket?.emit(SOCKET_EVENTS.GAME_FINALIZE, { value: localInput });
       return;
     }
     toggleReady();
-  }, [status, isMyTurn, localInput, socket, toggleReady]);
+  }, [phase, isMyTurn, localInput, gameSocket, toggleReady]);
 
   const totalTime = useMemo(() => {
-    switch (status) {
+    switch (phase) {
       case 'THEME_SELECTING':
         return PHASE_TIME.THEME_SELECT;
       case 'DRAWING':
@@ -60,10 +90,10 @@ const GameWidget = () => {
       default:
         return PHASE_TIME.DEFAULT;
     }
-  }, [status]);
+  }, [phase]);
 
   const renderGameContent = () => {
-    switch (status) {
+    switch (phase) {
       case 'THEME_SELECTING':
         return (
           <ThemeSelector
@@ -93,7 +123,7 @@ const GameWidget = () => {
 
   return (
     <div className="w-full h-screen flex justify-between items-center font-ssrm px-20 py-4 overflow-hidden gap-16">
-      <PlayerSidebar players={players} currentUserId={user?.id || ''} />
+      <PlayerSidebar players={syncedPlayers} currentUserId={user?.id || ''} />
 
       <main className="w-full h-full rounded-3xl bg-white shadow-xl flex flex-col relative overflow-hidden">
         <GameTimer
@@ -116,7 +146,7 @@ const GameWidget = () => {
           completedCount={completedCount}
           totalCount={totalCount}
           isReady={isMeReady}
-          showBadge={status !== 'THEME_SELECTING'}
+          showBadge={phase !== 'THEME_SELECTING'}
         />
       </aside>
     </div>

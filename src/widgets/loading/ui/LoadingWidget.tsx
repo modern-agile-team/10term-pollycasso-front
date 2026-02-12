@@ -9,8 +9,10 @@ interface LoadingWidgetProps {
   onFinished?: () => void;
 }
 
+const COUNTDOWN_OFFSET_MS = 2000;
+
 const getRemainingSeconds = (endsAt: number) =>
-  Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
+  Math.max(0, Math.ceil((endsAt - COUNTDOWN_OFFSET_MS - Date.now()) / 1000));
 
 const getCountColor = (num: number) => {
   if (num >= 3) return '#00AD66';
@@ -81,7 +83,7 @@ export const LoadingWidget = ({
 
   return (
     <div className="fixed inset-0 z-50 flex h-screen w-full flex-col items-center justify-center">
-      <div className="flex h-[250px] w-[250px] items-center justify-center rounded-full bg-white shadow-md" />
+      <div className="flex h-[250px] w-[250px] items-center justify-center rounded-full bg-white shadow-md"></div>
 
       <div className="mt-10 flex flex-col items-center text-center font-ssrm font-bold">
         <div className="mt-1 grid h-20 w-full place-items-center">

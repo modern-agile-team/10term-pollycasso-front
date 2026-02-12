@@ -17,16 +17,18 @@ export interface RoomState {
   currentRound: number | null;
   totalRounds: number | null;
 
-  phaseContext:
-    | ThemeSelectingContext
-    | DrawingContext
-    | EvaluatingContext
-    | RoundSummaryContext
-    | FinishContext
-    | null;
+  phaseContext: PhaseContext;
 
   teamScore: TeamScore | null;
 }
+
+export type PhaseContext =
+  | ThemeSelectingContext
+  | DrawingContext
+  | EvaluatingContext
+  | RoundSummaryContext
+  | FinishContext
+  | null;
 
 export type RoomStatus =
   | 'WAITING'

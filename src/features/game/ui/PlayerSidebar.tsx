@@ -9,7 +9,7 @@ import { COLORS } from '../constants/game';
 
 interface PlayerSidebarProps {
   players: Player[];
-  currentUserId: string;
+  currentUserId: string | number;
 }
 
 export const PlayerSidebar = ({

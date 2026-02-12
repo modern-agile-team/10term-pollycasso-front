@@ -2,28 +2,37 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { useAuthStore } from '@/entities/user';
 import { MOCK_GAME_SELECTING } from '@/mocks/game.mock';
-import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
 import type { DrawingContext, Player, RoomState } from '@/shared/model';
+import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+import { SOCKET_EVENTS } from '@/shared/api/socket';
 
 export const useGameState = () => {
   const user = useAuthStore((state) => state.user);
-  const { socket } = useSocket();
+  const { gameSocket } = useGameSocket();
 
   const [roomState, setRoomState] = useState<RoomState>(MOCK_GAME_SELECTING);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!gameSocket) return;
 
-    const handleStateSync = (newState: RoomState) => {
-      setRoomState(newState);
+    const handleUpdate = (payload: any) => {
+      console.log('📢 Game Event Received:', payload);
+      // 백엔드에서 준 payload가 전체 RoomState인지, 일부 업데이트인지에 따라 처리
+      setRoomState((prev) => ({
+        ...prev,
+        ...payload,
+        status: payload.phase || payload.status || prev.status, // 백엔드 필드명(phase) 대응
+      }));
     };
 
-    socket.on(SOCKET_EVENTS.ROOM_STATE_SYNC, handleStateSync);
+    gameSocket.on('room:stateSync', handleUpdate);
+    gameSocket.on('room:updateGameState', handleUpdate);
 
     return () => {
-      socket.off(SOCKET_EVENTS.ROOM_STATE_SYNC, handleStateSync);
+      gameSocket.off('room:stateSync', handleUpdate);
+      gameSocket.off('room:updateGameState', handleUpdate);
     };
-  }, [socket]);
+  }, [gameSocket]);
 
   const { status, players, endsAt, phaseContext } = roomState;
 

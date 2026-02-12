@@ -1,20 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
 import { RANDOM_THEMES } from '@/shared/model';
+import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+import { SOCKET_EVENTS } from '@/shared/api/socket';
 
 export const useThemeInput = (isMyTurn: boolean) => {
-  const { socket } = useSocket();
+  const { gameSocket } = useGameSocket();
   const [localInput, setLocalInput] = useState('');
 
   const handleInputChange = useCallback(
     (value: string) => {
       setLocalInput(value);
       if (isMyTurn) {
-        socket?.emit(SOCKET_EVENTS.GAME_TYPING, { value });
+        gameSocket?.emit(SOCKET_EVENTS.GAME_TYPING, { value });
       }
     },
-    [isMyTurn, socket],
+    [isMyTurn, gameSocket],
   );
 
   const handleRandomTheme = useCallback(() => {
@@ -22,13 +23,13 @@ export const useThemeInput = (isMyTurn: boolean) => {
     const randomTheme = RANDOM_THEMES[randomIndex];
 
     setLocalInput(randomTheme);
-    if (socket) {
-      socket.emit(SOCKET_EVENTS.GAME_TYPING, { value: randomTheme });
+    if (gameSocket) {
+      gameSocket.emit(SOCKET_EVENTS.GAME_TYPING, { value: randomTheme });
     }
-  }, [socket]);
+  }, [gameSocket]);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!gameSocket) return;
 
     const handleTypingShare = (data: { value: string }) => {
       if (!isMyTurn) {
@@ -36,11 +37,11 @@ export const useThemeInput = (isMyTurn: boolean) => {
       }
     };
 
-    socket.on(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
+    gameSocket.on(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
     return () => {
-      socket.off(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
+      gameSocket.off(SOCKET_EVENTS.GAME_TYPING_SHARE, handleTypingShare);
     };
-  }, [socket, isMyTurn]);
+  }, [gameSocket, isMyTurn]);
 
   return {
     localInput,

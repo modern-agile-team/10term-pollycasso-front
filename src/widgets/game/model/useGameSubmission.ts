@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from 'react';
 
 import { useAuthStore } from '@/entities/user';
-import { SOCKET_EVENTS, useSocket } from '@/shared/api/socket';
 import type { Player } from '@/shared/model';
 import { useGameState } from './useGameState';
+import { useGameSocket } from '@/shared/api/socket/GameSocketProvider';
+import { SOCKET_EVENTS } from '@/shared/api/socket';
 
 interface GameSubmissionState {
   players: Player[];
@@ -14,7 +15,7 @@ interface GameSubmissionState {
 }
 
 export const useGameSubmission = (): GameSubmissionState => {
-  const { socket } = useSocket();
+  const { gameSocket } = useGameSocket();
   const user = useAuthStore((state) => state.user);
 
   const { players } = useGameState();
@@ -31,10 +32,10 @@ export const useGameSubmission = (): GameSubmissionState => {
   }, [players, user]);
 
   const toggleReady = useCallback(() => {
-    if (!socket) return;
+    if (!gameSocket) return;
 
-    socket.emit(SOCKET_EVENTS.ROOM_READY_TOGGLE);
-  }, [socket]);
+    gameSocket.emit(SOCKET_EVENTS.ROOM_READY_TOGGLE);
+  }, [gameSocket]);
 
   return {
     players,

@@ -10,24 +10,28 @@ export const PHASE_TIME = {
 } as const;
 
 export interface ThemeSelectingContext {
-  selectorId: string;
+  kind: 'THEME_SELECTING';
+  selectorId: number;
   nickname: string;
-  value: string;
 }
 
 export interface DrawingContext {
+  kind: 'DRAWING';
   currentTheme: string;
 }
 
 export interface EvaluatingContext {
+  kind: 'EVALUATING';
   drawings: Record<string, DrawData>;
 }
 
 export interface RoundSummaryContext {
+  kind: 'ROUND_SUMMARY';
   ranking: RoundResult[];
 }
 
 export interface RoundResult {
+  kind: 'ROUND_RESULT';
   userId: string;
   drawData: DrawData;
   score: number;
@@ -35,6 +39,7 @@ export interface RoundResult {
 }
 
 export interface FinishContext {
+  kind: 'FINISHED';
   results: {
     userId: string;
     rank: number;
