@@ -25,6 +25,9 @@ export const useGameState = () => {
       }));
     };
 
+    gameSocket.on('room:stateSync', handleUpdate);
+    gameSocket.on('room:updateGameState', handleUpdate);
+
     return () => {
       gameSocket.off('room:stateSync', handleUpdate);
       gameSocket.off('room:updateGameState', handleUpdate);
