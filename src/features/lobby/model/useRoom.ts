@@ -9,13 +9,14 @@ import {
   selectTopBottomTeams,
 } from './roomSelectors';
 import { ENTRY_ERROR_MESSAGES } from '../constants/messages';
-import type { UpdateGameStatePayload } from '@/features/lobby/model/types';
+import type { UpdateGameStatePayload } from '../model/types';
 
 export const useRoom = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { roomId } = useParams<{ roomId: string }>();
   const { user } = useAuthStore();
+
   const waitingSocket = getWaitingSocket();
 
   const [roomState, setRoomState] = useState<RoomState | null>(null);
@@ -45,14 +46,12 @@ export const useRoom = () => {
 
     const handleJoinSuccess = (initialState: RoomState) => {
       setRoomState(initialState);
-
       setIsPasswordRequired(false);
       setPasswordError(null);
     };
 
     const handleSystemNotification = (response: SystemNotification) => {
       if (response.status >= 400) {
-        // 메시지 상수에서 찾고, 없으면 백엔드 메시지, 그것도 없으면 기본값
         const koreanMessage =
           ENTRY_ERROR_MESSAGES[response.code] ||
           response.message ||
@@ -109,7 +108,7 @@ export const useRoom = () => {
       changes,
     }: {
       userId: string;
-      changes: any;
+      changes: Partial<Player>;
     }) => {
       setRoomState((prev) => {
         if (!prev) return null;
@@ -136,7 +135,7 @@ export const useRoom = () => {
       phaseContext,
     }: UpdateGameStatePayload) => {
       setRoomState((prev) => {
-        if (!prev) return prev; // joinSuccess 이전이면 무시
+        if (!prev) return prev;
         return {
           ...prev,
           status: phase,
@@ -153,7 +152,6 @@ export const useRoom = () => {
     waitingSocket.on('room:stateSync', handleStateSync);
     waitingSocket.on('room:updateGameState', handleUpdateGameState);
     waitingSocket.on('connect', handleConnect);
-
     waitingSocket.on('system:notification', handleSystemNotification);
 
     if (waitingSocket.connected) {
@@ -211,7 +209,6 @@ export const useRoom = () => {
       bottomTeamPlayers,
       topTeamId,
       bottomTeamId,
-      // UI에 필요한 상태들
       isPasswordRequired,
       passwordError,
     },
