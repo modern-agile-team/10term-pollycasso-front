@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
 import { useAuthStore } from '@/entities/user';
@@ -13,8 +13,10 @@ import type { LoginFailureResponse } from '../model/types';
 import { authQueries } from '../queries/authQueries';
 
 export const useLogin = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const updateUser = useAuthStore((state) => state.updateUser);
 
   const [isAnyFieldFocused, setIsAnyFieldFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +35,7 @@ export const useLogin = () => {
   const { mutate: login, isPending } = useMutation({
     ...authQueries.login(),
 
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (!('accessToken' in response)) {
         setErrorMessage(response.message ?? '로그인에 실패했습니다.');
         return;
@@ -46,6 +48,13 @@ export const useLogin = () => {
         user: { id, nickname, tag },
         accessToken: accessToken,
       });
+
+      try {
+        const profileData = await queryClient.fetchQuery(authQueries.user());
+        updateUser(profileData);
+      } catch (err) {
+        console.error('유저 프로필을 가져오는 데 실패했습니다:', err);
+      }
 
       setErrorMessage(null);
       navigate('/welcome');

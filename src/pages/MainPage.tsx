@@ -82,6 +82,7 @@ const MainPage = () => {
     <div className="flex items-center justify-center min-w-[1500px] mx-auto min-h-screen gap-x-10 font-ssrm font-bold">
       <Sidebar
         nickname={user.nickname}
+        tag={user.tag!}
         level={user.level!}
         currentXp={user.currentExp!}
         coin={user.coin!}

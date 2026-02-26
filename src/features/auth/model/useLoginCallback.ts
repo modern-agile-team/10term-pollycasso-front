@@ -1,14 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAuthStore } from '@/entities/user';
 import { parseAccessToken } from '@/shared/lib';
 import { authQueries } from '../queries/authQueries';
 
 export const useLoginCallback = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const updateUser = useAuthStore((state) => state.updateUser);
 
   const isRun = useRef(false);
 
@@ -33,6 +35,9 @@ export const useLoginCallback = () => {
           user: { id, nickname, tag },
           accessToken: accessToken,
         });
+
+        const profileData = await queryClient.fetchQuery(authQueries.user());
+        updateUser(profileData);
 
         navigate('/welcome', { replace: true });
       } catch (error) {

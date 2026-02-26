@@ -6,7 +6,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { Crown } from '@/assets';
 import { cn } from '@/shared/lib';
-import ScalableText from './ScalableText';
+import { ScalableText } from './ScalableText';
 import { getOutfitImageUrl, OUTFIT_LAYERS } from '@/shared/lib/cdn';
 import type { Player } from '@/shared/model';
 import { getLevelColor } from '@/shared/lib/color';

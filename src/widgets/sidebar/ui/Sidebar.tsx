@@ -5,6 +5,7 @@ import { Coin } from '@/assets';
 import { useSound } from '@/entities/sound';
 import { SoundManager } from '@/shared/api/sound/manager';
 import { SOUND_ASSETS } from '@/shared/api/sound/assets';
+import { ScalableText } from '@/features/lobby';
 
 interface MenuItem {
   label: string;
@@ -38,6 +39,7 @@ const MENU_CONFIG: Record<'main' | 'mypage', MenuItem[]> = {
 
 interface SideBarProps {
   nickname: string;
+  tag: string;
   level: number;
   currentXp: number;
   coin: number;
@@ -55,6 +57,7 @@ const getMaxXp = (level: number): number => {
 
 export const Sidebar = ({
   nickname,
+  tag,
   level,
   currentXp,
   coin,
@@ -104,14 +107,20 @@ export const Sidebar = ({
       </div>
 
       <div className="flex flex-col w-full mt-6">
-        <div className="flex items-end justify-between">
-          <div className="flex items-center mb-1">
-            <div className="w-[35px] h-[35px] ml-2 rounded-full bg-gray-400 border border-white flex items-center justify-center">
-              <span className="text-white text-2xl">{level}</span>
+        <div className="flex items-end justify-between gap-2">
+          <div className="flex items-center mb-1 flex-1 min-w-0">
+            <div className="flex-shrink-0 w-[35px] h-[35px] rounded-full bg-gray-400 border border-white flex items-center justify-center">
+              <span className="text-white text-2xl font-bold">{level}</span>
             </div>
-            <span className="ml-2 text-3xl text-white">{nickname}</span>
+
+            <div className="flex-1 min-w-0 h-10 ml-2">
+              <ScalableText className="text-3xl text-white font-bold">
+                {nickname}#{tag}
+              </ScalableText>
+            </div>
           </div>
-          <span className="text-xs">
+
+          <span className="text-xs flex-shrink-0 mb-2">
             {currentXp}/{maxXp}
           </span>
         </div>

@@ -6,3 +6,4 @@ export { TeamTab } from './ui/TeamTab';
 export { useRoomUI } from './ui/useRoomUI';
 export { NudgeModal } from './ui/NudgeModal';
 export { useNudgeListener } from './model/useNudgeListener';
+export { ScalableText } from './ui/ScalableText';

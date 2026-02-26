@@ -8,7 +8,10 @@ interface ScalableTextProps {
   className?: string;
 }
 
-const ScalableText = ({ children, className = '' }: ScalableTextProps) => {
+export const ScalableText = ({
+  children,
+  className = '',
+}: ScalableTextProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLSpanElement>(null);
   const [scale, setScale] = useState<number>(1);
@@ -44,5 +47,3 @@ const ScalableText = ({ children, className = '' }: ScalableTextProps) => {
     </div>
   );
 };
-
-export default ScalableText;

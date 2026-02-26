@@ -12,10 +12,12 @@ import type { SignupFormValues } from '../lib/validators';
 import { signUpSchema } from '../lib/validators';
 import type { SignupFailureResponse } from '../model/types';
 import { authQueries } from '../queries/authQueries';
+import { getUser } from '../api/getUser';
 
 export const useSignup = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const updateUser = useAuthStore((state) => state.updateUser);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -63,6 +65,9 @@ export const useSignup = () => {
           user: { id, nickname, tag },
           accessToken: accessToken,
         });
+
+        const profileData = await getUser();
+        updateUser(profileData);
 
         setErrorMessage(null);
         navigate('/welcome');
